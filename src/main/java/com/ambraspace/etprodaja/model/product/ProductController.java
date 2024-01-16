@@ -1,0 +1,187 @@
+package com.ambraspace.etprodaja.model.product;
+
+import java.util.List;
+
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.ambraspace.etprodaja.util.ErrorResponse;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
+@RestController
+public class ProductController
+{
+
+	@Autowired
+	private ProductService productService;
+
+
+	@Operation(summary = "Get all products (paged)", responses = {
+			@ApiResponse(responseCode = "200", description = "Page of products returned", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = PageProduct.class))
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@GetMapping("/api/products")
+	public Page<Product> getProducts(
+			@Parameter(description = "Search query", required = false)
+			@RequestParam(name = "q", defaultValue = "") String query,
+			@Parameter(description = "Should the comment field be included in the search", required = false)
+			@RequestParam(name = "cm", defaultValue = "false") Boolean includeComments,
+			@Parameter(description = "Limit products to specified Warehouse ID", required = false)
+			@RequestParam(name = "w", defaultValue = "") Long warehouseId,
+			@Parameter(description = "Limit to products having all of the specified Tag IDs", required = false)
+			@RequestParam(name = "t", defaultValue = "") List<Long> tagIds,
+			@Parameter(description = "Limit products to specified Category ID", required = false)
+			@RequestParam(name = "ct", defaultValue = "") Long categoryId,
+			@ParameterObject @PageableDefault(sort = "name") Pageable pageable)
+	{
+		try
+		{
+			return productService.getProducts(query, includeComments, warehouseId, tagIds, categoryId, pageable);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
+	@Operation(summary = "Get product", responses = {
+			@ApiResponse(responseCode = "200", description = "Product returned (may be null)", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = Product.class))
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@GetMapping("/api/products/{id}")
+	public Product getProduct(@PathVariable Long id)
+	{
+		try
+		{
+			return productService.getProduct(id);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
+	@Operation(summary = "Add new product",
+			requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+					required = true,
+					content = {
+							@Content(encoding = @Encoding(name = "product", contentType = MediaType.APPLICATION_JSON_VALUE))
+					}
+			),
+			responses = {
+			@ApiResponse(responseCode = "200", description = "Product added", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = Product.class))
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@PostMapping(path = "/api/products", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public Product addProduct(
+			@RequestPart("product") Product product,
+			@RequestPart(name = "files", required = false) List<MultipartFile> files)
+	{
+		try
+		{
+			return productService.addProduct(product, files);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
+	@Operation(summary = "Update product",
+			requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+					required = true,
+					content = {
+							@Content(encoding = @Encoding(name = "product", contentType = MediaType.APPLICATION_JSON_VALUE))
+					}
+			),
+			responses = {
+			@ApiResponse(responseCode = "200", description = "Product updated", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = Product.class))
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@PutMapping(path = "/api/products/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public Product updateProduct(
+			@PathVariable Long id,
+			@RequestPart("product") Product product,
+			@RequestPart(name = "files", required = false) List<MultipartFile> files)
+	{
+		try
+		{
+			return productService.updateProduct(id, product, files);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
+	@Operation(summary = "Delete product", responses = {
+			@ApiResponse(responseCode = "200", description = "Product deleted", content = {
+					@Content(mediaType = "application/json")
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@DeleteMapping("/api/products/{id}")
+	public void deleteProduct(@PathVariable Long id)
+	{
+		try
+		{
+			productService.deleteProduct(id);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
+}
+
+

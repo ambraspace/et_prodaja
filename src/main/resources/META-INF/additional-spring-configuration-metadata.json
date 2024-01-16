@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "et-prodaja.storage-location",
+  "type": "java.lang.String",
+  "description": "Where product images and export files are placed"
+}]}

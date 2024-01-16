@@ -1,11 +1,15 @@
 spring:
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
-      ddl-auto: validate
-    open-in-view: true
+      ddl-auto: update
+    open-in-view: false
   datasource:
     url: jdbc:mariadb://localhost:3306/et_prodaja
     username: ambra
 server:
   port: 8080
+  error:
+    include-stacktrace: never
+et-prodaja:
+  storage-location: /home/ambra/et_prodaja
