@@ -2,8 +2,13 @@ package com.ambraspace.etprodaja;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.ambraspace.etprodaja", "com.ambraspace.auth.jwt"})
 public class EtProdajaApplication
 {
 
@@ -13,14 +18,10 @@ public class EtProdajaApplication
 	}
 
 
-	/*
-	 * https://github.com/springdoc/springdoc-openapi/issues/833#issuecomment-1067895977
-	 */
-//	@Bean
-//	MappingJackson2HttpMessageConverter octetStreamJsonConverter() {
-//	    MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-//	    converter.setSupportedMediaTypes(List.of(new MediaType("application", "octet-stream")));
-//	    return converter;
-//	}
+    @Bean
+    PasswordEncoder passwordEncoder()
+    {
+    	return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
 }

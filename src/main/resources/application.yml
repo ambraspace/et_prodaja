@@ -11,5 +11,12 @@ server:
   port: 8080
   error:
     include-stacktrace: never
+springdoc:
+  swagger-ui:
+    csrf:
+      enabled: true
 et-prodaja:
   storage-location: /home/ambra/et_prodaja
+jwt:
+  secret: sklfjslkfjslkdfjslkdfjslkdfjsdlkfjsdlkfjsldkfjsdfsdfsdfsdfsdfsdf
+  secret2-f-a: sklfjslkfjslkdfjslkdfjslkdfjsdlkfjsdlkfjsldkfjsdfsdfsdfsdfsdfsdd
