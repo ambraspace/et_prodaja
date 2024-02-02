@@ -88,4 +88,41 @@ public class CategoryService
 
 	}
 
+
+	public Category getCategory(Long id)
+	{
+		return categoryRepository.findById(id).orElse(null);
+	}
+
+
+	/**
+	 * @param categoryId - requested category ID
+	 * @return a list containing ID of this category and IDs of all down stream categories
+	 */
+	public List<Long> collectCategoryIds(Long categoryId)
+	{
+		List<Long> ids = new ArrayList<Long>();
+		Category parent = getCategory(categoryId);
+		if (parent != null)
+		{
+			ids.addAll(collectCategoryIds(parent));
+		} else {
+			// prevents sending empty list to repository method
+			ids.add(-1l);
+		}
+		return ids;
+	}
+
+
+	private List<Long> collectCategoryIds(Category root)
+	{
+		List<Long> ids = new ArrayList<Long>();
+		ids.add(root.getId());
+		for (Category c:root.getChildren())
+		{
+			ids.addAll(collectCategoryIds(c));
+		}
+		return ids;
+	}
+
 }

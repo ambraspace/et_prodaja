@@ -93,7 +93,7 @@ public class Product
 	}
 
 
-	public Integer getCategoryId()
+	public Long getCategoryId()
 	{
 		return category == null ? null : category.getId();
 	}

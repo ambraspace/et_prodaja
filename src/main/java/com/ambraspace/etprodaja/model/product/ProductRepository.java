@@ -21,12 +21,12 @@ WHERE
 	p = s.product AND
 	s.warehouse.id = :w AND
 	tg.id IN (:t) AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByWarehouseTagsAndCategory(
 			@Param("w") Long warehouseId,
 			@Param("t") List<Long> tags,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by warehouse and tags
@@ -50,11 +50,11 @@ FROM Product p CROSS JOIN StockInfo s
 WHERE
 	p = s.product AND
 	s.warehouse.id = :w AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByWarehouseAndCategory(
 			@Param("w") Long warehouseId,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by warehouse
@@ -79,13 +79,13 @@ WHERE
 	(p.name LIKE '%:q%' OR
 	p.comment LIKE '%:q%') AND
 	tg.id in (:t) AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByWarehouseNameCommentTagsAndCategory(
 			@Param("w") Long warehouseId,
 			@Param("q") String query,
 			@Param("t") List<Long> tags,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by warehouse, name, comment and tags
@@ -114,12 +114,12 @@ WHERE
 	s.warehouse.id = :w AND
 	(p.name LIKE '%:q%' OR
 	p.comment LIKE '%:q%') AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByWarehouseNameCommentAndCategory(
 			@Param("w") Long warehouseId,
 			@Param("q") String query,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by warehouse, name and comment
@@ -146,13 +146,13 @@ WHERE
 	s.warehouse.id = :w AND
 	p.name LIKE '%:q%' AND
 	tg.id in (:t) AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByWarehouseNameTagsAndCategory(
 			@Param("w") Long warehouseId,
 			@Param("q") String query,
 			@Param("t") List<Long> tags,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by warehouse, name and tags
@@ -179,12 +179,12 @@ WHERE
 	p = s.product AND
 	s.warehouse.id = :w AND
 	p.name LIKE '%:q%' AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByWarehouseNameAndCategory(
 			@Param("w") Long warehouseId,
 			@Param("q") String query,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by warehouse and name
@@ -207,11 +207,11 @@ SELECT DISTINCT p
 FROM Product p JOIN p.tags tg
 WHERE
 	tg.id in (:t) AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByTagsAndCategory(
 			@Param("t") List<Long> tags,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by tags
@@ -226,7 +226,7 @@ WHERE
 
 
 	// Search by category
-	Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
+	Page<Product> findByCategory_IdIsIn(List<Long> categoryIds, Pageable pageable);
 
 
 	// Search all
@@ -241,12 +241,12 @@ WHERE
 	(p.name LIKE '%:q%' OR
 	p.comment LIKE '%:q%') AND
 	tg.id in (:t) AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByNameCommentTagsAndCategory(
 			@Param("q") String query,
 			@Param("t") List<Long> tags,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by name, comment and tags
@@ -270,11 +270,11 @@ FROM Product p
 WHERE
 	(p.name LIKE '%:q%' OR
 	p.comment LIKE '%:q%') AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByNameCommentAndCategory(
 			@Param("q") String query,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by name and comment
@@ -296,12 +296,12 @@ FROM Product p JOIN p.tags tg
 WHERE
 	p.name LIKE '%:q%' AND
 	tg.id in (:t) AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByNameTagsAndCategory(
 			@Param("q") String query,
 			@Param("t") List<Long> tags,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by name and tags
@@ -323,11 +323,11 @@ SELECT p
 FROM Product p
 WHERE
 	p.name LIKE '%:q%' AND
-	p.category.id = :ct
+	p.category.id IN (:ct)
 			""")
 	Page<Product> findByNameAndCategory(
 			@Param("q") String query,
-			@Param("ct") Long categoryId, Pageable pageable);
+			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
 	// Search by name

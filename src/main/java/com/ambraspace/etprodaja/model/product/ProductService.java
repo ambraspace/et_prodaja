@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ambraspace.etprodaja.model.category.CategoryService;
 import com.ambraspace.etprodaja.model.offer.OfferService;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfoService;
@@ -32,6 +33,9 @@ public class ProductService
 
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	@Autowired
 	private StockInfoService stockInfoService;
@@ -55,7 +59,7 @@ public class ProductService
 					if (categoryId != null)
 					{
 						//Search by warehouse, tags and category
-						retVal = productRepository.findByWarehouseTagsAndCategory(warehouseId, tagIds, categoryId, pageable);
+						retVal = productRepository.findByWarehouseTagsAndCategory(warehouseId, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 					} else {
 						//Search by warehouse and tags
 						retVal = productRepository.findByWarehouseAndTags(warehouseId, tagIds, pageable);
@@ -64,7 +68,7 @@ public class ProductService
 					if (categoryId != null)
 					{
 						// Search by warehouse and category
-						retVal = productRepository.findByWarehouseAndCategory(warehouseId, categoryId, pageable);
+						retVal = productRepository.findByWarehouseAndCategory(warehouseId, categoryService.collectCategoryIds(categoryId), pageable);
 					} else {
 						// Search by warehouse
 						retVal = productRepository.findByWarehouse(warehouseId, pageable);
@@ -78,7 +82,7 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, comment, tags and category
-							retVal = productRepository.findByWarehouseNameCommentTagsAndCategory(warehouseId, query, tagIds, categoryId, pageable);
+							retVal = productRepository.findByWarehouseNameCommentTagsAndCategory(warehouseId, query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name, comment and tags
 							retVal = productRepository.findByWarehouseNameCommentAndTags(warehouseId, query, tagIds, pageable);
@@ -87,7 +91,7 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, comment and category
-							retVal = productRepository.findByWarehouseNameCommentAndCategory(warehouseId, query, categoryId, pageable);
+							retVal = productRepository.findByWarehouseNameCommentAndCategory(warehouseId, query, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name and comment
 							retVal = productRepository.findByWarehouseNameAndComment(warehouseId, query, pageable);
@@ -99,7 +103,7 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, tags and category
-							retVal = productRepository.findByWarehouseNameTagsAndCategory(warehouseId, query, tagIds, categoryId, pageable);
+							retVal = productRepository.findByWarehouseNameTagsAndCategory(warehouseId, query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name and tags
 							retVal = productRepository.findByWarehouseNameAndTags(warehouseId, query, tagIds, pageable);
@@ -108,7 +112,7 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by warehouse, name and category
-							retVal = productRepository.findByWarehouseNameAndCategory(warehouseId, query, categoryId, pageable);
+							retVal = productRepository.findByWarehouseNameAndCategory(warehouseId, query, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse and name
 							retVal = productRepository.findByWarehouseAndName(warehouseId, query, pageable);
@@ -124,7 +128,7 @@ public class ProductService
 					if (categoryId != null)
 					{
 						//Search by tags and category
-						retVal = productRepository.findByTagsAndCategory(tagIds, categoryId, pageable);
+						retVal = productRepository.findByTagsAndCategory(tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 					} else {
 						//Search by tags
 						retVal = productRepository.findByTags(tagIds, pageable);
@@ -133,7 +137,7 @@ public class ProductService
 					if (categoryId != null)
 					{
 						// Search by category
-						retVal = productRepository.findByCategoryId(categoryId, pageable);
+						retVal = productRepository.findByCategory_IdIsIn(categoryService.collectCategoryIds(categoryId), pageable);
 					} else {
 						// Search all
 						retVal = productRepository.findAll(pageable);
@@ -147,7 +151,7 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by name, comment, tags and category
-							retVal = productRepository.findByNameCommentTagsAndCategory(query, tagIds, categoryId, pageable);
+							retVal = productRepository.findByNameCommentTagsAndCategory(query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name, comment and tags
 							retVal = productRepository.findByNameCommentAndTags(query, tagIds, pageable);
@@ -156,7 +160,7 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by name, comment and category
-							retVal = productRepository.findByNameCommentAndCategory(query, categoryId, pageable);
+							retVal = productRepository.findByNameCommentAndCategory(query, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name and comment
 							retVal = productRepository.findByNameAndComment(query, pageable);
@@ -168,7 +172,7 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by name, tags and category
-							retVal = productRepository.findByNameTagsAndCategory(query, tagIds, categoryId, pageable);
+							retVal = productRepository.findByNameTagsAndCategory(query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name and tags
 							retVal = productRepository.findByNameAndTags(query, tagIds, pageable);
@@ -177,7 +181,7 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by name and category
-							retVal = productRepository.findByNameAndCategory(query, categoryId, pageable);
+							retVal = productRepository.findByNameAndCategory(query, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name
 							retVal = productRepository.findByName(query, pageable);
