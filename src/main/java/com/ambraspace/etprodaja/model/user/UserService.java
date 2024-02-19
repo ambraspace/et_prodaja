@@ -81,7 +81,7 @@ public class UserService implements UserDetailsService
 
 		fromRep.copyFieldsFrom(user);
 
-		if (fromRep.getPassword() == null || fromRep.getPassword().trim().equals(""))
+		if (fromRep.getPassword() != null && !fromRep.getPassword().trim().equals(""))
 		{
 			fromRep.setPassword(passwordEncoder.encode(fromRep.getPassword()));
 		}
