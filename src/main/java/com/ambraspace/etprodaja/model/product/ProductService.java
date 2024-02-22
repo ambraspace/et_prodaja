@@ -3,7 +3,6 @@ package com.ambraspace.etprodaja.model.product;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
@@ -227,8 +226,6 @@ public class ProductService
 	private void fillTransientFields(Long warehouseId, List<Product> products)
 	{
 
-		MathContext mathContext = new MathContext(2, RoundingMode.HALF_EVEN);
-
 		if (warehouseId != null && warehouseId > 0)
 		{
 
@@ -253,7 +250,7 @@ public class ProductService
 				BigDecimal orderedValue = dataForOrders != null ? dataForOrders.get(2, BigDecimal.class) : BigDecimal.ZERO;
 
 				BigDecimal availableValue =
-						(si != null ? si.getQuantity().multiply(si.getUnitPrice()) : BigDecimal.ZERO)
+						(si != null ? si.getQuantity().multiply(si.getUnitPrice()).setScale(2) : BigDecimal.ZERO)
 						.subtract(offeredValue)
 						.subtract(orderedValue);
 
@@ -263,7 +260,7 @@ public class ProductService
 				p.setPurchasePrice(availableQty.compareTo(
 						BigDecimal.ZERO) == 0 ?
 								BigDecimal.ZERO
-								: availableValue.divide(availableQty, mathContext));
+								: availableValue.divide(availableQty, 2, RoundingMode.HALF_EVEN));
 
 			});
 
@@ -300,7 +297,7 @@ public class ProductService
 				p.setPurchasePrice(
 						availableQty.compareTo(BigDecimal.ZERO) == 0 ?
 								BigDecimal.ZERO
-								: availableValue.divide(availableQty, mathContext));
+								: availableValue.divide(availableQty, 2, RoundingMode.HALF_EVEN));
 
 			});
 
