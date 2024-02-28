@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.company.CompanyService;
@@ -15,7 +16,7 @@ import com.ambraspace.etprodaja.model.user.User.Role;
 
 import jakarta.annotation.PostConstruct;
 
-@Service
+@Service @Transactional
 public class UserService implements UserDetailsService
 {
 
