@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 public class TagController
@@ -45,6 +46,7 @@ public class TagController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/tags")
 	public Page<Tag> getTags(@ParameterObject @PageableDefault(sort = "name") Pageable pageable)
 	{
@@ -68,6 +70,7 @@ public class TagController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/tags/{id}")
 	public Tag getTag(@PathVariable Long id)
 	{
@@ -91,6 +94,7 @@ public class TagController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/tags")
 	public Tag addTag(@RequestBody Tag tag)
 	{
@@ -113,6 +117,7 @@ public class TagController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/tags/{id}")
 	public void deleteTag(@PathVariable Long id)
 	{
@@ -137,6 +142,7 @@ public class TagController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/tags/search")
 	public List<Tag> searchTags(@RequestParam(required = true, name = "q") String query)
 	{

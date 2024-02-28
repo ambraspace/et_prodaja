@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.EntityManager;
 
 @RestController
@@ -43,6 +44,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/companies/{companyId}/warehouses")
 	public List<Warehouse> getWarehouses(@PathVariable Long companyId)
 	{
@@ -66,6 +68,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/companies/{companyId}/warehouses/{id}")
 	public Warehouse getWarehouse(@PathVariable Long companyId, @PathVariable Long id)
 	{
@@ -99,6 +102,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/companies/{companyId}/warehouses")
 	public Warehouse addWarehouse(@PathVariable Long companyId, @RequestBody Warehouse warehouse, EntityManager em)
 	{
@@ -132,6 +136,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/companies/{companyId}/warehouses/{id}")
 	public Warehouse updateWarehouse(@PathVariable Long companyId, @PathVariable Long id, @RequestBody Warehouse warehouse)
 	{
@@ -154,6 +159,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/companies/{companyId}/warehouses/{id}")
 	public void deleteWarehouse(@PathVariable Long companyId, @PathVariable Long id)
 	{

@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 public class UserController
@@ -44,6 +45,7 @@ public class UserController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/users")
 	public Page<User> getUsers(@ParameterObject @PageableDefault(sort = "username") Pageable pageable)
 	{
@@ -63,6 +65,7 @@ public class UserController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
     @GetMapping("/user")
     public User getUser(Principal user)
     {
@@ -84,6 +87,7 @@ public class UserController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/users/{username}")
 	public User getUser(@PathVariable String username)
 	{
@@ -107,6 +111,7 @@ public class UserController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN"})
 	@PostMapping("/api/users")
 	public User addUser(@RequestBody User user)
 	{
@@ -130,6 +135,7 @@ public class UserController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN"})
 	@PutMapping("/api/users/{username}")
 	public User updateUser(@PathVariable String username, @RequestBody User user)
 	{
@@ -152,6 +158,7 @@ public class UserController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN"})
 	@DeleteMapping("/api/users/{username}")
 	public void deleteUser(@PathVariable String username)
 	{

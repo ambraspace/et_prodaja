@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 public class CompanyController
@@ -42,6 +43,7 @@ public class CompanyController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/companies")
 	public Page<Company> getCompanies(@ParameterObject @PageableDefault(sort = "name") Pageable pageable)
 	{
@@ -65,6 +67,7 @@ public class CompanyController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/companies/{id}")
 	public Company getCompany(@PathVariable Long id)
 	{
@@ -83,6 +86,7 @@ public class CompanyController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/companies")
 	public Company addCompany(@RequestBody Company company)
 	{
@@ -106,6 +110,7 @@ public class CompanyController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/companies/{id}")
 	public Company updateCompany(@PathVariable Long id, @RequestBody Company company)
 	{
@@ -128,6 +133,7 @@ public class CompanyController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/companies/{id}")
 	public void deleteCompany(@PathVariable Long id)
 	{

@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 public class ProductController
@@ -49,6 +50,7 @@ public class ProductController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/products")
 	public Page<Product> getProducts(
 			@Parameter(description = "Search query", required = false)
@@ -83,6 +85,7 @@ public class ProductController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/products/{id}")
 	public Product getProduct(@PathVariable Long id)
 	{
@@ -113,6 +116,7 @@ public class ProductController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping(path = "/api/products", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public Product addProduct(
 			@RequestPart("product") Product product,
@@ -145,6 +149,7 @@ public class ProductController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping(path = "/api/products/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public Product updateProduct(
 			@PathVariable Long id,
@@ -170,6 +175,7 @@ public class ProductController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/products/{id}")
 	public void deleteProduct(@PathVariable Long id)
 	{

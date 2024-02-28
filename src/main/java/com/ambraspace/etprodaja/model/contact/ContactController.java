@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 public class ContactController
@@ -42,6 +43,7 @@ public class ContactController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/companies/{companyId}/contacts")
 	public List<Contact> getContacts(@PathVariable Long companyId)
 	{
@@ -65,6 +67,7 @@ public class ContactController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/companies/{companyId}/contacts/{id}")
 	public Contact getContact(@PathVariable Long companyId, @PathVariable Long id)
 	{
@@ -89,6 +92,7 @@ public class ContactController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/companies/{companyId}/contacts")
 	public Contact addContact(@PathVariable Long companyId, @RequestBody Contact contact)
 	{
@@ -113,6 +117,7 @@ public class ContactController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/companies/{companyId}/contacts/{id}")
 	public Contact updateContact(@PathVariable Long companyId, @PathVariable Long id, @RequestBody Contact contact)
 	{
@@ -135,6 +140,7 @@ public class ContactController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/companies/{companyId}/contacts/{id}")
 	public void deleteContacts(@PathVariable Long companyId, @PathVariable Long id)
 	{

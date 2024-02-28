@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 public class StockInfoController
@@ -43,6 +44,7 @@ public class StockInfoController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/products/{productId}/stockInfos/{id}")
 	public StockInfo getStockInfo(@PathVariable Long productId, @PathVariable Long id)
 	{
@@ -67,6 +69,7 @@ public class StockInfoController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/products/{productId}/stockInfos")
 	public Page<StockInfo> getStockInfosByProduct(
 			@PathVariable Long productId,
@@ -93,6 +96,7 @@ public class StockInfoController
 				})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/products/{productId}/stockInfos")
 	public StockInfo addStockInfo(@PathVariable Long productId, @RequestBody StockInfo si)
 	{
@@ -117,6 +121,7 @@ public class StockInfoController
 				})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/products/{productId}/stockInfos/{id}")
 	public StockInfo updateStockInfo(
 			@PathVariable Long productId,
@@ -143,6 +148,7 @@ public class StockInfoController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/products/{productId}/stockInfos/{id}")
 	public void deleteStockInfo(@PathVariable Long productId, @PathVariable Long id)
 	{
