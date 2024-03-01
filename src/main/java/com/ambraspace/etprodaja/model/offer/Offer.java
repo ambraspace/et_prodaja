@@ -1,7 +1,9 @@
 package com.ambraspace.etprodaja.model.offer;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,7 +11,10 @@ import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.contact.Contact;
+import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.user.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,6 +23,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,18 +34,19 @@ import lombok.Setter;
 public class Offer
 {
 
+	/*
+	 * After adding or deleting statuses SQL queries in repositories must be double checked!
+	 */
 	public enum Status
 	{
 		ACTIVE,
 		ACCEPTED,
-		DELIVERED,
-		INVOICED,
 		CANCELED
 	}
 
 	@Id
 	@OfferNoSequence(name = "offer_no_seq")
-	private String offerNo; // "P-" + year + sequence no. (P-2023-01)
+	private String id; // "P-" + year + sequence no. (P-2023-01)
 
 	@ManyToOne(optional = false)
 	private User user; // who created the offer
@@ -53,17 +61,65 @@ public class Offer
 	@ManyToOne
 	private Contact contact; // customer's contact
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "offer", orphanRemoval = true)
-	private List<Item> items;
+	@JsonProperty(access = Access.READ_ONLY)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "offer")
+	private List<Item> items = new ArrayList<Item>();
 
+	@NotNull @PositiveOrZero
 	private BigDecimal vat;
 
 	private String notes;
 
 	private String comments;
 
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.ACTIVE;
+
+
+	public BigDecimal getValue()
+	{
+		BigDecimal retVal = BigDecimal.ZERO;
+		items.forEach(i ->
+			retVal.add(
+				i.getNetPrice()
+				.multiply(
+						i.getQuantity()
+				)
+				.setScale(2, RoundingMode.HALF_EVEN)
+			)
+		);
+		return retVal;
+	}
+
+
+	public BigDecimal getCost()
+	{
+		BigDecimal retVal = BigDecimal.ZERO;
+		items.forEach(i ->
+			retVal.add(
+				i.getStockInfo().getUnitPrice()
+				.multiply(
+						i.getQuantity()
+				)
+				.setScale(2, RoundingMode.HALF_EVEN)
+			)
+		);
+		return retVal;
+	}
+
+
+	void copyFieldsFrom(Offer other)
+	{
+
+		this.setComments(other.getComments());
+		this.setCompany(other.getCompany());
+		this.setContact(other.getContact());
+		this.setNotes(other.getNotes());
+		this.setValidUntil(other.getValidUntil());
+		this.setVat(other.getVat());
+
+	}
 
 
 	@Override
@@ -74,7 +130,7 @@ public class Offer
 		Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
 		if (thisEffectiveClass != oEffectiveClass) return false;
 		Offer other = (Offer) o;
-		return getOfferNo() != null && Objects.equals(getOfferNo(), other.getOfferNo());
+		return getId() != null && Objects.equals(getId(), other.getId());
 	}
 
 	@Override

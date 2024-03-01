@@ -23,7 +23,7 @@ SELECT
 	SUM(s.quantity * s.unitPrice)
 FROM StockInfo s
 WHERE s.product IN (:products)
-GROUP BY s.product
+GROUP BY s.product.id
 ORDER BY s.product.id
 			""")
 	Iterable<Tuple> getStockInfoByProducts(@Param("products") Iterable<Product> products);

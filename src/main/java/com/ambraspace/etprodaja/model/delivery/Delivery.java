@@ -1,10 +1,13 @@
 package com.ambraspace.etprodaja.model.delivery;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
+
+import com.ambraspace.etprodaja.model.item.Item;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,7 +26,7 @@ public class Delivery
 
 	public enum Status
 	{
-		EXPECTING,
+		ON_THE_WAY,
 		DELIVERED
 	}
 
@@ -35,10 +38,10 @@ public class Delivery
 
 	private String comment;
 
-	private LocalDate deliveryTime;
+	private LocalDate deliveryDate;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "delivery", orphanRemoval = true)
-	List<DeliveryNote> deliverItems;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery", orphanRemoval = true)
+	private List<Item> items = new ArrayList<Item>();
 
 
 	@Override

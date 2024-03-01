@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ambraspace.etprodaja.model.category.CategoryService;
-import com.ambraspace.etprodaja.model.offer.OfferService;
+import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfoService;
 
@@ -40,7 +40,7 @@ public class ProductService
 	private StockInfoService stockInfoService;
 
 	@Autowired
-	private OfferService offerService;
+	private ItemService itemService;
 
 
 	public Page<Product> getProducts(String query, Boolean includeComments, Long warehouseId, List<Long> tagIds, Long categoryId, Pageable pageable)
@@ -230,8 +230,8 @@ public class ProductService
 		{
 
 			List<StockInfo> stockInfos = stockInfoService.getStockInfoByWarehouseIdAndProducts(warehouseId, products);
-			List<Tuple> itemDataForOffers = offerService.getItemDataForProductsInValidOffersByWarehouse(warehouseId, products);
-			List<Tuple> itemDataForOrders = offerService.getItemDataForOrderedProductsByWarehouse(warehouseId, products);
+			List<Tuple> itemDataForOffers = itemService.getItemDataForProductsInValidOffersByWarehouse(warehouseId, products);
+			List<Tuple> itemDataForOrders = itemService.getItemDataForOrderedProductsByWarehouse(warehouseId, products);
 
 			products.forEach(p -> {
 
@@ -267,8 +267,8 @@ public class ProductService
 		} else {
 
 			List<Tuple> stockInfos = stockInfoService.getStockInfoByProducts(products);
-			List<Tuple> itemDataForOffers = offerService.getItemDataForProductsInValidOffers(products);
-			List<Tuple> itemDataForOrders = offerService.getItemDataForOrderedProducts(products);
+			List<Tuple> itemDataForOffers = itemService.getItemDataForProductsInValidOffers(products);
+			List<Tuple> itemDataForOrders = itemService.getItemDataForOrderedProducts(products);
 
 			products.forEach(p -> {
 

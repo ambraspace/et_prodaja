@@ -7,7 +7,6 @@ import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.product.Product;
 import com.ambraspace.etprodaja.model.warehouse.Warehouse;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,7 +35,6 @@ public class StockInfo
 	@ManyToOne(optional = false)
 	private Warehouse warehouse;
 
-	@JsonIgnore
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private Product product;
 

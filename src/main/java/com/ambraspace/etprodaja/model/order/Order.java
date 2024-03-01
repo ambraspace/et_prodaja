@@ -1,12 +1,13 @@
 package com.ambraspace.etprodaja.model.order;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
 
-import com.ambraspace.etprodaja.model.offer.Item;
+import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.warehouse.Warehouse;
 
 import jakarta.persistence.Entity;
@@ -19,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,8 +34,7 @@ public class Order
 	public enum Status
 	{
 		OPEN,
-		ACTIVE,
-		DELIVERED
+		CLOSED
 	}
 
 	@Id
@@ -43,13 +44,14 @@ public class Order
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Warehouse warehouse;
 
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
 	private LocalDateTime closureTime = null;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	private List<Item> items;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order", orphanRemoval = true)
+	private List<Item> items = new ArrayList<Item>();
 
 
 	@Override
