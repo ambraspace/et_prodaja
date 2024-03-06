@@ -8,9 +8,9 @@ import java.util.Objects;
 import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.category.Category;
+import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.model.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -20,6 +20,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
@@ -31,6 +34,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@NamedEntityGraphs({
+	@NamedEntityGraph(name = "product-with-previews", attributeNodes = {
+			@NamedAttributeNode("previews")
+	}),
+	@NamedEntityGraph(name = "product-with-category-and-tags", attributeNodes = {
+			@NamedAttributeNode("category"),
+			@NamedAttributeNode("tags")
+	})
+})
 @Getter @Setter @NoArgsConstructor
 public class Product
 {
@@ -42,9 +54,13 @@ public class Product
 	@NotNull @NotBlank @Size(min = 5, max = 255, message = "Product name must be between 5 and 255 characters long")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	@NotNull
 	private List<Preview> previews = new ArrayList<Preview>();
+
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+	private List<StockInfo> stockInfos = new ArrayList<StockInfo>();
 
 	@NotNull @NotBlank
 	private String unit;
@@ -64,39 +80,13 @@ public class Product
 	@Transient
 	private BigDecimal orderedQty = BigDecimal.ZERO;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Category category;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	private List<Tag> tags = new ArrayList<Tag>();
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Tag> tags;
 
 	private String comment;
-
-
-	@JsonIgnore
-	public Category getCategory()
-	{
-		return category;
-	}
-
-
-	@JsonDeserialize
-	public void setCategory(Category category)
-	{
-		this.category = category;
-	}
-
-
-	public String getCategoryName()
-	{
-		return category == null ? null : category.getName();
-	}
-
-
-	public Long getCategoryId()
-	{
-		return category == null ? null : category.getId();
-	}
 
 
 	void copyFieldsFrom(Product other)

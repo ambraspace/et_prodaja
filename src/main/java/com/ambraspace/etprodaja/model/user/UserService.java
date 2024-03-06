@@ -16,7 +16,7 @@ import com.ambraspace.etprodaja.model.user.User.Role;
 
 import jakarta.annotation.PostConstruct;
 
-@Service @Transactional
+@Service
 public class UserService implements UserDetailsService
 {
 
@@ -72,6 +72,7 @@ public class UserService implements UserDetailsService
 	}
 
 
+	@Transactional
 	public User updateUser(String username, User user)
 	{
 
@@ -92,6 +93,7 @@ public class UserService implements UserDetailsService
 	}
 
 
+	@Transactional
 	public void deleteUser(String username)
 	{
 

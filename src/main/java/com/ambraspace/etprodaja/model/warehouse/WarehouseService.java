@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.company.CompanyService;
 
-@Service @Transactional
+@Service
 public class WarehouseService
 {
 
@@ -36,6 +36,7 @@ public class WarehouseService
 	}
 
 
+	@Transactional
 	public Warehouse addWarehouse(Long companyId, Warehouse warehouse)
 	{
 
@@ -51,6 +52,7 @@ public class WarehouseService
 	}
 
 
+	@Transactional
 	public Warehouse updateWarehouse(Long companyId, Long id, Warehouse warehouse)
 	{
 
@@ -66,6 +68,7 @@ public class WarehouseService
 	}
 
 
+	@Transactional
 	public void deleteWarehouse(Long companyId, Long id)
 	{
 

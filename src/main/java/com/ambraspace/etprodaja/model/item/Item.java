@@ -31,7 +31,7 @@ public class Item
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Offer offer;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,7 +42,7 @@ public class Item
 
 	private String deliveryNote;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private StockInfo stockInfo;
 
 	@NotNull @PositiveOrZero

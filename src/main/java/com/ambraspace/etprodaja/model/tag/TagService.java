@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ambraspace.etprodaja.model.product.ProductService;
 
-@Service @Transactional
+@Service
 public class TagService
 {
 
@@ -40,6 +40,7 @@ public class TagService
 	}
 
 
+	@Transactional
 	public void deleteTag(Long id)
 	{
 

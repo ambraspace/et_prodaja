@@ -12,22 +12,12 @@ import com.ambraspace.etprodaja.model.product.Product;
 
 import jakarta.persistence.Tuple;
 
-@Service @Transactional
+@Service
 public class ItemService
 {
 
 	@Autowired
 	private ItemRepository itemRepository;
-
-
-	public List<Item> getItemsByOfferNo(String offerNo)
-	{
-
-		List<Item> items = new ArrayList<Item>();
-		itemRepository.findByOfferIdOrderById(offerNo).forEach(items::add);
-		return items;
-
-	}
 
 
 	public Item getItemByOfferOfferNoAndItemId(String offerNo, Long itemId)
@@ -49,6 +39,7 @@ public class ItemService
 	}
 
 
+	@Transactional
 	public void deleteItem(String offerId, Long itemId)
 	{
 
@@ -62,6 +53,7 @@ public class ItemService
 	}
 
 
+	@Transactional
 	public Item updateItem(String offerNo, Long itemId, Item i)
 	{
 
@@ -77,6 +69,7 @@ public class ItemService
 	}
 
 
+	@Transactional
 	public List<Item> updateItems(List<Item> items)
 	{
 		List<Item> retVal = new ArrayList<Item>();

@@ -14,6 +14,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +28,12 @@ import lombok.Setter;
 @Entity
 @Getter @Setter @NoArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"warehouse_id", "product_id"}))
+@NamedEntityGraph(name = "stockinfo-with-warehouse-and-company", attributeNodes = {
+		@NamedAttributeNode(value = "warehouse", subgraph = "warehouse-and-company")
+},
+subgraphs = @NamedSubgraph(name = "warehouse-and-company", attributeNodes = {
+		@NamedAttributeNode(value = "company")
+}))
 public class StockInfo
 {
 
@@ -32,10 +41,10 @@ public class StockInfo
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Warehouse warehouse;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Product product;
 
 	private String customerReference;

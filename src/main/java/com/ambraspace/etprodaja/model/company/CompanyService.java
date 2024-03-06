@@ -6,7 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service @Transactional
+
+@Service
 public class CompanyService
 {
 
@@ -28,16 +29,11 @@ public class CompanyService
 
 	public Company addCompany(Company company)
 	{
-
-		//company.getContacts().forEach(c -> c.setCompany(company));
-
-		//company.getWarehouses().forEach(w -> w.setCompany(company));
-
 		return companyRepository.save(company);
-
 	}
 
 
+	@Transactional
 	public Company updateCompany(Long id, Company company)
 	{
 
@@ -53,6 +49,7 @@ public class CompanyService
 	}
 
 
+	@Transactional
 	public void deleteCompany(Long id)
 	{
 

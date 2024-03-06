@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -31,8 +32,12 @@ ORDER BY s.product.id
 
 	Iterable<StockInfo> findByWarehouseIdAndProductInOrderByProduct(Long warehouseId, Iterable<Product> products);
 
+
+	@EntityGraph("stockinfo-with-warehouse-and-company")
 	Optional<StockInfo> findByProductIdAndId(Long productId, Long id);
 
+
+	@EntityGraph("stockinfo-with-warehouse-and-company")
 	Page<StockInfo> findByProductId(Long productId, Pageable pageable);
 
 }

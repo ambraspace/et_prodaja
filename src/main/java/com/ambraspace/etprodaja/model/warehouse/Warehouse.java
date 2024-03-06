@@ -31,7 +31,7 @@ public class Warehouse
 	@NotNull @NotBlank @Size(min = 4, max = 50, message = "Warehouse name must be between 4 and 50 characters long!")
 	private String name;
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Company company;
 
 

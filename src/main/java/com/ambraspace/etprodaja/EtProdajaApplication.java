@@ -7,6 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
+
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.ambraspace.etprodaja", "com.ambraspace.auth.jwt"})
 public class EtProdajaApplication
@@ -22,6 +24,13 @@ public class EtProdajaApplication
     PasswordEncoder passwordEncoder()
     {
     	return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+
+    //https://stackoverflow.com/a/71416675/13381019
+    @Bean
+    Hibernate6Module hibernateModule() {
+        return new Hibernate6Module();
     }
 
 }

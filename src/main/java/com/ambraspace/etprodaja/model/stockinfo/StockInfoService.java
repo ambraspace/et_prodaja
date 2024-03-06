@@ -13,7 +13,7 @@ import com.ambraspace.etprodaja.model.product.Product;
 
 import jakarta.persistence.Tuple;
 
-@Service @Transactional
+@Service
 public class StockInfoService
 {
 
@@ -42,6 +42,7 @@ public class StockInfoService
 	}
 
 
+	@Transactional
 	public StockInfo updateStockInfo(Long productId, Long i, StockInfo si)
 	{
 
@@ -56,6 +57,8 @@ public class StockInfoService
 
 	}
 
+
+	@Transactional
 	public void deleteStockInfo(Long productId, Long i)
 	{
 
@@ -67,6 +70,7 @@ public class StockInfoService
 		stockInfoRepository.delete(fromRep);
 
 	}
+
 
 	public List<Tuple> getStockInfoByProducts(List<Product> products)
 	{

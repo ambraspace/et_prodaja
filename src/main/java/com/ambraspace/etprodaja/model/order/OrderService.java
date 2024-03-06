@@ -12,7 +12,7 @@ import com.ambraspace.etprodaja.model.order.Order.Status;
 import com.ambraspace.etprodaja.model.warehouse.Warehouse;
 import com.ambraspace.etprodaja.model.warehouse.WarehouseService;
 
-@Service @Transactional
+@Service
 public class OrderService
 {
 
@@ -26,6 +26,7 @@ public class OrderService
 	private ItemService itemService;
 
 
+	@Transactional
 	public void orderItems(List<Item> items)
 	{
 

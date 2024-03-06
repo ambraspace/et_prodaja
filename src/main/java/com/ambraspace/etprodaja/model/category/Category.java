@@ -15,6 +15,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +25,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@NamedEntityGraph(
+		name = "category-with-children",
+		attributeNodes = @NamedAttributeNode("children")
+)
 @Getter @Setter @NoArgsConstructor
 public class Category
 {
@@ -35,7 +41,7 @@ public class Category
 	@Column(name = "`order`")
 	private Integer order;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Category> children = new ArrayList<Category>();
 
 	@NotNull @NotBlank

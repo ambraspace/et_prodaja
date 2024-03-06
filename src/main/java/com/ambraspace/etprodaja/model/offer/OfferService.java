@@ -2,10 +2,12 @@ package com.ambraspace.etprodaja.model.offer;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +19,7 @@ import com.ambraspace.etprodaja.model.order.OrderService;
 import com.ambraspace.etprodaja.model.user.User;
 import com.ambraspace.etprodaja.model.user.UserService;
 
-@Service @Transactional
+@Service
 public class OfferService
 {
 
@@ -40,8 +42,12 @@ public class OfferService
 	}
 
 
+	@Transactional(readOnly = true)
 	public Page<Offer> getOffers(String username, Long companyId, Status status, boolean onlyOverdue, Pageable pageable)
 	{
+
+		Page<String> offerIds;
+
 		if (username == null)
 		{
 			if (companyId == null)
@@ -50,16 +56,16 @@ public class OfferService
 				{
 					if (onlyOverdue)
 					{
-						return getOffersByOnlyOverdue(pageable);
+						offerIds = getOffersByOnlyOverdue(pageable);
 					} else {
-						return getOffers(pageable);
+						offerIds = getOffers(pageable);
 					}
 				} else {
 					if (onlyOverdue)
 					{
-						return getOffersByStatusAndOnlyOverdue(status, pageable);
+						offerIds = getOffersByStatusAndOnlyOverdue(status, pageable);
 					} else {
-						return getOffersByStatus(status, pageable);
+						offerIds = getOffersByStatus(status, pageable);
 					}
 				}
 			} else {
@@ -67,16 +73,16 @@ public class OfferService
 				{
 					if (onlyOverdue)
 					{
-						return getOffersByCompanyIdAndOnlyOverdue(companyId, pageable);
+						offerIds = getOffersByCompanyIdAndOnlyOverdue(companyId, pageable);
 					} else {
-						return getOffersByCompanyId(companyId, pageable);
+						offerIds = getOffersByCompanyId(companyId, pageable);
 					}
 				} else {
 					if (onlyOverdue)
 					{
-						return getOffersByCompanyIdAndStatusAndOnlyOverdue(companyId, status, pageable);
+						offerIds = getOffersByCompanyIdAndStatusAndOnlyOverdue(companyId, status, pageable);
 					} else {
-						return getOffersByCompanyIdAndStatus(companyId, status, pageable);
+						offerIds = getOffersByCompanyIdAndStatus(companyId, status, pageable);
 					}
 				}
 			}
@@ -87,16 +93,16 @@ public class OfferService
 				{
 					if (onlyOverdue)
 					{
-						return getOffersByUsernameAndOnlyOverdue(username, pageable);
+						offerIds = getOffersByUsernameAndOnlyOverdue(username, pageable);
 					} else {
-						return getOffersByUsername(username, pageable);
+						offerIds = getOffersByUsername(username, pageable);
 					}
 				} else {
 					if (onlyOverdue)
 					{
-						return getOffersByUsernameAndStatusAndOnlyOverdue(username, status, pageable);
+						offerIds = getOffersByUsernameAndStatusAndOnlyOverdue(username, status, pageable);
 					} else {
-						return getOffersByUsernameAndStatus(username, status, pageable);
+						offerIds = getOffersByUsernameAndStatus(username, status, pageable);
 					}
 				}
 			} else {
@@ -104,117 +110,122 @@ public class OfferService
 				{
 					if (onlyOverdue)
 					{
-						return getOffersByUsernameAndCompanyIdAndOnlyOverdue(username, companyId, pageable);
+						offerIds = getOffersByUsernameAndCompanyIdAndOnlyOverdue(username, companyId, pageable);
 					} else {
-						return getOffersByUsernameAndCompanyId(username, companyId, pageable);
+						offerIds = getOffersByUsernameAndCompanyId(username, companyId, pageable);
 					}
 				} else {
 					if (onlyOverdue)
 					{
-						return getOffersByUsernameAndCompanyIdAndStatusAndOnlyOverdue(username, companyId, status, pageable);
+						offerIds = getOffersByUsernameAndCompanyIdAndStatusAndOnlyOverdue(username, companyId, status, pageable);
 					} else {
-						return getOffersByUsernameAndCompanyIdAndStatus(username, companyId, status, pageable);
+						offerIds = getOffersByUsernameAndCompanyIdAndStatus(username, companyId, status, pageable);
 					}
 				}
 			}
 		}
+
+		List<Offer> selectedOffers = new ArrayList<Offer>();
+		offerRepository.getOfferDetails(offerIds.getContent(), pageable.getSort()).forEach(selectedOffers::add);
+		return new PageImpl<Offer>(selectedOffers, pageable, offerIds.getTotalElements());
+
 	}
 
 
-	private Page<Offer> getOffersByUsernameAndCompanyIdAndStatus(String username, Long companyId, Status status,
+	private Page<String> getOffersByUsernameAndCompanyIdAndStatus(String username, Long companyId, Status status,
 			Pageable pageable)
 	{
 		return offerRepository.findByUserUsernameAndCompanyIdAndStatus(username, companyId, status, pageable);
 	}
 
 
-	private Page<Offer> getOffersByUsernameAndCompanyIdAndStatusAndOnlyOverdue(String username, Long companyId,
+	private Page<String> getOffersByUsernameAndCompanyIdAndStatusAndOnlyOverdue(String username, Long companyId,
 			Status status, Pageable pageable)
 	{
 		return offerRepository.findByUserUsernameAndCompanyIdAndStatusAndValidUntilIsBefore(username, companyId, status, LocalDate.now(), pageable);
 	}
 
 
-	private Page<Offer> getOffersByUsernameAndCompanyId(String username, Long companyId, Pageable pageable)
+	private Page<String> getOffersByUsernameAndCompanyId(String username, Long companyId, Pageable pageable)
 	{
 		return offerRepository.findByUserUsernameAndCompanyId(username, companyId, pageable);
 	}
 
 
-	private Page<Offer> getOffersByUsernameAndCompanyIdAndOnlyOverdue(String username, Long companyId,
+	private Page<String> getOffersByUsernameAndCompanyIdAndOnlyOverdue(String username, Long companyId,
 			Pageable pageable)
 	{
 		return offerRepository.findByUserUsernameAndCompanyIdAndValidUntilIsBefore(username, companyId, LocalDate.now(), pageable);
 	}
 
 
-	private Page<Offer> getOffersByUsernameAndStatus(String username, Status status, Pageable pageable)
+	private Page<String> getOffersByUsernameAndStatus(String username, Status status, Pageable pageable)
 	{
 		return offerRepository.findByUserUsernameAndStatus(username, status, pageable);
 	}
 
 
-	private Page<Offer> getOffersByUsernameAndStatusAndOnlyOverdue(String username, Status status, Pageable pageable)
+	private Page<String> getOffersByUsernameAndStatusAndOnlyOverdue(String username, Status status, Pageable pageable)
 	{
 		return offerRepository.findByUserUsernameAndStatusAndValidUntilIsBefore(username, status, LocalDate.now(), pageable);
 	}
 
 
-	private Page<Offer> getOffersByUsername(String username, Pageable pageable)
+	private Page<String> getOffersByUsername(String username, Pageable pageable)
 	{
 		return offerRepository.findByUserUsername(username, pageable);
 	}
 
 
-	private Page<Offer> getOffersByUsernameAndOnlyOverdue(String username, Pageable pageable)
+	private Page<String> getOffersByUsernameAndOnlyOverdue(String username, Pageable pageable)
 	{
 		return offerRepository.findByUserUsernameAndValidUntilIsBefore(username, LocalDate.now(), pageable);
 	}
 
 
-	private Page<Offer> getOffersByCompanyIdAndStatus(Long companyId, Status status, Pageable pageable)
+	private Page<String> getOffersByCompanyIdAndStatus(Long companyId, Status status, Pageable pageable)
 	{
 		return offerRepository.findByCompanyIdAndStatus(companyId, status, pageable);
 	}
 
 
-	private Page<Offer> getOffersByCompanyIdAndStatusAndOnlyOverdue(Long companyId, Status status, Pageable pageable)
+	private Page<String> getOffersByCompanyIdAndStatusAndOnlyOverdue(Long companyId, Status status, Pageable pageable)
 	{
 		return offerRepository.findByCompanyIdAndStatusAndValidUntilIsBefore(companyId, status, LocalDate.now(), pageable);
 	}
 
 
-	private Page<Offer> getOffersByCompanyId(Long companyId, Pageable pageable)
+	private Page<String> getOffersByCompanyId(Long companyId, Pageable pageable)
 	{
 		return offerRepository.findByCompanyId(companyId, pageable);
 	}
 
 
-	private Page<Offer> getOffersByCompanyIdAndOnlyOverdue(Long companyId, Pageable pageable)
+	private Page<String> getOffersByCompanyIdAndOnlyOverdue(Long companyId, Pageable pageable)
 	{
 		return offerRepository.findByCompanyIdAndValidUntilIsBefore(companyId, LocalDate.now(), pageable);
 	}
 
 
-	private Page<Offer> getOffersByStatus(Status status, Pageable pageable)
+	private Page<String> getOffersByStatus(Status status, Pageable pageable)
 	{
 		return offerRepository.findByStatus(status, pageable);
 	}
 
 
-	private Page<Offer> getOffersByStatusAndOnlyOverdue(Status status, Pageable pageable)
+	private Page<String> getOffersByStatusAndOnlyOverdue(Status status, Pageable pageable)
 	{
 		return offerRepository.findByStatusAndValidUntilIsBefore(status, LocalDate.now(), pageable);
 	}
 
 
-	private Page<Offer> getOffers(Pageable pageable)
+	private Page<String> getOffers(Pageable pageable)
 	{
-		return offerRepository.findAll(pageable);
+		return offerRepository.getAllOffers(pageable);
 	}
 
 
-	private Page<Offer> getOffersByOnlyOverdue(Pageable pageable)
+	private Page<String> getOffersByOnlyOverdue(Pageable pageable)
 	{
 		return offerRepository.findByValidUntilIsBefore(LocalDate.now(), pageable);
 	}
@@ -254,6 +265,7 @@ Garantni period: 2 godine
 	}
 
 
+	@Transactional
 	public Offer updateOffer(String offerId, Offer offer, String username)
 	{
 
@@ -279,6 +291,7 @@ Garantni period: 2 godine
 	}
 
 
+	@Transactional
 	public void deleteOffer(String offerId)
 	{
 
@@ -297,6 +310,7 @@ Garantni period: 2 godine
 	}
 
 
+	@Transactional
 	public Offer cancelOffer(String offerId, String reason)
 	{
 
@@ -327,6 +341,7 @@ Garantni period: 2 godine
 	}
 
 
+	@Transactional
 	public Offer acceptOffer(String offerId)
 	{
 
@@ -350,6 +365,7 @@ Garantni period: 2 godine
 	}
 
 
+	@Transactional
 	public Offer duplicateOffer(String offerNo, String username)
 	{
 
@@ -390,12 +406,7 @@ Garantni period: 2 godine
 	}
 
 
-	public List<Item> getItems(String offerId)
-	{
-		return itemService.getItemsByOfferNo(offerId);
-	}
-
-
+	@Transactional
 	public Item addItem(String offerId, Item i)
 	{
 

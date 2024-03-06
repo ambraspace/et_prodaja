@@ -22,6 +22,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -31,6 +35,23 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+// The default value for parameter 'hibernate.max_fetch_depth' is 2, so
+// in order for this to work as expected set this parameter to 3.
+@NamedEntityGraphs({
+		@NamedEntityGraph(name = "offer-with-details", attributeNodes = {
+				@NamedAttributeNode("company"),
+				@NamedAttributeNode(value = "items", subgraph = "offer.items")
+		}, subgraphs = {
+				@NamedSubgraph(name = "offer.items", attributeNodes = {
+						@NamedAttributeNode("order"),
+						@NamedAttributeNode("delivery"),
+						@NamedAttributeNode(value = "stockInfo", subgraph = "offer.items.stockInfo")
+				}),
+				@NamedSubgraph(name = "offer.items.stockInfo", attributeNodes = {
+						@NamedAttributeNode("product")
+				})
+		})
+})
 public class Offer
 {
 
@@ -48,21 +69,21 @@ public class Offer
 	@OfferNoSequence(name = "offer_no_seq")
 	private String id; // "P-" + year + sequence no. (P-2023-01)
 
-	@ManyToOne(optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private User user; // who created the offer
 
 	private LocalDate offerDate;
 
 	private LocalDate validUntil;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Company company; // customer
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Contact contact; // customer's contact
 
 	@JsonProperty(access = Access.READ_ONLY)
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "offer")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "offer")
 	private List<Item> items = new ArrayList<Item>();
 
 	@NotNull @PositiveOrZero
@@ -79,7 +100,12 @@ public class Offer
 
 	public BigDecimal getValue()
 	{
+
 		BigDecimal retVal = BigDecimal.ZERO;
+
+		if (items == null || items.size() == 0)
+			return retVal;
+
 		items.forEach(i ->
 			retVal.add(
 				i.getNetPrice()
@@ -89,13 +115,20 @@ public class Offer
 				.setScale(2, RoundingMode.HALF_EVEN)
 			)
 		);
+
 		return retVal;
+
 	}
 
 
 	public BigDecimal getCost()
 	{
+
 		BigDecimal retVal = BigDecimal.ZERO;
+
+		if (items == null || items.size() == 0)
+			return retVal;
+
 		items.forEach(i ->
 			retVal.add(
 				i.getStockInfo().getUnitPrice()
@@ -105,7 +138,9 @@ public class Offer
 				.setScale(2, RoundingMode.HALF_EVEN)
 			)
 		);
+
 		return retVal;
+
 	}
 
 

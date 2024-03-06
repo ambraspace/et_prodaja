@@ -34,10 +34,10 @@ public class Company
 	@Column(nullable = false)
 	private String locality;
 
-//	@OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
 //	private List<Contact> contacts = new ArrayList<Contact>();
-
-//	@OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//
+//	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
 //	private List<Warehouse> warehouses = new ArrayList<Warehouse>();
 
 
@@ -52,18 +52,6 @@ public class Company
 		this.setName(company.getName());
 
 		this.setLocality(company.getLocality());
-
-//		this.contacts.clear();
-//
-//		this.contacts.addAll(company.getContacts());
-//
-//		this.contacts.forEach(c -> c.setCompany(this));
-
-//		this.warehouses.clear();
-//
-//		this.warehouses.addAll(company.getWarehouses());
-//
-//		this.warehouses.forEach(w -> w.setCompany(this));
 
 	}
 

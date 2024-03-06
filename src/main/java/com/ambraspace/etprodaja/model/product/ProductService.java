@@ -4,13 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +26,7 @@ import com.ambraspace.etprodaja.model.stockinfo.StockInfoService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Tuple;
 
-@Service @Transactional
+@Service
 public class ProductService
 {
 
@@ -43,10 +46,11 @@ public class ProductService
 	private ItemService itemService;
 
 
+	@Transactional(readOnly = true)
 	public Page<Product> getProducts(String query, Boolean includeComments, Long warehouseId, List<Long> tagIds, Long categoryId, Pageable pageable)
 	{
 
-		Page<Product> retVal;
+		Page<Long> productIds;
 
 		if (warehouseId != null && warehouseId > 0)
 		{
@@ -58,19 +62,19 @@ public class ProductService
 					if (categoryId != null)
 					{
 						//Search by warehouse, tags and category
-						retVal = productRepository.findByWarehouseTagsAndCategory(warehouseId, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+						productIds = productRepository.findByWarehouseTagsAndCategory(warehouseId, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 					} else {
 						//Search by warehouse and tags
-						retVal = productRepository.findByWarehouseAndTags(warehouseId, tagIds, pageable);
+						productIds = productRepository.findByWarehouseAndTags(warehouseId, tagIds, pageable);
 					}
 				} else {
 					if (categoryId != null)
 					{
 						// Search by warehouse and category
-						retVal = productRepository.findByWarehouseAndCategory(warehouseId, categoryService.collectCategoryIds(categoryId), pageable);
+						productIds = productRepository.findByWarehouseAndCategory(warehouseId, categoryService.collectCategoryIds(categoryId), pageable);
 					} else {
 						// Search by warehouse
-						retVal = productRepository.findByWarehouse(warehouseId, pageable);
+						productIds = productRepository.findByWarehouse(warehouseId, pageable);
 					}
 				}
 			} else {
@@ -81,19 +85,19 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, comment, tags and category
-							retVal = productRepository.findByWarehouseNameCommentTagsAndCategory(warehouseId, query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByWarehouseNameCommentTagsAndCategory(warehouseId, query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name, comment and tags
-							retVal = productRepository.findByWarehouseNameCommentAndTags(warehouseId, query, tagIds, pageable);
+							productIds = productRepository.findByWarehouseNameCommentAndTags(warehouseId, query, tagIds, pageable);
 						}
 					} else {
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, comment and category
-							retVal = productRepository.findByWarehouseNameCommentAndCategory(warehouseId, query, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByWarehouseNameCommentAndCategory(warehouseId, query, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name and comment
-							retVal = productRepository.findByWarehouseNameAndComment(warehouseId, query, pageable);
+							productIds = productRepository.findByWarehouseNameAndComment(warehouseId, query, pageable);
 						}
 					}
 				} else {
@@ -102,19 +106,19 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, tags and category
-							retVal = productRepository.findByWarehouseNameTagsAndCategory(warehouseId, query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByWarehouseNameTagsAndCategory(warehouseId, query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name and tags
-							retVal = productRepository.findByWarehouseNameAndTags(warehouseId, query, tagIds, pageable);
+							productIds = productRepository.findByWarehouseNameAndTags(warehouseId, query, tagIds, pageable);
 						}
 					} else {
 						if (categoryId != null)
 						{
 							//Search by warehouse, name and category
-							retVal = productRepository.findByWarehouseNameAndCategory(warehouseId, query, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByWarehouseNameAndCategory(warehouseId, query, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse and name
-							retVal = productRepository.findByWarehouseAndName(warehouseId, query, pageable);
+							productIds = productRepository.findByWarehouseAndName(warehouseId, query, pageable);
 						}
 					}
 				}
@@ -127,19 +131,19 @@ public class ProductService
 					if (categoryId != null)
 					{
 						//Search by tags and category
-						retVal = productRepository.findByTagsAndCategory(tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+						productIds = productRepository.findByTagsAndCategory(tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 					} else {
 						//Search by tags
-						retVal = productRepository.findByTags(tagIds, pageable);
+						productIds = productRepository.findByTags(tagIds, pageable);
 					}
 				} else {
 					if (categoryId != null)
 					{
 						// Search by category
-						retVal = productRepository.findByCategory_IdIsIn(categoryService.collectCategoryIds(categoryId), pageable);
+						productIds = productRepository.findByCategory(categoryService.collectCategoryIds(categoryId), pageable);
 					} else {
 						// Search all
-						retVal = productRepository.findAll(pageable);
+						productIds = productRepository.findAllProducts(pageable);
 					}
 				}
 			} else {
@@ -150,19 +154,19 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by name, comment, tags and category
-							retVal = productRepository.findByNameCommentTagsAndCategory(query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByNameCommentTagsAndCategory(query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name, comment and tags
-							retVal = productRepository.findByNameCommentAndTags(query, tagIds, pageable);
+							productIds = productRepository.findByNameCommentAndTags(query, tagIds, pageable);
 						}
 					} else {
 						if (categoryId != null)
 						{
 							//Search by name, comment and category
-							retVal = productRepository.findByNameCommentAndCategory(query, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByNameCommentAndCategory(query, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name and comment
-							retVal = productRepository.findByNameAndComment(query, pageable);
+							productIds = productRepository.findByNameAndComment(query, pageable);
 						}
 					}
 				} else {
@@ -171,40 +175,45 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by name, tags and category
-							retVal = productRepository.findByNameTagsAndCategory(query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByNameTagsAndCategory(query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name and tags
-							retVal = productRepository.findByNameAndTags(query, tagIds, pageable);
+							productIds = productRepository.findByNameAndTags(query, tagIds, pageable);
 						}
 					} else {
 						if (categoryId != null)
 						{
 							//Search by name and category
-							retVal = productRepository.findByNameAndCategory(query, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByNameAndCategory(query, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name
-							retVal = productRepository.findByName(query, pageable);
+							productIds = productRepository.findByName(query, pageable);
 						}
 					}
 				}
 			}
 		}
 
-		if (retVal.hasContent())
+		List<Product> retVal = new ArrayList<Product>();
+
+		if (productIds.hasContent())
 		{
-
-			fillTransientFields(warehouseId, retVal.getContent());
-
+			retVal = getProductsWithPreviews(productIds.getContent(), pageable.getSort());
+			fillTransientFields(warehouseId, retVal);
 		}
 
-		return retVal;
+		return new PageImpl<Product>(retVal, pageable, productIds.getTotalElements());
 
 	}
 
 
+	@Transactional(readOnly = true)
 	public Product getProduct(Long id)
 	{
-		Product p = productRepository.findById(id).orElse(null);
+		Product p = productRepository.getProductWithPreviews(id).orElse(null);
+		if (p != null)
+			productRepository.getProductWithCategoryAndTags(id).orElse(null);
+
 		if (p != null)
 		{
 			fillTransientFields(null, List.of(p));
@@ -306,6 +315,13 @@ public class ProductService
 	}
 
 
+	private List<Product> getProductsWithPreviews(List<Long> productIds, Sort sort)
+	{
+		List<Product> retVal = new ArrayList<Product>();
+		productRepository.getProductsById(productIds, sort).forEach(retVal::add);
+		return retVal;
+	}
+
 
 	public Product addProduct(Product product, List<MultipartFile> files) throws IllegalStateException, IOException
 	{
@@ -335,6 +351,7 @@ public class ProductService
 	}
 
 
+	@Transactional
 	public Product updateProduct(Long id, Product product, List<MultipartFile> newFiles) throws IllegalStateException, IOException
 	{
 
@@ -387,6 +404,7 @@ public class ProductService
 	}
 
 
+	@Transactional
 	public void deleteProduct(Long id)
 	{
 
@@ -406,6 +424,7 @@ public class ProductService
 	}
 
 
+	@Transactional
 	public void removeTagFromProducts(Long tagId)
 	{
 

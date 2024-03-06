@@ -3,7 +3,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-    open-in-view: false
+    open-in-view: true
+    properties:
+      '[hibernate.max_fetch_depth]': 3
   datasource:
     url: jdbc:mariadb://localhost:3306/et_prodaja
     username: ambra

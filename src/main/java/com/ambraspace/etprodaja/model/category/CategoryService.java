@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service @Transactional
+@Service
 public class CategoryService
 {
 
@@ -42,19 +42,23 @@ public class CategoryService
 	}
 
 
+	@Transactional
 	public List<Category> saveCategories(List<Category> categories)
 	{
 
 		List<Category> fromRep = getCategories();
 
+		// Remove all categories that have been left out in the supplied list of categories
 		fromRep.removeAll(categories);
 
 		categoryRepository.deleteAll(fromRep);
 
+		// Now add all supplied categories to the collection
 		fromRep.clear();
 
 		fromRep.addAll(categories);
 
+		// Set order of categories
 		int nextVal = 1;
 
 		for (Category c:fromRep)
@@ -90,7 +94,7 @@ public class CategoryService
 	}
 
 
-	public Category getCategory(Long id)
+	private Category getCategory(Long id)
 	{
 		return categoryRepository.findById(id).orElse(null);
 	}

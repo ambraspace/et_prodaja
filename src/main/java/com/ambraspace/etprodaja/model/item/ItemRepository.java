@@ -66,8 +66,6 @@ ORDER BY s.product.id
 	""")
 	Iterable<Tuple> getItemDataForOrderedProductsByWarehouse(Long warehouseId, Iterable<Product> products);
 
-	Iterable<Item> findByOfferIdOrderById(String offerId);
-
 	Optional<Item> findByOfferIdAndId(String offerId, Long id);
 
 	void deleteByOfferIdAndId(String offerId, Long id);

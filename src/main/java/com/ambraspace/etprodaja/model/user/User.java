@@ -11,8 +11,11 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +27,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@NamedEntityGraph(name = "user-with-company", attributeNodes = @NamedAttributeNode("company"))
 public class User
 {
 
@@ -49,7 +53,7 @@ public class User
 	@NotNull @NotBlank @Size(min = 10, max = 50, message = "Full name must be between 10 and 50 characters long!")
 	private String fullName;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Company company;
 
 	@Pattern(regexp = "[\\d-()/+ ]*", message = "Phone number must be properly formed")

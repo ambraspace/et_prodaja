@@ -1,7 +1,6 @@
 package com.ambraspace.etprodaja.model.offer;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import com.ambraspace.etprodaja.util.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -239,27 +237,6 @@ public class OfferController
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 	}
-
-
-	@Operation(summary = "Get items",
-			responses = {
-			@ApiResponse(responseCode = "200", description = "List of items returned", content = {
-					@Content(mediaType = "application/json", array = @ArraySchema(arraySchema =
-							@Schema(implementation = Item.class)))
-			}),
-			@ApiResponse(responseCode = "400", description = "Bad request", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = ErrorResponse.class))
-			})
-	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
-	@GetMapping("/api/offers/{offerId}/items")
-	public List<Item> getItems(@PathVariable("offerId") String offerId)
-	{
-		return offerService.getItems(offerId);
-	}
-
 
 
 	@Operation(summary = "Adds an item to the offer",

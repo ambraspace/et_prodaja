@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ambraspace.etprodaja.model.company.Company;
 
-@Service @Transactional
+@Service
 public class ContactService
 {
 
@@ -44,6 +44,7 @@ public class ContactService
 	}
 
 
+	@Transactional
 	public Contact updateContact(Long companyId, Long id, Contact contact)
 	{
 
@@ -59,6 +60,7 @@ public class ContactService
 	}
 
 
+	@Transactional
 	public void deleteContact(Long companyId, Long id)
 	{
 
