@@ -1,5 +1,7 @@
 package com.ambraspace.etprodaja.model.order;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +33,24 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@NamedEntityGraphs({
+	@NamedEntityGraph(name = "order-with-details", attributeNodes = {
+			@NamedAttributeNode(value = "warehouse", subgraph = "order.warehouse"),
+			@NamedAttributeNode(value = "items", subgraph = "order.items")
+	}, subgraphs = {
+			@NamedSubgraph(name = "order.warehouse", attributeNodes = {
+					@NamedAttributeNode("company")
+			}),
+			@NamedSubgraph(name = "order.items", attributeNodes = {
+					@NamedAttributeNode("offer"),
+					@NamedAttributeNode("delivery"),
+					@NamedAttributeNode(value = "stockInfo", subgraph = "order.items.stockInfo")
+			}),
+			@NamedSubgraph(name = "order.items.stockInfo", attributeNodes = {
+					@NamedAttributeNode("product")
+			})
+	})
+})
 @Table(name = "`order`")
 public class Order
 {
@@ -52,6 +76,29 @@ public class Order
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order", orphanRemoval = true)
 	private List<Item> items = new ArrayList<Item>();
+
+
+	public BigDecimal getValue()
+	{
+
+		BigDecimal retVal = BigDecimal.ZERO;
+
+		if (items == null || items.size() == 0)
+			return retVal;
+
+		items.forEach(i ->
+			retVal.add(
+				i.getStockInfo().getUnitPrice()
+				.multiply(
+						i.getQuantity()
+				)
+				.setScale(2, RoundingMode.HALF_EVEN)
+			)
+		);
+
+		return retVal;
+
+	}
 
 
 	@Override
