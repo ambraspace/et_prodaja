@@ -16,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -45,6 +46,9 @@ public class Item
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private StockInfo stockInfo;
 
+	@NotNull @NotBlank
+	private String productName;
+
 	@NotNull @PositiveOrZero
 	private BigDecimal quantity = BigDecimal.valueOf(0, 2);
 
@@ -71,6 +75,7 @@ public class Item
 		this.setDiscountPercent(other.getDiscountPercent());
 		this.setGrossPrice(other.getGrossPrice());
 		this.setOrder(other.getOrder());
+		this.setProductName(other.getProductName());
 		this.setQuantity(other.getQuantity());
 		this.setStockInfo(other.getStockInfo());
 
