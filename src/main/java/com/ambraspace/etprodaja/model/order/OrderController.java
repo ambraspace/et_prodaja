@@ -45,7 +45,7 @@ public class OrderController
 	})
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
-	@GetMapping("/orders/{id}")
+	@GetMapping("/api/orders/{id}")
 	public Order getOrder(@PathVariable("id") Long id)
 	{
 		return orderService.getOrder(id);
@@ -64,7 +64,7 @@ public class OrderController
 	})
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
-	@GetMapping("/orders")
+	@GetMapping("/api/orders")
 	public Page<Order> getOrders(
 			@Parameter(description = "Warehouse", required = false)
 			@RequestParam(name = "w", required = false)
@@ -95,7 +95,7 @@ public class OrderController
 	})
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
-	@PutMapping("/orders/{id}/close")
+	@PutMapping("/api/orders/{id}/close")
 	public Order closeOrder(@PathVariable("id") Long id)
 	{
 		try
