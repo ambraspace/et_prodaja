@@ -26,6 +26,12 @@ public class ItemService
 	}
 
 
+	public Item getItem(Long itemId)
+	{
+		return itemRepository.findById(itemId).orElse(null);
+	}
+
+
 	public Item addItem(Offer offer, Item i)
 	{
 
