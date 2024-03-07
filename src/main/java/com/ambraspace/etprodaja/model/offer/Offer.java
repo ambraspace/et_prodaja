@@ -58,7 +58,7 @@ public class Offer
 	/*
 	 * After adding or deleting statuses SQL queries in repositories must be double checked!
 	 */
-	public enum Status
+	public static enum Status
 	{
 		ACTIVE,
 		ACCEPTED,

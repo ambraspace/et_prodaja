@@ -24,7 +24,7 @@ import lombok.Setter;
 public class Delivery
 {
 
-	public enum Status
+	public static enum Status
 	{
 		ON_THE_WAY,
 		DELIVERED

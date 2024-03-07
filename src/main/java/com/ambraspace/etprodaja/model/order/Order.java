@@ -55,7 +55,7 @@ import lombok.Setter;
 public class Order
 {
 
-	public enum Status
+	public static enum Status
 	{
 		OPEN,
 		CLOSED
