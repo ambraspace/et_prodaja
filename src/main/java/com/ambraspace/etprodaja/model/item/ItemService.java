@@ -20,7 +20,7 @@ public class ItemService
 	private ItemRepository itemRepository;
 
 
-	public Item getItemByOfferOfferNoAndItemId(String offerNo, Long itemId)
+	public Item getItemByOfferIdAndItemId(String offerNo, Long itemId)
 	{
 		return itemRepository.findByOfferIdAndId(offerNo, itemId).orElse(null);
 	}
@@ -43,7 +43,7 @@ public class ItemService
 	public void deleteItem(String offerId, Long itemId)
 	{
 
-		Item item = getItemByOfferOfferNoAndItemId(offerId, itemId);
+		Item item = getItemByOfferIdAndItemId(offerId, itemId);
 
 		if (item == null)
 			throw new RuntimeException("Item not found in the database!");
@@ -57,7 +57,7 @@ public class ItemService
 	public Item updateItem(String offerNo, Long itemId, Item i)
 	{
 
-		Item fromRep = getItemByOfferOfferNoAndItemId(offerNo, itemId);
+		Item fromRep = getItemByOfferIdAndItemId(offerNo, itemId);
 
 		if (fromRep == null)
 			throw new RuntimeException("Item not found in the database!");
