@@ -94,7 +94,6 @@ public class User
 		this.setCompany(other.getCompany());
 		this.setEmail(other.getEmail());
 		this.setFullName(other.getFullName());
-		this.setPassword(other.getPassword());
 		this.setPhone(other.getPhone());
 		this.setRole(other.getRole());
 		this.setSignature(other.getSignature());

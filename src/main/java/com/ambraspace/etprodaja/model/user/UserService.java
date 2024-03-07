@@ -83,9 +83,9 @@ public class UserService implements UserDetailsService
 
 		fromRep.copyFieldsFrom(user);
 
-		if (fromRep.getPassword() != null && !fromRep.getPassword().trim().equals(""))
+		if (user.getPassword() != null && !user.getPassword().trim().equals(""))
 		{
-			fromRep.setPassword(passwordEncoder.encode(fromRep.getPassword()));
+			fromRep.setPassword(passwordEncoder.encode(user.getPassword()));
 		}
 
 		return userRepository.save(fromRep);
