@@ -2,6 +2,7 @@ package com.ambraspace.etprodaja.model.product;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+
+import com.ambraspace.etprodaja.model.category.Category;
 
 
 public interface ProductRepository extends CrudRepository<Product, Long>, PagingAndSortingRepository<Product, Long>
@@ -356,5 +359,7 @@ WHERE
 	@Query("SELECT p FROM Product p where p.id = :id")
 	Optional<Product> getProductWithCategoryAndTags(@Param("id") Long id);
 
+
+	Iterable<Product> findByCategoryIn(Set<Category> categories);
 
 }

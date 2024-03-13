@@ -1,11 +1,16 @@
 package com.ambraspace.etprodaja.model.category;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.ambraspace.etprodaja.model.product.Product;
+import com.ambraspace.etprodaja.model.product.ProductRepository;
 
 @Service
 public class CategoryService
@@ -13,6 +18,9 @@ public class CategoryService
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private ProductRepository productRepository;
 
 
 	public List<Category> getCategories()
@@ -46,7 +54,49 @@ public class CategoryService
 	public List<Category> saveCategories(List<Category> categories)
 	{
 
+		// Set order of categories
+		int nextVal = 1;
+
+		for (Category c:categories)
+		{
+			c.setRootCategory(true);
+			nextVal = setOrderOfCategories(c, nextVal);
+		}
+
+		// First detach all products assigned to categories which are going to be deleted
 		List<Category> fromRep = getCategories();
+
+		// Flatten lists of categories
+		Set<Category> flatFromRep = new HashSet<Category>();
+		Set<Category> flatNew = new HashSet<Category>();
+
+		fromRep.forEach(c -> flatFromRep.addAll(makeItFlat(c)));
+		categories.forEach(c -> flatNew.addAll(makeItFlat(c)));
+
+		flatFromRep.removeAll(flatNew);
+
+		// Now we have a set of all categories to be deleted
+
+		if (flatFromRep.size() > 0)
+		{
+
+			Category uncategorized = new Category();
+			uncategorized.setName("UNCATEGORIZED");
+			uncategorized.setRootCategory(true);
+			uncategorized.setOrder(nextVal);
+			Category saved = categoryRepository.save(uncategorized); // Here we saved the category and assigned an ID to it
+			categories.add(saved);
+
+			List<Product> products = new ArrayList<Product>();
+			productRepository.findByCategoryIn(flatFromRep).forEach(p -> {
+				p.setCategory(saved);
+				products.add(p);
+			});
+
+			productRepository.saveAll(products);
+
+			// Products are now detached and earlier categories can be deleted
+		}
 
 		// Remove all categories that have been left out in the supplied list of categories
 		fromRep.removeAll(categories);
@@ -57,15 +107,6 @@ public class CategoryService
 		fromRep.clear();
 
 		fromRep.addAll(categories);
-
-		// Set order of categories
-		int nextVal = 1;
-
-		for (Category c:fromRep)
-		{
-			c.setRootCategory(true);
-			nextVal = setOrderOfCategories(c, nextVal);
-		}
 
 		categoryRepository.saveAll(fromRep);
 
@@ -128,6 +169,19 @@ public class CategoryService
 			ids.addAll(collectCategoryIds(c));
 		}
 		return ids;
+	}
+
+
+	private List<Category> makeItFlat(Category category)
+	{
+		List<Category> retVal = new ArrayList<Category>();
+		retVal.add(category);
+		if (category.getChildren().size() > 0)
+		{
+			category.getChildren().forEach(c -> retVal.addAll(makeItFlat(c)));
+		}
+		category.setChildren(List.of());
+		return retVal;
 	}
 
 }
