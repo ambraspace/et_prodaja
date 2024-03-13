@@ -360,8 +360,6 @@ public class ProductService
 		if (fromRep == null)
 			throw new RuntimeException("No such product in the database!");
 
-		fromRep.setId(id);
-
 		// User can not add previews like this, so delete all which are not in the database
 	    product.getPreviews().retainAll(fromRep.getPreviews());
 
@@ -428,11 +426,16 @@ public class ProductService
 	public void removeTagFromProducts(Long tagId)
 	{
 
+		List<Product> modifiedProducts = new ArrayList<Product>();
+
 		getProducts(null, false, null, List.of(tagId), null, Pageable.unpaged())
 		.forEach(p -> {
 			p.getTags().removeIf(t -> t.getId().equals(tagId));
-			productRepository.save(p);
+			modifiedProducts.add(p);
 		});
+
+		if (modifiedProducts.size() > 0)
+			productRepository.saveAll(modifiedProducts);
 
 	}
 
