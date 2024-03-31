@@ -23,7 +23,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.persistence.EntityManager;
 
 @RestController
 public class WarehouseController
@@ -104,7 +103,7 @@ public class WarehouseController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/companies/{companyId}/warehouses")
-	public Warehouse addWarehouse(@PathVariable Long companyId, @RequestBody Warehouse warehouse, EntityManager em)
+	public Warehouse addWarehouse(@PathVariable Long companyId, @RequestBody Warehouse warehouse)
 	{
 		try
 		{
