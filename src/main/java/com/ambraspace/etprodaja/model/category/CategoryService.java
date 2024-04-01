@@ -80,22 +80,27 @@ public class CategoryService
 		if (flatFromRep.size() > 0)
 		{
 
-			Category uncategorized = new Category();
-			uncategorized.setName("UNCATEGORIZED");
-			uncategorized.setRootCategory(true);
-			uncategorized.setOrder(nextVal);
-			Category saved = categoryRepository.save(uncategorized); // Here we saved the category and assigned an ID to it
-			categories.add(saved);
-
 			List<Product> products = new ArrayList<Product>();
-			productRepository.findByCategoryIn(flatFromRep).forEach(p -> {
-				p.setCategory(saved);
-				products.add(p);
-			});
+			productRepository.findByCategoryIn(flatFromRep).forEach(products::add);
 
-			productRepository.saveAll(products);
+			if (products.size() > 0)
+			{
 
-			// Products are now detached and earlier categories can be deleted
+				Category uncategorized = new Category();
+				uncategorized.setName("UNCATEGORIZED");
+				uncategorized.setRootCategory(true);
+				uncategorized.setOrder(nextVal);
+				Category saved = categoryRepository.save(uncategorized); // Here we saved the category and assigned an ID to it
+				categories.add(saved);
+
+				products.forEach(p -> p.setCategory(uncategorized));
+
+				productRepository.saveAll(products);
+
+				// Products are now detached and earlier categories can be deleted
+
+			}
+
 		}
 
 		// Remove all categories that have been left out in the supplied list of categories
@@ -180,7 +185,7 @@ public class CategoryService
 		{
 			category.getChildren().forEach(c -> retVal.addAll(makeItFlat(c)));
 		}
-		category.setChildren(List.of());
+		//category.setChildren(List.of());
 		return retVal;
 	}
 
