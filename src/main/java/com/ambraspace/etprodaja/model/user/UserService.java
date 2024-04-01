@@ -63,6 +63,11 @@ public class UserService implements UserDetailsService
 	public User addUser(User user)
 	{
 
+		User fromRep = getUser(user.getUsername());
+
+		if (fromRep != null)
+			throw new RuntimeException("Username already exists!");
+
 		if (user.getPassword() == null || user.getPassword().trim().equals(""))
 			throw new RuntimeException("Please set user password!");
 
