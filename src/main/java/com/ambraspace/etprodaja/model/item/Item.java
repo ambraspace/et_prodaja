@@ -9,6 +9,8 @@ import com.ambraspace.etprodaja.model.delivery.Delivery;
 import com.ambraspace.etprodaja.model.offer.Offer;
 import com.ambraspace.etprodaja.model.order.Order;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -59,6 +61,7 @@ public class Item
 	private BigDecimal discountPercent = BigDecimal.valueOf(0, 2);
 
 
+	@JsonProperty(access = Access.READ_ONLY)
 	public BigDecimal getNetPrice()
 	{
 		return grossPrice.multiply(

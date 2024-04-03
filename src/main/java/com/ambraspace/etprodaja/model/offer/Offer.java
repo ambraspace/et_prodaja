@@ -97,7 +97,7 @@ public class Offer
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.ACTIVE;
 
-
+	@JsonProperty(access = Access.READ_ONLY)
 	public BigDecimal getValue()
 	{
 
@@ -121,6 +121,7 @@ public class Offer
 	}
 
 
+	@JsonProperty(access = Access.READ_ONLY)
 	public BigDecimal getCost()
 	{
 
