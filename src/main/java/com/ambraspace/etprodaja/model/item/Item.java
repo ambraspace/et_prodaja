@@ -1,6 +1,7 @@
 package com.ambraspace.etprodaja.model.item;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
@@ -66,7 +67,7 @@ public class Item
 	{
 		return grossPrice.multiply(
 				BigDecimal.ONE.subtract(discountPercent.movePointLeft(2)))
-				.setScale(2);
+				.setScale(2, RoundingMode.HALF_EVEN);
 	}
 
 

@@ -259,7 +259,7 @@ public class ProductService
 				BigDecimal orderedValue = dataForOrders != null ? dataForOrders.get(2, BigDecimal.class) : BigDecimal.ZERO;
 
 				BigDecimal availableValue =
-						(si != null ? si.getQuantity().multiply(si.getUnitPrice()).setScale(2) : BigDecimal.ZERO)
+						(si != null ? si.getQuantity().multiply(si.getUnitPrice()).setScale(2, RoundingMode.HALF_EVEN) : BigDecimal.ZERO)
 						.subtract(offeredValue)
 						.subtract(orderedValue);
 
