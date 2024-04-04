@@ -19,6 +19,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -28,6 +31,20 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@NamedEntityGraphs(value = {
+		@NamedEntityGraph(name = "offer-items", attributeNodes = {
+				@NamedAttributeNode("order"),
+				@NamedAttributeNode("delivery")
+		}),
+		@NamedEntityGraph(name = "order-items", attributeNodes = {
+				@NamedAttributeNode("offer"),
+				@NamedAttributeNode("delivery")
+		}),
+		@NamedEntityGraph(name = "delivery-items", attributeNodes = {
+				@NamedAttributeNode("offer"),
+				@NamedAttributeNode("order")
+		})
+})
 public class Item
 {
 

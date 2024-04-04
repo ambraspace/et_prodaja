@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.offer.Offer.Status;
 import com.ambraspace.etprodaja.util.ErrorResponse;
 
@@ -38,6 +37,9 @@ public class OfferController
 
 	@Autowired
 	private OfferService offerService;
+
+	@Autowired
+	private WorkflowService workflowService;
 
 
 	@Operation(summary = "Get offer by ID", responses = {
@@ -182,7 +184,7 @@ public class OfferController
 	{
 		try
 		{
-			return offerService.cancelOffer(offerId, reason);
+			return workflowService.cancelOffer(offerId, reason);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
@@ -207,7 +209,7 @@ public class OfferController
 	{
 		try
 		{
-			return offerService.acceptOffer(offerId);
+			return workflowService.acceptOffer(offerId);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
@@ -232,92 +234,10 @@ public class OfferController
 	{
 		try
 		{
-			return offerService.duplicateOffer(offerId, principal.getName());
+			return workflowService.duplicateOffer(offerId, principal.getName());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
-	}
-
-
-	@Operation(summary = "Adds an item to the offer",
-			responses = {
-			@ApiResponse(responseCode = "200", description = "Item saved and returned", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = Item.class))
-			}),
-			@ApiResponse(responseCode = "400", description = "Bad request", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = ErrorResponse.class))
-			})
-	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
-	@PostMapping("/api/offers/{offerId}/items")
-	public Item addItem(@PathVariable("offerId") String offerId, @RequestBody Item item)
-	{
-		try
-		{
-			return offerService.addItem(offerId, item);
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-		}
-
-	}
-
-
-	@Operation(summary = "Updates existing item",
-			responses = {
-			@ApiResponse(responseCode = "200", description = "Item saved and returned", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = Item.class))
-			}),
-			@ApiResponse(responseCode = "400", description = "Bad request", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = ErrorResponse.class))
-			})
-	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
-	@PutMapping("/api/offers/{offerId}/items/{id}")
-	public Item updateItem(
-			@PathVariable("offerId") String offerId,
-			@PathVariable("id") Long itemId,
-			@RequestBody Item item)
-	{
-		try
-		{
-			return offerService.updateItem(offerId, itemId, item);
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-		}
-
-	}
-
-
-	@Operation(summary = "Deletes existing item",
-			responses = {
-			@ApiResponse(responseCode = "200", description = "Item deleted", content = {
-					@Content(mediaType = "application/json")
-			}),
-			@ApiResponse(responseCode = "400", description = "Bad request", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = ErrorResponse.class))
-			})
-	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
-	@DeleteMapping("/api/offers/{offerId}/items/{id}")
-	public void deleteItem(
-			@PathVariable("offerId") String offerId,
-			@PathVariable("id") Long itemId)
-	{
-		try
-		{
-			offerService.deleteItem(offerId, itemId);
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-		}
-
 	}
 
 

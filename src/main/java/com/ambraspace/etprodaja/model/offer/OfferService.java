@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ambraspace.etprodaja.model.item.Item;
-import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.offer.Offer.Status;
-import com.ambraspace.etprodaja.model.order.OrderService;
 import com.ambraspace.etprodaja.model.user.User;
 import com.ambraspace.etprodaja.model.user.UserService;
 
@@ -27,13 +24,7 @@ public class OfferService
 	private OfferRepository offerRepository;
 
 	@Autowired
-	private ItemService itemService;
-
-	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private OrderService orderService;
 
 
 	public Offer getOffer(String offerId)
@@ -311,7 +302,7 @@ Garantni period: 2 godine
 
 
 	@Transactional
-	public Offer cancelOffer(String offerId, String reason)
+	Offer cancelOffer(String offerId, String reason)
 	{
 
 		Offer fromRep = getOffer(offerId);
@@ -328,7 +319,7 @@ Garantni period: 2 godine
 		fromRep.setStatus(Status.CANCELED);
 		if (reason != null)
 		{
-			if (fromRep.getComments() != null && !fromRep.getComments().trim().equals(""))
+			if (fromRep.getComments() != null && !fromRep.getComments().isBlank())
 			{
 				fromRep.setComments(fromRep.getComments() + "\n\n" + reason);
 			} else {
@@ -342,7 +333,7 @@ Garantni period: 2 godine
 
 
 	@Transactional
-	public Offer acceptOffer(String offerId)
+	Offer acceptOffer(String offerId)
 	{
 
 		Offer fromRep = getOffer(offerId);
@@ -356,8 +347,6 @@ Garantni period: 2 godine
 		if (fromRep.getStatus().equals(Status.ACCEPTED))
 			throw new RuntimeException("The offer has already been accepted!");
 
-		orderService.orderItems(fromRep.getItems());
-
 		fromRep.setStatus(Status.ACCEPTED);
 
 		return offerRepository.save(fromRep);
@@ -365,71 +354,19 @@ Garantni period: 2 godine
 	}
 
 
-	@Transactional
-	public Offer duplicateOffer(String offerNo, String username)
+	public Offer duplicateOffer(Offer original, User user)
 	{
 
-		User user = userService.getUser(username);
-
-		if (user == null)
-			throw new RuntimeException("User not specified!");
-
-		Offer fromRep = getOffer(offerNo);
-
-		if (fromRep == null)
-			throw new RuntimeException("No such offer in the database!");
-
 		Offer retVal = new Offer();
-		retVal.copyFieldsFrom(fromRep);
+		retVal.copyFieldsFrom(original);
 		retVal.setOfferDate(LocalDate.now());
 		retVal.setId(null);
 		retVal.setStatus(Status.ACTIVE);
 		retVal.setUser(user);
 		retVal.setValidUntil(LocalDate.now().plusDays(7));
 
-		Offer savedOffer = offerRepository.save(retVal);
-
-		fromRep.getItems().forEach(i -> {
-			Item item = new Item();
-			item.copyFieldsFrom(i);
-			item.setDelivery(null);
-			item.setDeliveryNote(null);
-			item.setOffer(savedOffer);
-			item.setOrder(null);
-			savedOffer.getItems().add(item);
-		});
-
-		itemService.updateItems(savedOffer.getItems());
-
-		return savedOffer;
+		return offerRepository.save(retVal);
 
 	}
-
-
-	@Transactional
-	public Item addItem(String offerId, Item i)
-	{
-
-		Offer offer = getOffer(offerId);
-
-		if (offer == null)
-			throw new RuntimeException("Offer not found in the database!");
-
-		return itemService.addItem(offer, i);
-
-	}
-
-
-	public void deleteItem(String offerId, Long itemId)
-	{
-		itemService.deleteItem(offerId, itemId);
-	}
-
-
-	public Item updateItem(String offerId, Long itemId, Item i)
-	{
-		return itemService.updateItem(offerId, itemId, i);
-	}
-
 
 }

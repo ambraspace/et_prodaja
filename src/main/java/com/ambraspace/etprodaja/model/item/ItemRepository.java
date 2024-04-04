@@ -2,6 +2,7 @@ package com.ambraspace.etprodaja.model.item;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,6 +13,25 @@ import jakarta.persistence.Tuple;
 
 public interface ItemRepository extends CrudRepository<Item, Long>, PagingAndSortingRepository<Item, Long>
 {
+
+	@EntityGraph("offer-items")
+	Optional<Item> findByOfferIdAndId(String offerId, Long id);
+
+
+	@EntityGraph("offer-items")
+	Iterable<Item> findByOfferId(String offerId);
+
+
+	@EntityGraph("order-items")
+	Iterable<Item> findByOrderId(Long orderId);
+
+
+	@EntityGraph("delivery-items")
+	Iterable<Item> findByDeliveryId(Long deliveryId);
+
+
+	void deleteByOfferIdAndId(String offerId, Long id);
+
 
 	@Query(value = """
 SELECT s.product.id, SUM(i.quantity), SUM(i.quantity * s.unitPrice)
@@ -65,9 +85,5 @@ GROUP BY s.product.id
 ORDER BY s.product.id
 	""")
 	Iterable<Tuple> getItemDataForOrderedProductsByWarehouse(Long warehouseId, Iterable<Product> products);
-
-	Optional<Item> findByOfferIdAndId(String offerId, Long id);
-
-	void deleteByOfferIdAndId(String offerId, Long id);
 
 }

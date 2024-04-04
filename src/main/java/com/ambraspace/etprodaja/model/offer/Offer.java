@@ -13,6 +13,7 @@ import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.contact.Contact;
 import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -43,12 +44,7 @@ import lombok.Setter;
 				@NamedAttributeNode(value = "items", subgraph = "offer.items")
 		}, subgraphs = {
 				@NamedSubgraph(name = "offer.items", attributeNodes = {
-						@NamedAttributeNode("order"),
-						@NamedAttributeNode("delivery"),
-						@NamedAttributeNode(value = "stockInfo", subgraph = "offer.items.stockInfo")
-				}),
-				@NamedSubgraph(name = "offer.items.stockInfo", attributeNodes = {
-						@NamedAttributeNode("product")
+						@NamedAttributeNode("stockInfo")
 				})
 		})
 })
@@ -82,7 +78,7 @@ public class Offer
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Contact contact; // customer's contact
 
-	@JsonProperty(access = Access.READ_ONLY)
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "offer")
 	private List<Item> items = new ArrayList<Item>();
 

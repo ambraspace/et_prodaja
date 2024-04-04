@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ambraspace.etprodaja.model.offer.Offer;
+import com.ambraspace.etprodaja.model.offer.OfferService;
 import com.ambraspace.etprodaja.model.product.Product;
 
 import jakarta.persistence.Tuple;
@@ -17,23 +18,50 @@ public class ItemService
 {
 
 	@Autowired
+	private OfferService offerService;
+
+	@Autowired
 	private ItemRepository itemRepository;
 
 
-	public Item getItemByOfferIdAndItemId(String offerNo, Long itemId)
+	public Item getOfferItem(String offerNo, Long itemId)
 	{
 		return itemRepository.findByOfferIdAndId(offerNo, itemId).orElse(null);
 	}
 
 
-	public Item getItem(Long itemId)
+	public List<Item> getOfferItems(String offerNo)
 	{
-		return itemRepository.findById(itemId).orElse(null);
+		List<Item> retVal = new ArrayList<>();
+		itemRepository.findByOfferId(offerNo).forEach(retVal::add);
+		return retVal;
 	}
 
 
-	public Item addItem(Offer offer, Item i)
+	public List<Item> getOrderItems(Long orderId)
 	{
+		List<Item> retVal = new ArrayList<>();
+		itemRepository.findByOrderId(orderId).forEach(retVal::add);
+		return retVal;
+	}
+
+
+	public List<Item> getDeliveryItems(Long deliveryId)
+	{
+		List<Item> retVal = new ArrayList<>();
+		itemRepository.findByDeliveryId(deliveryId).forEach(retVal::add);
+		return retVal;
+	}
+
+
+	@Transactional
+	public Item addItem(String offerId, Item i)
+	{
+
+		Offer offer = offerService.getOffer(offerId);
+
+		if (offer == null)
+			throw new RuntimeException("Offer not found in the database!");
 
 		i.setOffer(offer);
 		i.setOrder(null);
@@ -49,7 +77,7 @@ public class ItemService
 	public void deleteItem(String offerId, Long itemId)
 	{
 
-		Item item = getItemByOfferIdAndItemId(offerId, itemId);
+		Item item = getOfferItem(offerId, itemId);
 
 		if (item == null)
 			throw new RuntimeException("Item not found in the database!");
@@ -63,7 +91,7 @@ public class ItemService
 	public Item updateItem(String offerNo, Long itemId, Item i)
 	{
 
-		Item fromRep = getItemByOfferIdAndItemId(offerNo, itemId);
+		Item fromRep = getOfferItem(offerNo, itemId);
 
 		if (fromRep == null)
 			throw new RuntimeException("Item not found in the database!");
@@ -72,6 +100,12 @@ public class ItemService
 
 		return itemRepository.save(fromRep);
 
+	}
+
+
+	public Item getItem(Long itemId)
+	{
+		return itemRepository.findById(itemId).orElse(null);
 	}
 
 
@@ -127,5 +161,30 @@ public class ItemService
 		return retVal;
 
 	}
+
+
+	public List<Item> duplicateItems(List<Item> originalItems, Offer parentOffer)
+	{
+
+		List<Item> duplicatedItems = new ArrayList<>();
+
+		originalItems.forEach(i -> {
+			Item item = new Item();
+			item.copyFieldsFrom(i);
+			item.setDelivery(null);
+			item.setDeliveryNote(null);
+			item.setOffer(parentOffer);
+			item.setOrder(null);
+			duplicatedItems.add(item);
+		});
+
+		List<Item> retVal = new ArrayList<>();
+
+		itemRepository.saveAll(duplicatedItems).forEach(retVal::add);
+
+		return retVal;
+
+	}
+
 
 }
