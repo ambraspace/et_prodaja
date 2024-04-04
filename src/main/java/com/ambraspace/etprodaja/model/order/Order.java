@@ -11,6 +11,8 @@ import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.warehouse.Warehouse;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,12 +44,7 @@ import lombok.Setter;
 					@NamedAttributeNode("company")
 			}),
 			@NamedSubgraph(name = "order.items", attributeNodes = {
-					@NamedAttributeNode("offer"),
-					@NamedAttributeNode("delivery"),
-					@NamedAttributeNode(value = "stockInfo", subgraph = "order.items.stockInfo")
-			}),
-			@NamedSubgraph(name = "order.items.stockInfo", attributeNodes = {
-					@NamedAttributeNode("product")
+					@NamedAttributeNode("stockInfo")
 			})
 	})
 })
@@ -74,10 +71,11 @@ public class Order
 
 	private LocalDateTime closureTime = null;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
 	private List<Item> items = new ArrayList<Item>();
 
 
+	@JsonProperty(access = Access.READ_ONLY)
 	public BigDecimal getValue()
 	{
 

@@ -39,15 +39,7 @@ import lombok.Setter;
 			@NamedAttributeNode(value = "items", subgraph = "delivery.items")
 	}, subgraphs = {
 			@NamedSubgraph(name = "delivery.items", attributeNodes = {
-					@NamedAttributeNode(value = "offer", subgraph = "delivery.items.offer"),
-					@NamedAttributeNode("order"),
-					@NamedAttributeNode(value = "stockInfo", subgraph = "delivery.items.stockInfo")
-			}),
-			@NamedSubgraph(name = "delivery.items.offer", attributeNodes = {
-					@NamedAttributeNode("company")
-			}),
-			@NamedSubgraph(name = "delivery.items.stockInfo", attributeNodes = {
-					@NamedAttributeNode("product")
+					@NamedAttributeNode("stockInfo")
 			})
 	})
 })
@@ -79,7 +71,7 @@ public class Delivery
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery")
 	private List<Item> items = new ArrayList<Item>();
 
 
