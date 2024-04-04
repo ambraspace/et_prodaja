@@ -100,15 +100,16 @@ public class Offer
 		if (items == null || items.size() == 0)
 			return retVal;
 
-		items.forEach(i ->
-			retVal.add(
+		for (Item i:items)
+		{
+			retVal = retVal.add(
 				i.getNetPrice()
 				.multiply(
 						i.getQuantity()
 				)
 				.setScale(2, RoundingMode.HALF_EVEN)
-			)
-		);
+			);
+		}
 
 		return retVal;
 
@@ -124,22 +125,39 @@ public class Offer
 		if (items == null || items.size() == 0)
 			return retVal;
 
-		items.forEach(i ->
-			retVal.add(
+		for (Item i:items)
+		{
+			retVal = retVal.add(
 				i.getStockInfo().getUnitPrice()
 				.multiply(
 						i.getQuantity()
 				)
 				.setScale(2, RoundingMode.HALF_EVEN)
-			)
-		);
+			);
+		}
 
 		return retVal;
 
 	}
 
 
-	void copyFieldsFrom(Offer other)
+	@JsonProperty(access = Access.READ_ONLY)
+	public BigDecimal getMargin()
+	{
+
+		BigDecimal retVal = BigDecimal.ZERO;
+
+		if (getCost().compareTo(BigDecimal.ZERO) == 0)
+			return retVal;
+
+		return getValue()
+				.divide(getCost(), RoundingMode.HALF_EVEN)
+				.subtract(BigDecimal.ONE);
+
+	}
+
+
+	public void copyFieldsFrom(Offer other)
 	{
 
 		this.setComments(other.getComments());
