@@ -45,7 +45,7 @@ public class ItemController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/offers/{offerId}/items/{id}")
-	public Item getItem(@PathVariable("offerId") String offerId, @PathVariable("id") Long id)
+	public Item getOfferItem(@PathVariable("offerId") String offerId, @PathVariable("id") Long id)
 	{
 		return itemService.getOfferItem(offerId, id);
 	}
