@@ -36,8 +36,6 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-// The default value for parameter 'hibernate.max_fetch_depth' is 2, so
-// in order for this to work as expected set this parameter to 3.
 @NamedEntityGraphs({
 		@NamedEntityGraph(name = "offer-with-details", attributeNodes = {
 				@NamedAttributeNode("company"),
@@ -63,7 +61,7 @@ public class Offer
 
 	@Id
 	@OfferNoSequence(name = "offer_no_seq")
-	private String id; // "P-" + year + sequence no. (P-2023-01)
+	private String id; // "P-" + year + sequence no. (P-2023-001)
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private User user; // who created the offer

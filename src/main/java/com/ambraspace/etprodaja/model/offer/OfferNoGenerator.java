@@ -45,7 +45,7 @@ public class OfferNoGenerator implements IdentifierGenerator
 		else
 			max += sequence.incrementBy();
 
-		return prefix + max;
+		return prefix + String.format("%03d", max);
 
 	}
 
