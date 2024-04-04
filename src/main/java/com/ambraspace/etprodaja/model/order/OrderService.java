@@ -31,6 +31,37 @@ public class OrderService
 
 
 	@Transactional
+	private void deleteOrderById(Long id)
+	{
+
+		Order fromRep = getOrder(id);
+
+		if (fromRep == null)
+			throw new RuntimeException("No such order in the database!");
+
+		fromRep.getItems().forEach(i -> {
+			i.setOrder(null);
+		});
+
+		itemService.updateItems(fromRep.getItems());
+
+		orderRepository.deleteById(fromRep.getId());
+
+	}
+
+
+	@Transactional
+	public void deleteAllOrders()
+	{
+
+		List<Order> orders = getAllOrders(Pageable.unpaged()).getContent();
+
+		orders.forEach(o -> deleteOrderById(o.getId()));
+
+	}
+
+
+	@Transactional
 	public void orderItems(List<Item> items)
 	{
 

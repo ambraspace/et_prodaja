@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -105,6 +106,30 @@ public class OrderController
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 	}
+
+
+	@Operation(summary = "Delete all orders (maintenance operation)", responses = {
+			@ApiResponse(responseCode = "200", description = "Orders deleted", content = {
+					@Content(mediaType = "application/json")
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN"})
+	@DeleteMapping("/api/orders/all")
+	public void deleteAllOrders()
+	{
+		try
+		{
+			orderService.deleteAllOrders();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
 
 
 }

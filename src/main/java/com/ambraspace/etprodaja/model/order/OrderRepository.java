@@ -19,6 +19,11 @@ public interface OrderRepository extends CrudRepository<Order, Long>, PagingAndS
 	Optional<Order> findByWarehouseIdAndStatus(Long warehouseId, Status status);
 
 
+	@Override
+	@EntityGraph("order-with-details")
+	Optional<Order> findById(Long id);
+
+
 	@Query("""
 SELECT o FROM Order o JOIN o.items i
 WHERE
