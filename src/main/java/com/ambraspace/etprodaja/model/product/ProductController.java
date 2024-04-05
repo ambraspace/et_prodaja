@@ -54,15 +54,15 @@ public class ProductController
 	@GetMapping("/api/products")
 	public Page<Product> getProducts(
 			@Parameter(description = "Search query", required = false)
-			@RequestParam(name = "q", defaultValue = "") String query,
+			@RequestParam(name = "q", required = false) String query,
 			@Parameter(description = "Should the comment field be included in the search", required = false)
-			@RequestParam(name = "cm", defaultValue = "false") Boolean includeComments,
+			@RequestParam(name = "cm", required = false) Boolean includeComments,
 			@Parameter(description = "Limit products to specified Warehouse ID", required = false)
-			@RequestParam(name = "w", defaultValue = "") Long warehouseId,
+			@RequestParam(name = "w", required = false) Long warehouseId,
 			@Parameter(description = "Limit to products having all of the specified Tag IDs", required = false)
-			@RequestParam(name = "t", defaultValue = "") List<Long> tagIds,
+			@RequestParam(name = "t", required = false) List<Long> tagIds,
 			@Parameter(description = "Limit products to specified Category ID", required = false)
-			@RequestParam(name = "ct", defaultValue = "") Long categoryId,
+			@RequestParam(name = "ct", required = false) Long categoryId,
 			@ParameterObject @PageableDefault(sort = "name") Pageable pageable)
 	{
 		try
