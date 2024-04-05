@@ -241,4 +241,28 @@ public class OfferController
 	}
 
 
+	@Operation(summary = "Delete all offers (maintenance operation)",
+			responses = {
+			@ApiResponse(responseCode = "200", description = "All offers deleted", content = {
+					@Content(mediaType = "application/json")
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN"})
+	@DeleteMapping("/api/offers/all")
+	public void deleteAllOffers()
+	{
+		try
+		{
+			offerService.deleteAllOffers();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
 }

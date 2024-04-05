@@ -143,4 +143,15 @@ public class DeliveryService
 
 	}
 
+
+	@Transactional
+	public void deleteAllDeliveries()
+	{
+
+		List<Delivery> deliveries = getDeliveries(null, null, Pageable.unpaged()).getContent();
+
+		deliveries.forEach(d -> deleteDelivery(d.getId()));
+
+	}
+
 }

@@ -369,4 +369,15 @@ Garantni period: 2 godine
 
 	}
 
+
+	@Transactional
+	public void deleteAllOffers()
+	{
+
+		List<String> offers = getOffers(Pageable.unpaged()).getContent();
+
+		offers.forEach(id -> deleteOffer(id));
+
+	}
+
 }

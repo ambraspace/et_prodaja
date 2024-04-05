@@ -176,4 +176,29 @@ public class DeliveryController
 		}
 	}
 
+
+	@Operation(summary = "Delete all deliveries (maintenance operation)",
+			responses = {
+			@ApiResponse(responseCode = "200", description = "All deliveries deleted", content = {
+					@Content(mediaType = "application/json")
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN"})
+	@DeleteMapping("/api/deliveries/all")
+	public void deleteAllDeliveries()
+	{
+		try
+		{
+			deliveryService.deleteAllDeliveries();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
 }
