@@ -291,10 +291,8 @@ Garantni period: 2 godine
 		if (fromRep == null)
 			throw new RuntimeException("No such offer in the database!");
 
-		/*
-		 * TODO: Provjeriti najprije šta je sa isporukama, narudžbama, pa tek onda brisati.
-		 * Obrisati i zavisne objekte (Item)
-		 */
+		if (fromRep.getStatus().equals(Status.ACCEPTED))
+			throw new RuntimeException("Offer which has been accepted cannot be deleted!");
 
 		offerRepository.deleteById(offerId);
 
