@@ -56,7 +56,7 @@ public class ProductController
 			@Parameter(description = "Search query", required = false)
 			@RequestParam(name = "q", required = false) String query,
 			@Parameter(description = "Should the comment field be included in the search", required = false)
-			@RequestParam(name = "cm", required = false) Boolean includeComments,
+			@RequestParam(name = "cm", defaultValue = "false") Boolean includeComments,
 			@Parameter(description = "Limit products to specified Warehouse ID", required = false)
 			@RequestParam(name = "w", required = false) Long warehouseId,
 			@Parameter(description = "Limit to products having all of the specified Tag IDs", required = false)
@@ -67,7 +67,9 @@ public class ProductController
 	{
 		try
 		{
-			return productService.getProducts(query, includeComments, warehouseId, tagIds, categoryId, pageable);
+			Page<Product> retVal =
+			productService.getProducts(query, includeComments, warehouseId, tagIds, categoryId, pageable);
+			return retVal;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

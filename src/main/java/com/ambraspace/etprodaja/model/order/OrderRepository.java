@@ -1,9 +1,11 @@
 package com.ambraspace.etprodaja.model.order;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -25,7 +27,7 @@ public interface OrderRepository extends CrudRepository<Order, Long>, PagingAndS
 
 
 	@Query("""
-SELECT o FROM Order o JOIN o.items i
+SELECT o.id FROM Order o JOIN o.items i
 WHERE
 	o.warehouse.id = :w AND
 	o.status = :s
@@ -34,39 +36,36 @@ GROUP BY
 HAVING
 	SUM(CASE i.delivery.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
 			""")
-	@EntityGraph("order-with-details")
-	Page<Order> findByWarehouseIdAndStatusAndOnlyUndelivered(
+	Page<Long> findByWarehouseIdAndStatusAndOnlyUndelivered(
 			@Param("w") Long warehouseId,
 			@Param("s") Status status,
 			Pageable pageable);
 
 
 	@Query("""
-SELECT o FROM Order o
+SELECT o.id FROM Order o
 WHERE
 	o.warehouse.id = :w AND
 	o.status = :s
 			""")
-	@EntityGraph("order-with-details")
-	Page<Order> findByWarehouseIdAndStatus(
+	Page<Long> findByWarehouseIdAndStatus(
 			@Param("w") Long warehouseId,
 			@Param("s") Status status,
 			Pageable pageable);
 
 
 	@Query("""
-SELECT o FROM Order o
+SELECT o.id FROM Order o
 WHERE
 	o.warehouse.id = :w
 			""")
-	@EntityGraph("order-with-details")
-	Page<Order> findByWarehouseId(
+	Page<Long> findByWarehouseId(
 			@Param("w") Long warehouseId,
 			Pageable pageable);
 
 
 	@Query("""
-SELECT o FROM Order o JOIN o.items i
+SELECT o.id FROM Order o JOIN o.items i
 WHERE
 	o.warehouse.id = :w
 GROUP BY
@@ -74,25 +73,23 @@ GROUP BY
 HAVING
 	SUM(CASE i.delivery.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
 			""")
-	@EntityGraph("order-with-details")
-	Page<Order> findByWarehouseIdAndOnlyUndelivered(
+	Page<Long> findByWarehouseIdAndOnlyUndelivered(
 			@Param("w") Long warehouseId,
 			Pageable pageable);
 
 
 	@Query("""
-SELECT o FROM Order o
+SELECT o.id FROM Order o
 WHERE
 	o.status = :s
 			""")
-	@EntityGraph("order-with-details")
-	Page<Order> findByStatus(
+	Page<Long> findByStatus(
 			@Param("s") Status status,
 			Pageable pageable);
 
 
 	@Query("""
-SELECT o FROM Order o JOIN o.items i
+SELECT o.id FROM Order o JOIN o.items i
 WHERE
 	o.status = :s
 GROUP BY
@@ -100,28 +97,29 @@ GROUP BY
 HAVING
 	SUM(CASE i.delivery.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
 			""")
-	@EntityGraph("order-with-details")
-	Page<Order> findByStatusAndOnlyUndelivered(
+	Page<Long> findByStatusAndOnlyUndelivered(
 			@Param("s") Status status,
 			Pageable pageable);
 
 
 	@Query("""
-SELECT o FROM Order o
+SELECT o.id FROM Order o
 			""")
-	@EntityGraph("order-with-details")
-	Page<Order> findAllOrders(Pageable pageable);
+	Page<Long> findAllOrders(Pageable pageable);
 
 
 	@Query("""
-SELECT o FROM Order o JOIN o.items i
+SELECT o.id FROM Order o JOIN o.items i LEFT JOIN i.delivery d
 GROUP BY
 	o.id
 HAVING
-	SUM(CASE i.delivery.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
+	SUM(CASE d.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
 			""")
-	@EntityGraph("order-with-details")
-	Page<Order> findByOnlyUndelivered(Pageable pageable);
+	Page<Long> findByOnlyUndelivered(Pageable pageable);
 
+
+	@Query("SELECT o FROM Order o WHERE o.id in (:ids)")
+	@EntityGraph("order-with-details")
+	Iterable<Order> getOrderDetails(@Param("ids") List<Long> ids, Sort sort);
 
 }

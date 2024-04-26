@@ -34,15 +34,18 @@ import lombok.Setter;
 @NamedEntityGraphs(value = {
 		@NamedEntityGraph(name = "offer-items", attributeNodes = {
 				@NamedAttributeNode("order"),
-				@NamedAttributeNode("delivery")
+				@NamedAttributeNode("delivery"),
+				@NamedAttributeNode("stockInfo")
 		}),
 		@NamedEntityGraph(name = "order-items", attributeNodes = {
 				@NamedAttributeNode("offer"),
-				@NamedAttributeNode("delivery")
+				@NamedAttributeNode("delivery"),
+				@NamedAttributeNode("stockInfo")
 		}),
 		@NamedEntityGraph(name = "delivery-items", attributeNodes = {
 				@NamedAttributeNode("offer"),
-				@NamedAttributeNode("order")
+				@NamedAttributeNode("order"),
+				@NamedAttributeNode("stockInfo")
 		})
 })
 public class Item
@@ -91,11 +94,9 @@ public class Item
 	public void copyFieldsFrom(Item other)
 	{
 
-		this.setDelivery(other.getDelivery());
 		this.setDeliveryNote(other.getDeliveryNote());
 		this.setDiscountPercent(other.getDiscountPercent());
 		this.setGrossPrice(other.getGrossPrice());
-		this.setOrder(other.getOrder());
 		this.setProductName(other.getProductName());
 		this.setQuantity(other.getQuantity());
 		this.setStockInfo(other.getStockInfo());

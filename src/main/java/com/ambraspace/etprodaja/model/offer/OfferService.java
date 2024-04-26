@@ -1,6 +1,7 @@
 package com.ambraspace.etprodaja.model.offer;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.offer.Offer.Status;
 import com.ambraspace.etprodaja.model.user.User;
 import com.ambraspace.etprodaja.model.user.UserService;
@@ -29,7 +31,10 @@ public class OfferService
 
 	public Offer getOffer(String offerId)
 	{
-		return offerRepository.findById(offerId).orElse(null);
+		Offer retVal = offerRepository.findById(offerId).orElse(null); 
+		if (retVal != null)
+			fillTransientFields(List.of(retVal));
+		return retVal;
 	}
 
 
@@ -118,6 +123,7 @@ public class OfferService
 
 		List<Offer> selectedOffers = new ArrayList<Offer>();
 		offerRepository.getOfferDetails(offerIds.getContent(), pageable.getSort()).forEach(selectedOffers::add);
+		fillTransientFields(selectedOffers);
 		return new PageImpl<Offer>(selectedOffers, pageable, offerIds.getTotalElements());
 
 	}
@@ -372,9 +378,61 @@ Garantni period: 2 godine
 	public void deleteAllOffers()
 	{
 
-		List<String> offers = getOffers(Pageable.unpaged()).getContent();
+		offerRepository.deleteAll();
 
-		offers.forEach(id -> deleteOffer(id));
+	}
+	
+	
+	private void fillTransientFields(List<Offer> offers)
+	{
+		
+		for (Offer o:offers)
+		{
+			
+			BigDecimal value = BigDecimal.ZERO;
+			
+			BigDecimal cost = BigDecimal.ZERO;
+
+			if (o.getItems() != null && o.getItems().size() > 0)
+			{
+				
+				for (Item i:o.getItems())
+				{
+
+					value = value.add(
+						i.getNetPrice()
+						.multiply(
+								i.getQuantity()
+						)
+						.setScale(2, RoundingMode.HALF_EVEN)
+					);
+					
+					cost = cost.add(
+							i.getStockInfo().getUnitPrice()
+							.multiply(
+									i.getQuantity()
+							)
+							.setScale(2, RoundingMode.HALF_EVEN)
+						);
+
+				}
+
+			}
+			
+			o.setValue(value);
+			
+			o.setCost(cost);
+			
+			o.setMargin(
+					cost.compareTo(BigDecimal.ZERO) == 0 ?
+							BigDecimal.ZERO :
+								value
+								.divide(cost, 4, RoundingMode.HALF_EVEN)
+								.subtract(BigDecimal.ONE)
+								.movePointRight(2)
+			);
+			
+		}
 
 	}
 

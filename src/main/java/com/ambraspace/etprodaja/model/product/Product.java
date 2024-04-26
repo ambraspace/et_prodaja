@@ -11,6 +11,7 @@ import com.ambraspace.etprodaja.model.category.Category;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.model.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -69,15 +70,19 @@ public class Product
 	private BigDecimal price = BigDecimal.ZERO;
 
 	@Transient
+	@JsonProperty
 	private BigDecimal purchasePrice = BigDecimal.ZERO;
 
 	@Transient
+	@JsonProperty
 	private BigDecimal availableQty = BigDecimal.ZERO;
 
 	@Transient
+	@JsonProperty
 	private BigDecimal offeredQty = BigDecimal.ZERO;
 
 	@Transient
+	@JsonProperty
 	private BigDecimal orderedQty = BigDecimal.ZERO;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)

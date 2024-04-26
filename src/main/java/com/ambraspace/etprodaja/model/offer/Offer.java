@@ -1,7 +1,6 @@
 package com.ambraspace.etprodaja.model.offer;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +26,7 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -77,7 +76,7 @@ public class Offer
 	private Contact contact; // customer's contact
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "offer")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "offer", orphanRemoval = true)
 	private List<Item> items = new ArrayList<Item>();
 
 	@NotNull @PositiveOrZero
@@ -90,71 +89,18 @@ public class Offer
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.ACTIVE;
-
-	@JsonProperty(access = Access.READ_ONLY)
-	public BigDecimal getValue()
-	{
-
-		BigDecimal retVal = BigDecimal.ZERO;
-
-		if (items == null || items.size() == 0)
-			return retVal;
-
-		for (Item i:items)
-		{
-			retVal = retVal.add(
-				i.getNetPrice()
-				.multiply(
-						i.getQuantity()
-				)
-				.setScale(2, RoundingMode.HALF_EVEN)
-			);
-		}
-
-		return retVal;
-
-	}
-
-
-	@JsonProperty(access = Access.READ_ONLY)
-	public BigDecimal getCost()
-	{
-
-		BigDecimal retVal = BigDecimal.ZERO;
-
-		if (items == null || items.size() == 0)
-			return retVal;
-
-		for (Item i:items)
-		{
-			retVal = retVal.add(
-				i.getStockInfo().getUnitPrice()
-				.multiply(
-						i.getQuantity()
-				)
-				.setScale(2, RoundingMode.HALF_EVEN)
-			);
-		}
-
-		return retVal;
-
-	}
-
-
-	@JsonProperty(access = Access.READ_ONLY)
-	public BigDecimal getMargin()
-	{
-
-		BigDecimal retVal = BigDecimal.ZERO;
-
-		if (getCost().compareTo(BigDecimal.ZERO) == 0)
-			return retVal;
-
-		return getValue()
-				.divide(getCost(), RoundingMode.HALF_EVEN)
-				.subtract(BigDecimal.ONE);
-
-	}
+	
+	@Transient
+	@JsonProperty
+	private BigDecimal value;
+	
+	@Transient
+	@JsonProperty
+	private BigDecimal cost;
+	
+	@Transient
+	@JsonProperty
+	private BigDecimal margin;
 
 
 	public void copyFieldsFrom(Offer other)

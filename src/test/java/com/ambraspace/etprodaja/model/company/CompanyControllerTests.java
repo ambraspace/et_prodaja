@@ -1,22 +1,19 @@
 package com.ambraspace.etprodaja.model.company;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+
+import com.ambraspace.etprodaja.SecurityTestComponent;
+import com.ambraspace.etprodaja.model.contact.Contact;
+import com.ambraspace.etprodaja.model.contact.ContactControllerTestComponent;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -24,149 +21,67 @@ public class CompanyControllerTests
 {
 
 	@Autowired
-	private MockMvc mockMvc;
+	private CompanyControllerTestComponent companyTestComponent;
+
+	@Autowired
+	private ContactControllerTestComponent contactTestComponent;
+
+	@Autowired
+	private SecurityTestComponent securityTestComponent;
 
 
 	@Test
-	public void testAll() throws Exception
+	public void testCompanyOperations() throws Exception
 	{
 
-
-		MvcResult res = this.mockMvc.perform(
-				post("/api/companies")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(""))
-			.andExpect(status().isBadRequest())
-			.andReturn();
-
-		assertTrue(res.getResolvedException() instanceof HttpMessageNotReadableException);
+		securityTestComponent.authenticate("admin", "administrator");
 
 
-		res = this.mockMvc.perform(
-				post("/api/companies")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"id":0,
-							"name":"Test company",
-							"locality":"Test locality",
-							"contacts":[
-								{
-									"name":"Test contact"
-								}
-							]
-						}
-						"""))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("name").value("Test company"))
-			.andExpect(jsonPath("locality").value("Test locality"))
-			.andExpect(jsonPath("id").isNumber())
-			.andExpect(jsonPath("contacts").isArray())
-			.andReturn();
+		Company company = companyTestComponent.addCompany("""
+{
+	"name":"Test company",
+	"locality":"City and Country"
+}
+				""");
 
-		Long id = new JSONObject(res.getResponse().getContentAsString()).getLong("id");
+		company = companyTestComponent.getCompany(company.getId());
 
+		assertNotEquals(company, null);
 
-		this.mockMvc.perform(
-				post("/api/companies")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"name":"T",
-							"locality":"Test locality"
-						}
-						"""))
-			.andExpect(status().isBadRequest());
+		assertNotEquals(companyTestComponent.getCompanies().size(), 0);
 
+		company = companyTestComponent.updateCompany(company.getId(), """
+{
+	"name":"Updated test company",
+	"locality":"City and Country"
+}
+				""");
 
-		this.mockMvc.perform(
-				get("/api/companies")
-				.contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk());
+		assertTrue(company.getName().equals("Updated test company"));
 
+		Contact contact = contactTestComponent.addContact(company.getId(), """
+{
+	"name":"Test contact",
+	"phone":"+454 (565) 121-111",
+	"email":"test@test.com",
+	"comment":"This is a test"
+}
+				""");
 
-		this.mockMvc.perform(
-				get("/api/companies")
-				.param("sort", "no_field_name")
-				.contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest());
+		Long id = company.getId();
 
+		// Cannot delete due to referential integrity
+		assertThrows(AssertionError.class, () -> {
+			companyTestComponent.deleteCompany(id);
+		});
 
-		this.mockMvc.perform(
-				get("/api/companies/" + id)
-				.contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk());
+		contactTestComponent.deleteContact(id, contact.getId());
 
+		companyTestComponent.deleteCompany(id);
 
-		this.mockMvc.perform(
-				get("/api/companies/null")
-				.contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest());
+		company = companyTestComponent.getCompany(company.getId());
 
-
-		this.mockMvc.perform(
-				put("/api/companies/" + (id+1))
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"id":0,
-							"name":"Test company 2",
-							"locality":"Test locality 2"
-						}
-						"""))
-			.andExpect(status().isBadRequest())
-			.andExpect(status().reason("No such company in the database!"));
-
-
-		this.mockMvc.perform(
-				put("/api/companies/" + id)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"id":0,
-							"name":"Test company 2",
-							"locality":"Test locality 2"
-						}
-						"""))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("name").value("Test company 2"))
-			.andExpect(jsonPath("locality").value("Test locality 2"))
-			.andExpect(jsonPath("id").value(id));
-
-
-		this.mockMvc.perform(
-				put("/api/companies/" + id)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"id":0,
-							"name":"Test company 3",
-							"locality":"Test locality 3",
-							"contacts":[
-								{
-									"name":"Test contact 3"
-								}
-							]
-						}
-						"""))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("name").value("Test company 3"))
-			.andExpect(jsonPath("locality").value("Test locality 3"))
-			.andExpect(jsonPath("id").value(id));
-
-
-		this.mockMvc.perform(
-				delete("/api/companies/" + (id+1))
-				.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(status().reason("No such company in the database!"));
-
-
-		this.mockMvc.perform(
-				delete("/api/companies/" + id)
-				.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
-
+		assertEquals(company, null);
 
 	}
 

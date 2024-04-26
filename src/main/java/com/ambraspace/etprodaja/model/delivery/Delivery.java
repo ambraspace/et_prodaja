@@ -1,7 +1,6 @@
 package com.ambraspace.etprodaja.model.delivery;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,8 @@ import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.item.Item;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,6 +26,7 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -71,38 +73,19 @@ public class Delivery
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery")
 	private List<Item> items = new ArrayList<Item>();
 
-
-	public BigDecimal getValue()
-	{
-
-		BigDecimal retVal = BigDecimal.ZERO;
-
-		if (items == null || items.size() == 0)
-			return retVal;
-
-		items.forEach(i ->
-			retVal.add(
-				i.getStockInfo().getUnitPrice()
-				.multiply(
-						i.getQuantity()
-				)
-				.setScale(2, RoundingMode.HALF_EVEN)
-			)
-		);
-
-		return retVal;
-
-	}
+	@Transient
+	@JsonProperty
+	private BigDecimal value;
 
 
 	void copyFieldsFrom(Delivery other)
 	{
 		this.setComment(other.getComment());
 		this.setDeliveryDate(other.getDeliveryDate());
-		this.setId(null);
 		this.setSupplier(other.getSupplier());
 		this.setSupplierReference(other.getSupplierReference());
 	}

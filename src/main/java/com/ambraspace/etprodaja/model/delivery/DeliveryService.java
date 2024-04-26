@@ -1,6 +1,7 @@
 package com.ambraspace.etprodaja.model.delivery;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,28 +28,38 @@ public class DeliveryService
 
 	public Delivery getDelivery(Long id)
 	{
-		return deliveryRepository.findById(id).orElse(null);
+		Delivery retVal = deliveryRepository.findById(id).orElse(null);
+		fillTransientFields(List.of(retVal));
+		return retVal;
 	}
 
 
 	public Page<Delivery> getDeliveries(Long supplierId, Status status, Pageable pageable)
 	{
+
+		Page<Delivery> retVal;
+
 		if (supplierId == null)
 		{
 			if (status == null)
 			{
-				return deliveryRepository.findAll(pageable);
+				retVal = deliveryRepository.findAll(pageable);
 			} else {
-				return deliveryRepository.findByStatus(status, pageable);
+				retVal = deliveryRepository.findByStatus(status, pageable);
 			}
 		} else {
 			if (status == null)
 			{
-				return deliveryRepository.findBySupplierId(supplierId, pageable);
+				retVal = deliveryRepository.findBySupplierId(supplierId, pageable);
 			} else {
-				return deliveryRepository.findBySupplierIdAndStatus(supplierId, status, pageable);
+				retVal = deliveryRepository.findBySupplierIdAndStatus(supplierId, status, pageable);
 			}
 		}
+
+		fillTransientFields(retVal.getContent());
+
+		return retVal;
+
 	}
 
 
@@ -136,7 +147,6 @@ public class DeliveryService
 		if (fromRep.getStatus().equals(Status.DELIVERED))
 			throw new RuntimeException("Delivery has already been delivered!");
 
-		fromRep.setDeliveryDate(LocalDate.now());
 		fromRep.setStatus(Status.DELIVERED);
 
 		return deliveryRepository.save(fromRep);
@@ -151,6 +161,34 @@ public class DeliveryService
 		List<Delivery> deliveries = getDeliveries(null, null, Pageable.unpaged()).getContent();
 
 		deliveries.forEach(d -> deleteDelivery(d.getId()));
+
+	}
+
+
+	private void fillTransientFields(List<Delivery> deliveries)
+	{
+
+		for (Delivery d:deliveries)
+		{
+
+			BigDecimal value = BigDecimal.ZERO;
+
+			if (d.getItems() != null && d.getItems().size() > 0)
+			{
+
+				for (Item i:d.getItems())
+				{
+					value = value.add(
+							i.getStockInfo().getUnitPrice()
+							.multiply(i.getQuantity())
+							.setScale(2, RoundingMode.HALF_EVEN));
+				}
+
+			}
+
+			d.setValue(value);
+
+		}
 
 	}
 

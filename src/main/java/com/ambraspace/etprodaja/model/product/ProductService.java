@@ -222,16 +222,6 @@ public class ProductService
 	}
 
 
-	/*
-	 * TODO: Test thoroughly (even when available qty is negative)
-	 * Test case #1: Product with no StockInfo data and no Item data
-	 * Test case #2: Product with no StockInfo data but with Item data for Offers
-	 * Test case #3: Product with no StockInfo data but with Item data for Offers and Orders
-	 * Test case #4: Product with StockInfo data and no Item data
-	 * Test case #5: Product with StockInfo data and Item data for Offers
-	 * Test case #6: Product with StockInfo data and Item data for Offers and Orders
-	 * Each test should include multiple Warehouses with different quantities and unit prices
-	 */
 	private void fillTransientFields(Long warehouseId, List<Product> products)
 	{
 

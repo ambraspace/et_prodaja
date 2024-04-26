@@ -80,7 +80,7 @@ public class OfferController
 			@Parameter(description = "Company ID", required = false)
 			@RequestParam(name = "c", required = false) Long companyId,
 			@Parameter(description = "Offer status", required = false)
-			@RequestParam(name = "s", defaultValue = "ACTIVE") Status status,
+			@RequestParam(name = "s", required = false) Status status,
 			@Parameter(description = "Show only overdue offers", required = false)
 			@RequestParam(name = "o", defaultValue = "false") boolean onlyOverdue,
 			@ParameterObject @PageableDefault(sort = {"offerDate", "id"}, direction = Direction.DESC) Pageable pageable)

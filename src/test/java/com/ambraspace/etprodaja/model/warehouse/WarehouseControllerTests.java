@@ -1,14 +1,16 @@
 package com.ambraspace.etprodaja.model.warehouse;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+
+import com.ambraspace.etprodaja.SecurityTestComponent;
+import com.ambraspace.etprodaja.model.company.Company;
+import com.ambraspace.etprodaja.model.company.CompanyControllerTestComponent;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -16,26 +18,66 @@ public class WarehouseControllerTests
 {
 
 	@Autowired
-	private MockMvc mockMvc;
+	private CompanyControllerTestComponent companyControllerTestComponent;
+
+	@Autowired
+	private WarehouseControllerTestComponent warehouseControllerTestComponent;
+
+	@Autowired
+	private SecurityTestComponent securityTestComponent;
+
 
 	@Test
-	public void addStockInfo() throws Exception
+	public void testWarehouseOperations() throws Exception
 	{
 
-		this.mockMvc
-			.perform(post("/api/stockInfo")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-{
-	"warehouse":{"id":17},
-	"product":{"id":89},
-	"customerReference":"Neki njihov naziv",
-	"quantity":25.1,
-	"unitPrice":3.14
-}
-				"""))
-			.andExpect(status().isOk());
+		securityTestComponent.authenticate("admin", "administrator");
 
+		Company company = companyControllerTestComponent.addCompany("""
+{
+	"name":"Test company",
+	"locality":"City and country"
+}
+				""");
+
+		Warehouse warehouse = warehouseControllerTestComponent.addWarehouse(
+				company.getId(),
+				"""
+{
+	"name":"Test warehouse"
+}
+				""");
+
+		assertNotEquals(warehouse, null);
+
+		warehouse = warehouseControllerTestComponent.getWarehouse(company.getId(), warehouse.getId());
+
+		assertNotEquals(warehouse, null);
+
+		assertEquals(warehouse.getName(), "Test warehouse");
+
+		warehouse = warehouseControllerTestComponent.updateWarehouse(
+				company.getId(),
+				warehouse.getId(),
+				"""
+{
+	"name":"Updated test warehouse"
+}
+				""");
+
+		assertNotEquals(warehouse, null);
+
+		assertEquals(warehouse.getName(), "Updated test warehouse");
+
+		assertNotEquals(warehouseControllerTestComponent.getWarehouses(company.getId()).size(), 0);
+
+		warehouseControllerTestComponent.deleteWarehouse(company.getId(), warehouse.getId());
+
+		warehouse = warehouseControllerTestComponent.getWarehouse(company.getId(), warehouse.getId());
+
+		assertEquals(warehouse, null);
+
+		companyControllerTestComponent.deleteCompany(company.getId());
 
 	}
 

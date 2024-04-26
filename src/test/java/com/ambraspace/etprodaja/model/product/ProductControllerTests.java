@@ -1,378 +1,571 @@
 package com.ambraspace.etprodaja.model.product;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+
+import com.ambraspace.etprodaja.SecurityTestComponent;
+import com.ambraspace.etprodaja.model.category.Category;
+import com.ambraspace.etprodaja.model.category.CategoryControllerTestComponent;
+import com.ambraspace.etprodaja.model.company.Company;
+import com.ambraspace.etprodaja.model.company.CompanyControllerTestComponent;
+import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
+import com.ambraspace.etprodaja.model.stockinfo.StockInfoControllerTestComponent;
+import com.ambraspace.etprodaja.model.tag.Tag;
+import com.ambraspace.etprodaja.model.tag.TagControllerTestComponent;
+import com.ambraspace.etprodaja.model.warehouse.Warehouse;
+import com.ambraspace.etprodaja.model.warehouse.WarehouseControllerTestComponent;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProductControllerTests
-{
+public class ProductControllerTests {
 
 	@Autowired
-	private MockMvc mockMvc;
+	private SecurityTestComponent securityTestComponent;
+
+	@Autowired
+	private ProductControllerTestComponent productControllerTestComponent;
+
+	@Autowired
+	private CategoryControllerTestComponent categoryControllerTestComponent;
+
+	@Autowired
+	private TagControllerTestComponent tagControllerTestComponent;
+
+	@Autowired
+	private CompanyControllerTestComponent companyControllerTestComponent;
+
+	@Autowired
+	private WarehouseControllerTestComponent warehouseControllerTestComponent;
+
+	@Autowired
+	private StockInfoControllerTestComponent stockInfoControllerTestComponent;
+
+
+	@Value("${et-prodaja.storage-location}")
+	private String storageLocation;
+
 
 	@Test
 	public void testProductOperations() throws Exception
 	{
 
-		/*
-		 * Add tags
-		 */
+		securityTestComponent.authenticate("admin", "administrator");
 
-		MvcResult res = this.mockMvc.perform(post("/api/tags")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
+
+		List<Category> categories = categoryControllerTestComponent.saveCategories("""
+ [
+	{
+		"name":"Test category",
+		"children":[]
+	},
+	{
+		"name":"Another category",
+		"children":[]
+	}
+ ]
+				""");
+
+		Tag tag = tagControllerTestComponent.addTag("""
+ {
+	"name":"Test tag",
+	"color":"#111111"
+ }
+				""");
+
+
+		String productBody = String.format("""
 {
-  "id": 0,
-  "name": "Tag 1",
-  "color": "#111111"
+	"name":"Test decoration",
+	"unit":"pcs.",
+	"price":123.45,
+	"category":
+		{
+			"id":%d
+		},
+	"tags":
+		[
+			{
+				"id":%d
+			}
+		],
+	"comment":"This is a test"
 }
-						"""))
-		.andExpect(jsonPath("id").isNumber())
-		.andExpect(status().isOk())
-		.andReturn();
+				""", categories.get(0).getId(), tag.getId());
 
-		JSONObject jsonObject = new JSONObject(res.getResponse().getContentAsString());
+		Product product = productControllerTestComponent.addProduct(productBody, 3);
 
-		Long tagId = jsonObject.getLong("id");
+		assertNotEquals(product, null);
 
-		res = this.mockMvc.perform(post("/api/tags")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
+		assertEquals(product.getCategory().getId(), categories.get(0).getId());
+
+		assertEquals(product.getTags().get(0).getId(), tag.getId());
+
+		assertEquals(product.getPrice().compareTo(BigDecimal.valueOf(12345, 2)), 0);
+
+		assertEquals(product.getPreviews().size(), 3);
+
+		for (Preview preview:product.getPreviews())
+		{
+			assertTrue(new File(storageLocation, preview.getFileName()).exists());
+		}
+
+		String updatedProductBody = String.format("""
 {
-  "id": 0,
-  "name": "Tag 2",
-  "color": "#222222"
+	"id":%d,
+	"name":"Updated test decoration",
+	"unit":"pcs.",
+	"price":234.56,
+	"category":
+		{
+			"id":%d
+		},
+	"tags":
+		[
+		],
+	"comment":"This is an updated test",
+	"previews":
+	[
+		{
+			"id":%d,
+			"fileName":"%s",
+			"originalFileName":"%s",
+			"size":%d,
+			"primary":%b
+		}
+	]
 }
-						"""))
-		.andExpect(jsonPath("id").isNumber())
-		.andExpect(status().isOk())
-		.andReturn();
+				""",
+				product.getId(),
+				categories.get(1).getId(),
+				product.getPreviews().get(1).getId(),
+				product.getPreviews().get(1).getFileName(),
+				product.getPreviews().get(1).getOriginalFileName(),
+				product.getPreviews().get(1).getSize(),
+				product.getPreviews().get(1).getPrimary()
+				);
 
+		Product updatedProduct =
+				productControllerTestComponent.updateProduct(product.getId(), updatedProductBody, 3);
 
-		/*
-		 * Get a tag by its ID
-		 */
+		assertEquals(updatedProduct.getCategory().getId(), categories.get(1).getId());
 
+		assertEquals(updatedProduct.getTags().size(), 0);
 
-		res = this.mockMvc.perform(get("/api/tags/" + tagId)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
+		assertEquals(updatedProduct.getId(), product.getId());
 
-		jsonObject = new JSONObject(res.getResponse().getContentAsString());
+		assertEquals(updatedProduct.getPreviews().size(), 4);
 
-		assertEquals(jsonObject.getLong("id"), tagId);
-		assertEquals(jsonObject.getString("name"), "Tag 1");
-		assertEquals(jsonObject.getString("color"), "#111111");
+		for (Preview preview:updatedProduct.getPreviews())
+		{
+			assertTrue(new File(storageLocation, preview.getFileName()).exists());
+		}
 
+		assertEquals(updatedProduct.getPreviews().get(0).getId(), product.getPreviews().get(1).getId());
 
-		/*
-		 * Save categories
-		 */
+		assertFalse(new File(storageLocation, product.getPreviews().get(0).getFileName()).exists());
 
+		assertFalse(new File(storageLocation, product.getPreviews().get(2).getFileName()).exists());
 
-		res = this.mockMvc.perform(post("/api/categories")
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-[
-  {
-    "id": 1,
-    "parentId": 0,
-    "name": "Kategorija 1"
-  },
-  {
-    "id": 3,
-    "parentId": 2,
-    "name": "Kategorija 1.1.1"
-  },
-  {
-    "id": 2,
-    "parentId": 1,
-    "name": "Kategorija 1.1"
-  },
-  {
-    "id": 4,
-    "parentId": 0,
-    "name": "Kategorija 2"
-  },
-  {
-    "id": 6,
-    "parentId": 0,
-    "name": "Kategorija 3"
-  },
-  {
-    "id": 5,
-    "parentId": 4,
-    "name": "Kategorija 2.1"
-  }
-]
-						"""))
-				.andExpect(status().isOk())
-				.andReturn();
-
-
-		/*
-		 * Get all categories
-		 */
-
-
-		res = this.mockMvc.perform(get("/api/categories")
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		JSONArray jsonArray = new JSONArray(res.getResponse().getContentAsString());
-
-		assertEquals(jsonArray.length(), 6);
-
-
-		/*
-		 * Save categories
-		 */
-
-
-		res = this.mockMvc.perform(post("/api/categories")
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-[
-  {
-    "id": 1,
-    "parentId": 0,
-    "name": "Kategorija 1"
-  },
-  {
-    "id": 3,
-    "parentId": 2,
-    "name": "Kategorija 1.1.1"
-  },
-  {
-    "id": 2,
-    "parentId": 1,
-    "name": "Kategorija 1.1"
-  }
-]
-						"""))
-				.andExpect(status().isOk())
-				.andReturn();
-
-
-		/*
-		 * Get all categories
-		 */
-
-
-		res = this.mockMvc.perform(get("/api/categories")
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		jsonArray = new JSONArray(res.getResponse().getContentAsString());
-
-		assertEquals(jsonArray.length(), 3);
-
-
-		/*
-		 * Add a product
-		 */
-
-		jsonObject = new JSONObject("""
+		Company company = companyControllerTestComponent.addCompany("""
 {
-  "id": 0,
-  "name": "Ukras 1",
-  "previews": [
-    {
-      "id": 0,
-      "fileName": "string",
-      "originalFileName": "string",
-      "size": 0,
-      "primary": true
-    }
-  ],
-  "unit": "kom.",
-  "price": 100,
-  "category": {
-    "id": 3,
-    "parentId": 0,
-    "name": "string"
-  },
-  "tags": [
-    {
-      "id": 1,
-      "name": "string",
-      "color": "#DC6c5B"
-    }
-  ],
-  "comment": "Novi ukras neizmijenjen"
+	"name":"Test company",
+	"locality":"City or country"
 }
 				""");
 
-		jsonObject.getJSONArray("tags").getJSONObject(0).put("id", tagId);
+		Warehouse warehouse = warehouseControllerTestComponent.addWarehouse(company.getId(), """
+{
+	"name":"Test warehouse"
+}
+				""");
 
-		res = this.mockMvc.perform(
-				multipart("/api/products")
-				.file(
-						new MockMultipartFile(
-								"product",
-								"product",
-								MediaType.APPLICATION_JSON_VALUE,
-								jsonObject.toString().getBytes(StandardCharsets.UTF_8)
-								))
-				.file(
-						new MockMultipartFile(
-								"files",
-								"file1.png",
-								MediaType.IMAGE_PNG_VALUE,
-								new byte[] {1}))
-				.file(
-						new MockMultipartFile(
-								"files",
-								"file2.png",
-								MediaType.IMAGE_PNG_VALUE,
-								new byte[] {2}))
-				.file(
-						new MockMultipartFile(
-								"files",
-								"file3.png",
-								MediaType.IMAGE_PNG_VALUE,
-								new byte[] {3}))
-				.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("id").isNumber())
-			.andReturn();
-
-		jsonObject = new JSONObject(res.getResponse().getContentAsString());
-
-		Long productId = jsonObject.getLong("id");
+		StockInfo stockInfo = stockInfoControllerTestComponent.addStockInfo(product.getId(), String.format("""
+{
+	"warehouse":
+	{
+		"id":%d
+	},
+	"customerReference":"CODE1234",
+	"quantity":10,
+	"unitPrice":100.00
+}
+				""", warehouse.getId()));
 
 
-		/*
-		 * Update a product
-		 */
+		// Fails due to referential integrity
+		assertThrows(AssertionError.class, () -> {
+			productControllerTestComponent.deleteProduct(updatedProduct.getId());
+		});
 
+		stockInfoControllerTestComponent.deleteStockInfo(product.getId(), stockInfo.getId());
 
-		jsonObject.put("name", "Ukras 1.1");
-		jsonObject.getJSONArray("previews").remove(2);
-		jsonObject.put("price", 110);
-		jsonObject.getJSONObject("category").put("id", 2);
-		jsonObject.getJSONArray("tags").getJSONObject(0).put("id", (tagId + 1));
-		jsonObject.put("comment", "Ukras 1 izmijenjen");
+		warehouseControllerTestComponent.deleteWarehouse(company.getId(), warehouse.getId());
 
-		res = this.mockMvc.perform(
-				multipart(HttpMethod.PUT, "/api/products/" + productId)
-				.file(
-						new MockMultipartFile(
-								"product",
-								"product",
-								MediaType.APPLICATION_JSON_VALUE,
-								jsonObject.toString().getBytes(StandardCharsets.UTF_8)
-								))
-				.file(
-						new MockMultipartFile(
-								"files",
-								"file4.png",
-								MediaType.IMAGE_PNG_VALUE,
-								new byte[] {4}))
-				.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andReturn();
+		companyControllerTestComponent.deleteCompany(company.getId());
 
-		jsonObject = new JSONObject(res.getResponse().getContentAsString());
+		productControllerTestComponent.deleteProduct(updatedProduct.getId());
 
-		assertEquals(jsonObject.getLong("id"), productId);
-		assertEquals(jsonObject.getString("name"), "Ukras 1.1");
-		assertEquals(jsonObject.getJSONArray("previews").getJSONObject(0).getString("originalFileName"), "file1.png");
-		assertEquals(jsonObject.getJSONArray("previews").getJSONObject(1).getString("originalFileName"), "file2.png");
-		assertEquals(jsonObject.getJSONArray("previews").getJSONObject(2).getString("originalFileName"), "file4.png");
-		assertEquals(jsonObject.getInt("price"), 110);
-		assertEquals(jsonObject.getJSONObject("category").getLong("id"), 2);
-		assertEquals(jsonObject.getJSONArray("tags").getJSONObject(0).getLong("id"), (tagId + 1));
-		assertEquals(jsonObject.getString("comment"), "Ukras 1 izmijenjen");
-
-
-		/*
-		 * Delete a product
-		 */
-
-	    this.mockMvc.perform(delete("/api/products/" + productId))
-	    	.andExpect(status().isOk());
-
-
-		res = this.mockMvc.perform(post("/api/categories")
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-[]
-						"""))
-				.andExpect(status().isOk())
-				.andReturn();
-
-
-		/*
-		 * Get all categories
-		 */
-
-
-		res = this.mockMvc.perform(get("/api/categories")
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		jsonArray = new JSONArray(res.getResponse().getContentAsString());
-
-		assertEquals(jsonArray.length(), 0);
-
-
-		/*
-		 * Get all tags
-		 */
-
-
-		res = this.mockMvc.perform(get("/api/tags")
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		jsonObject = new JSONObject(res.getResponse().getContentAsString());
-
-		assertEquals(jsonObject.getJSONArray("content").length(), 2);
-
-
-		/*
-		 * Delete a tag by its ID
-		 */
-
-		for (int i = 0; i < jsonObject.getJSONArray("content").length(); i++)
+		for (Preview preview:updatedProduct.getPreviews())
 		{
-			long id = jsonObject.getJSONArray("content").getJSONObject(i).getLong("id");
-			this.mockMvc.perform(delete("/api/tags/" + id))
-					.andExpect(status().isOk());
+			assertFalse(new File(storageLocation, preview.getFileName()).exists());
 		}
 
+		tagControllerTestComponent.deleteTag(tag.getId());
+
+		categoryControllerTestComponent.saveCategories("[]");
 
 	}
 
 
+	@Test
+	public void testProductSearch() throws Exception
+	{
+
+		securityTestComponent.authenticate("admin", "administrator");
+
+		List<Category> categories = categoryControllerTestComponent.saveCategories("""
+[
+	{
+		"name":"Kat 1",
+		"children":[]
+	},
+	{
+		"name":"Kat 2",
+		"children":[]
+	}
+]
+				""");
+
+		tagControllerTestComponent.addTag("""
+{
+	"name":"Tag 1",
+	"color":"#111111"
+}
+				""");
+
+		tagControllerTestComponent.addTag("""
+{
+	"name":"Tag 2",
+	"color":"#222222"
+}
+				""");
+
+		List<Tag> tags = tagControllerTestComponent.getTags();
+
+		Company company = companyControllerTestComponent.addCompany("""
+{
+	"name":"Test company",
+	"locality":"City or country"
+}
+				""");
+
+		warehouseControllerTestComponent.addWarehouse(company.getId(), """
+{
+	"name":"Warehouse 1"
+}
+				""");
+
+		warehouseControllerTestComponent.addWarehouse(company.getId(), """
+{
+	"name":"Warehouse 2"
+}
+				""");
+
+		List<Warehouse> warehouses = warehouseControllerTestComponent.getWarehouses(company.getId());
+
+		String productTemplate = """
+				{
+				"name":"%s",
+				"comment":"%s",
+				"unit":"pcs.",
+				"price":%.2f,
+				"category":
+				{
+				"id":%d
+				},
+				"tags":
+				[
+				{
+				"id":%d
+				}
+				]
+				}
+				""";
+
+		List<Product> products = new ArrayList<Product>();
+
+		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
+				"Product a bc",
+				"Comment def",
+				123.45,
+				categories.get(0).getId(),
+				tags.get(0).getId()), 3));
+
+		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
+				"Product A BC",
+				"Comment DEF",
+				111.11,
+				categories.get(1).getId(),
+				tags.get(0).getId()), 3));
+
+		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
+				"Product ghi",
+				"Comment jkl",
+				200.00,
+				categories.get(0).getId(),
+				tags.get(1).getId()), 3));
+
+		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
+				"Product GHI",
+				"Comment JKL",
+				133.33,
+				categories.get(1).getId(),
+				tags.get(1).getId()), 3));
+
+
+		List<StockInfo> stockInfos = new ArrayList<StockInfo>();
+
+		stockInfos.add(stockInfoControllerTestComponent.addStockInfo(products.get(0).getId(), String.format("""
+				{
+				"warehouse":
+				{
+					"id":%d
+				},
+				"customerReference":"CODE1234",
+				"quantity":10,
+				"unitPrice":100.00
+			}
+							""", warehouses.get(0).getId())));
+
+		stockInfos.add(stockInfoControllerTestComponent.addStockInfo(products.get(1).getId(), String.format("""
+				{
+				"warehouse":
+				{
+					"id":%d
+				},
+				"customerReference":"CODE1234",
+				"quantity":10,
+				"unitPrice":100.00
+			}
+							""", warehouses.get(1).getId())));
+
+		stockInfos.add(stockInfoControllerTestComponent.addStockInfo(products.get(2).getId(), String.format("""
+				{
+				"warehouse":
+				{
+					"id":%d
+				},
+				"customerReference":"CODE1234",
+				"quantity":10,
+				"unitPrice":100.00
+			}
+							""", warehouses.get(0).getId())));
+
+		stockInfos.add(stockInfoControllerTestComponent.addStockInfo(products.get(3).getId(), String.format("""
+				{
+				"warehouse":
+				{
+					"id":%d
+				},
+				"customerReference":"CODE1234",
+				"quantity":10,
+				"unitPrice":100.00
+			}
+							""", warehouses.get(1).getId())));
+
+		String p1a = "a bc";
+
+		String p1b = "def";
+
+		Boolean p2 = true;
+
+		Long p3 = warehouses.get(0).getId();
+
+		List<Long> p4a = List.of(tags.get(0).getId());
+
+		List<Long> p4b = tags.stream().map(t -> t.getId()).collect(Collectors.toList());
+
+		Long p5 = categories.get(1).getId();
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, null, null, null).size(), 4);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, null, null, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, null, null, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, p3, null, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, null, p4a, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, null, p4b, null).size(), 4);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, null, null, p5).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, p3, null, null).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, null, p4a, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, null, p4b, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, null, null, p5).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, p3, null, null).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, null, p4a, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, null, p4b, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, null, null, p5).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, p3, p4a, null).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, p3, p4b, null).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, p3, null, p5).size(), 0);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, null, p4a, p5).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, null, p4b, p5).size(), 2);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, p3, p4a, null).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, p3, p4a, null).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, p3, p4b, null).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, p3, p4b, null).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, p3, null, p5).size(), 0);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, p3, null, p5).size(), 0);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, null, p4a, p5).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, null, p4a, p5).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, null, p4b, p5).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, null, p4b, p5).size(), 1);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, p3, p4a, p5).size(), 0);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(null, null, p3, p4b, p5).size(), 0);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, p3, p4a, p5).size(), 0);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, p3, p4a, p5).size(), 0);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1a, null, p3, p4b, p5).size(), 0);
+
+		assertEquals(productControllerTestComponent
+				.getProducts(p1b, p2, p3, p4b, p5).size(), 0);
+
+		products = productControllerTestComponent.getProducts(null, null, null, null, null);
+
+		assertEquals(products.get(0).getAvailableQty().compareTo(BigDecimal.valueOf(10)), 0);
+
+		assertEquals(products.get(0).getOfferedQty().compareTo(BigDecimal.valueOf(0)), 0);
+
+		assertEquals(products.get(0).getOrderedQty().compareTo(BigDecimal.valueOf(0)), 0);
+
+		assertEquals(products.get(0).getPurchasePrice().compareTo(BigDecimal.valueOf(100)), 0);
+
+		stockInfos.add(stockInfoControllerTestComponent.addStockInfo(products.get(0).getId(), String.format("""
+				{
+				"warehouse":
+				{
+					"id":%d
+				},
+				"customerReference":"CODE1234",
+				"quantity":5,
+				"unitPrice":90.00
+			}
+							""", warehouses.get(1).getId())));
+
+
+		Product product = productControllerTestComponent.getProduct(products.get(0).getId());
+
+		assertNotEquals(product, null);
+
+		assertEquals(product.getAvailableQty().compareTo(BigDecimal.valueOf(15)), 0);
+
+		assertEquals(product.getOfferedQty().compareTo(BigDecimal.valueOf(0)), 0);
+
+		assertEquals(product.getOrderedQty().compareTo(BigDecimal.valueOf(0)), 0);
+
+		assertEquals(product.getPurchasePrice().compareTo(BigDecimal.valueOf(9667, 2)), 0);
+
+		stockInfoControllerTestComponent.deleteStockInfo(products.get(0).getId(), stockInfos.get(4).getId());
+		stockInfoControllerTestComponent.deleteStockInfo(products.get(0).getId(), stockInfos.get(0).getId());
+		stockInfoControllerTestComponent.deleteStockInfo(products.get(1).getId(), stockInfos.get(1).getId());
+		stockInfoControllerTestComponent.deleteStockInfo(products.get(2).getId(), stockInfos.get(2).getId());
+		stockInfoControllerTestComponent.deleteStockInfo(products.get(3).getId(), stockInfos.get(3).getId());
+
+		productControllerTestComponent.deleteProduct(products.get(0).getId());
+		productControllerTestComponent.deleteProduct(products.get(1).getId());
+		productControllerTestComponent.deleteProduct(products.get(2).getId());
+		productControllerTestComponent.deleteProduct(products.get(3).getId());
+
+		warehouseControllerTestComponent.deleteWarehouse(company.getId(), warehouses.get(0).getId());
+		warehouseControllerTestComponent.deleteWarehouse(company.getId(), warehouses.get(1).getId());
+
+		companyControllerTestComponent.deleteCompany(company.getId());
+
+		tagControllerTestComponent.deleteTag(tags.get(0).getId());
+		tagControllerTestComponent.deleteTag(tags.get(1).getId());
+
+		categoryControllerTestComponent.saveCategories("[]");
+
+	}
 
 }
