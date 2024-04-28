@@ -22,7 +22,7 @@ public class CsrfController {
 							@Schema(implementation = ErrorResponse.class))
 			})
 	})
-    @GetMapping("/csrf")
+    @GetMapping("/api/csrf")
     public String csrf() {
         return null;
     }

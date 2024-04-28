@@ -91,7 +91,7 @@ public class SecurityTests {
 
 		Thread.sleep(Duration.ofSeconds(1));
 
-		this.mockMvc.perform(get("/refreshtoken")
+		this.mockMvc.perform(get("/api/refreshtoken")
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
 				.header("X-XSRF-TOKEN", securityService.getXsrf())

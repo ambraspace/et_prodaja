@@ -51,7 +51,7 @@ public class JwtAuthenticationController {
 							@Schema(implementation = ErrorResponse.class))
 			})
 	})
-    @PostMapping("/authenticate")
+    @PostMapping("/api/authenticate")
     public CustomJwtResponse authenticate(@RequestBody JwtRequest jwtRequest)
             throws Exception {
 
@@ -87,7 +87,7 @@ public class JwtAuthenticationController {
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-    @GetMapping("/refreshtoken")
+    @GetMapping("/api/refreshtoken")
     public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
 
         String username = null;

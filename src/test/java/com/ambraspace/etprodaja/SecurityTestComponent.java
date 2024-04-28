@@ -36,14 +36,14 @@ public class SecurityTestComponent {
 		@Override
 		public void handle(MvcResult result) throws Exception {
 
-			if (result.getRequest().getPathInfo().equals("/authenticate") &&
+			if (result.getRequest().getPathInfo().equals("/api/authenticate") &&
 					result.getResponse().getStatus() == HttpStatus.OK.value())
 			{
 				logger.debug("Setting JWT");
 				JSONObject body = new JSONObject(result.getResponse().getContentAsString());
 				SecurityTestComponent.this.jwt = body.getString("jwttoken");
 				logger.debug("JWT: " + SecurityTestComponent.this.jwt);
-			} else if (result.getRequest().getPathInfo().equals("/refreshtoken") &&
+			} else if (result.getRequest().getPathInfo().equals("/api/refreshtoken") &&
 					result.getResponse().getStatus() == HttpStatus.OK.value())
 			{
 				logger.debug("Refreshing JWT");
@@ -92,7 +92,7 @@ public class SecurityTestComponent {
 }
 				""", username, password);
 
-		this.mockMvc.perform(post("/authenticate")
+		this.mockMvc.perform(post("/api/authenticate")
 				.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +135,7 @@ public class SecurityTestComponent {
 	private void getNewCsrfToken()
 	{
 		try {
-			mockMvc.perform(get("/csrf")
+			mockMvc.perform(get("/api/csrf")
 					.accept(MediaType.APPLICATION_JSON)
 					.contentType(MediaType.APPLICATION_JSON))
 			.andDo(getResultHandler());
