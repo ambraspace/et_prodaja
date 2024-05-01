@@ -104,6 +104,26 @@ public class ProductControllerTestComponent {
 	}
 
 
+	public byte[] downloadProductPreview(
+			Long productId,
+			Long previewId) throws Exception
+	{
+
+		MockHttpServletRequestBuilder builder = get("/api/products/" + productId + "/previews/" + previewId + "/download");
+
+		MvcResult result =
+				this.mockMvc.perform(builder
+						.accept(MediaType.APPLICATION_OCTET_STREAM)
+						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
+				.andExpect(status().isOk())
+				.andDo(securityTestComponent.getResultHandler())
+				.andReturn();
+
+		return result.getResponse().getContentAsByteArray();
+
+	}
+
+
 	public Product addProduct(String body, int numFiles) throws Exception
 	{
 

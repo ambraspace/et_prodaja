@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class ProductController
@@ -94,6 +95,29 @@ public class ProductController
 		try
 		{
 			return productService.getProduct(id);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
+	@Operation(summary = "Download product preview", responses = {
+			@ApiResponse(responseCode = "200", description = "File returned", content = {
+					@Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
+	@GetMapping("/api/products/{productId}/previews/{previewId}/download")
+	public void downloadProductPreview(@PathVariable Long productId, @PathVariable Long previewId, HttpServletResponse response)
+	{
+		try
+		{
+			productService.downloadProductImage(productId, previewId, response);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

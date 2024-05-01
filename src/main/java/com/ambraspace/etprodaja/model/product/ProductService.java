@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +30,7 @@ import com.ambraspace.etprodaja.model.stockinfo.StockInfoService;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Tuple;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class ProductService
@@ -219,6 +225,45 @@ public class ProductService
 			fillTransientFields(null, List.of(p));
 		}
 		return p;
+	}
+
+
+	public void downloadProductImage(Long productId, Long previewId, HttpServletResponse response) throws IOException
+	{
+
+		Product product = getProduct(productId);
+
+		if (product == null)
+			throw new RuntimeException("Product not found!");
+
+		Preview preview = product.getPreviews().stream().filter(p -> p.getId().equals(previewId)).findFirst().orElse(null);
+
+		if (preview == null)
+			throw new RuntimeException("Preview not found!");
+
+		File file = new File(storageLocation, preview.getFileName());
+
+		if (!file.exists())
+			throw new RuntimeException("File not found!");
+
+		String contentType = Files.probeContentType(file.toPath());
+
+        if (contentType == null) {
+            // Use the default media type
+            contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+        }
+
+        response.setContentType(contentType);
+
+        response.setContentLengthLong(preview.getSize());
+
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
+                .filename(preview.getOriginalFileName(), StandardCharsets.UTF_8)
+                .build()
+                .toString());
+
+        Files.copy(file.toPath(), response.getOutputStream());
+
 	}
 
 

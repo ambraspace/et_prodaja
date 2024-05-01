@@ -124,6 +124,10 @@ public class ProductControllerTests {
 			assertTrue(new File(storageLocation, preview.getFileName()).exists());
 		}
 
+		byte[] fileImage = productControllerTestComponent.downloadProductPreview(product.getId(), product.getPreviews().get(0).getId());
+
+		assertEquals(fileImage.length, 1);
+
 		String updatedProductBody = String.format("""
 {
 	"id":%d,
