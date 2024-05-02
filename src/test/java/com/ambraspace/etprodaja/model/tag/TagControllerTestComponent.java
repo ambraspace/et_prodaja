@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja.model.tag;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -99,11 +98,11 @@ public class TagControllerTestComponent {
 
 		MvcResult result =
 				this.mockMvc.perform(post("/api/tags")
-						.with(csrf())
+						//with(csrf())
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
@@ -120,9 +119,9 @@ public class TagControllerTestComponent {
 	{
 
 		this.mockMvc.perform(delete("/api/tags/" + id)
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 		.andExpect(status().isOk())
 		.andDo(securityTestComponent.getResultHandler());

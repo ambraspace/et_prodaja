@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,11 +92,11 @@ public class SecurityTestComponent {
 				""", username, password);
 
 		this.mockMvc.perform(post("/api/authenticate")
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(body)
-				.header("X-XSRF-TOKEN", getXsrf()))
+				.content(body))
+				//.header("X-XSRF-TOKEN", getXsrf()))
 		.andExpect(status().isOk()).andDo(getResultHandler());
 
 	}

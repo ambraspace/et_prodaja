@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja.model.order;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -31,7 +30,7 @@ public class OrderControllerTestComponent
 	private SecurityTestComponent securityTestComponent;
 
 	private static final ObjectMapper mapper = new ObjectMapper();
-	
+
 	static {
 		mapper.findAndRegisterModules();
 	}
@@ -91,9 +90,9 @@ public class OrderControllerTestComponent
 	{
 
 		MvcResult result = this.mockMvc.perform(put("/api/orders/" + id + "/close")
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
@@ -108,9 +107,9 @@ public class OrderControllerTestComponent
 	{
 
 		this.mockMvc.perform(delete("/api/orders/all")
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 		.andExpect(status().isOk())
 		.andDo(securityTestComponent.getResultHandler());

@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja.model.warehouse;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -78,12 +77,12 @@ public class WarehouseControllerTestComponent
 
 		MvcResult result =
 				this.mockMvc.perform(post("/api/companies/" + companyId + "/warehouses")
-						.with(csrf())
+						//.with(csrf())
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						.header("Authorization", "Bearer " + securityTestComponent.getJwt())
-						.header("X-XSRF-TOKEN", securityTestComponent.getXsrf()))
+						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
+						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
@@ -98,12 +97,12 @@ public class WarehouseControllerTestComponent
 
 		MvcResult result =
 				this.mockMvc.perform(put("/api/companies/" + companyId + "/warehouses/" + warehouseId)
-						.with(csrf())
+						//.with(csrf())
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						.header("Authorization", "Bearer " + securityTestComponent.getJwt())
-						.header("X-XSRF-TOKEN", securityTestComponent.getXsrf()))
+						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
+						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
@@ -117,10 +116,10 @@ public class WarehouseControllerTestComponent
 	{
 
 		this.mockMvc.perform(delete("/api/companies/" + companyId + "/warehouses/" + warehouseId)
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
-				.header("Authorization", "Bearer " + securityTestComponent.getJwt())
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf()))
+				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf()))
 		.andExpect(status().isOk())
 		.andDo(securityTestComponent.getResultHandler());
 

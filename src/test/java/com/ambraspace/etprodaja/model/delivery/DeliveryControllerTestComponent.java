@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja.model.delivery;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,7 +31,7 @@ public class DeliveryControllerTestComponent
 	private SecurityTestComponent securityTestComponent;
 
 	private static final ObjectMapper mapper = new ObjectMapper();
-	
+
 	static {
 		mapper.findAndRegisterModules();
 	}
@@ -90,11 +89,11 @@ public class DeliveryControllerTestComponent
 	{
 
 		MvcResult result = this.mockMvc.perform(post("/api/deliveries")
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(body)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
@@ -109,11 +108,11 @@ public class DeliveryControllerTestComponent
 	{
 
 		MvcResult result = this.mockMvc.perform(put("/api/deliveries/" + id)
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(body)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
@@ -128,9 +127,9 @@ public class DeliveryControllerTestComponent
 	{
 
 		this.mockMvc.perform(delete("/api/deliveries/" + id)
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler());
@@ -142,9 +141,9 @@ public class DeliveryControllerTestComponent
 	{
 
 		MvcResult result = this.mockMvc.perform(put("/api/deliveries/" + id + "/delivered")
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
@@ -159,9 +158,9 @@ public class DeliveryControllerTestComponent
 	{
 
 		this.mockMvc.perform(delete("/api/deliveries/all")
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler());

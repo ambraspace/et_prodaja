@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja.model.stockinfo;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -79,11 +78,11 @@ public class StockInfoControllerTestComponent
 
 		MvcResult result =
 				this.mockMvc.perform(post("/api/products/" + productId + "/stockInfos")
-						.with(csrf())
+						//.with(csrf())
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
@@ -99,11 +98,11 @@ public class StockInfoControllerTestComponent
 
 		MvcResult result =
 				this.mockMvc.perform(put("/api/products/" + productId + "/stockInfos/" + id)
-						.with(csrf())
+						//.with(csrf())
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
@@ -118,10 +117,10 @@ public class StockInfoControllerTestComponent
 	{
 
 		this.mockMvc.perform(delete("/api/products/" + productId + "/stockInfos/" + id)
-				.with(csrf())
+				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
-				.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 		.andExpect(status().isOk())
 		.andDo(securityTestComponent.getResultHandler());

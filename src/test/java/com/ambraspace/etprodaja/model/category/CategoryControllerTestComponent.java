@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja.model.category;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,11 +52,11 @@ public class CategoryControllerTestComponent {
 
 		MvcResult result =
 				this.mockMvc.perform(post("/api/categories")
-						.with(csrf())
+						//.with(csrf())
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
