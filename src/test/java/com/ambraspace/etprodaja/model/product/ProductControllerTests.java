@@ -124,7 +124,7 @@ public class ProductControllerTests {
 			assertTrue(new File(storageLocation, preview.getFileName()).exists());
 		}
 
-		byte[] fileImage = productControllerTestComponent.downloadProductPreview(product.getId(), product.getPreviews().get(0).getId());
+		byte[] fileImage = productControllerTestComponent.downloadProductPreview(product.getPreviews().get(0).getFileName());
 
 		assertEquals(fileImage.length, 1);
 

@@ -61,7 +61,7 @@ public class SecurityConfig
         http
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers("/api/authenticate", "/api/csrf", "/swagger-ui/**", "/v3/api-docs/**")
+                    .requestMatchers("/api/authenticate", "/api/files", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
                     .anyRequest()
                         .authenticated())

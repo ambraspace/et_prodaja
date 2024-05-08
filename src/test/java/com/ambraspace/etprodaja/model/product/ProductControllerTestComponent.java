@@ -104,16 +104,14 @@ public class ProductControllerTestComponent {
 
 
 	public byte[] downloadProductPreview(
-			Long productId,
-			Long previewId) throws Exception
+			String fileName) throws Exception
 	{
 
-		MockHttpServletRequestBuilder builder = get("/api/products/" + productId + "/previews/" + previewId + "/download");
+		MockHttpServletRequestBuilder builder = get("/api/files?fn=" + fileName);
 
 		MvcResult result =
 				this.mockMvc.perform(builder
-						.accept(MediaType.APPLICATION_OCTET_STREAM)
-						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
+						.accept(MediaType.APPLICATION_OCTET_STREAM))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();

@@ -110,14 +110,12 @@ public class ProductController
 							@Schema(implementation = ErrorResponse.class))
 			})
 	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
-	@GetMapping("/api/products/{productId}/previews/{previewId}/download")
-	public void downloadProductPreview(@PathVariable Long productId, @PathVariable Long previewId, HttpServletResponse response)
+	@GetMapping("/api/files")
+	public void downloadProductPreview(@RequestParam("fn") String fileName, HttpServletResponse response)
 	{
 		try
 		{
-			productService.downloadProductImage(productId, previewId, response);
+			productService.downloadProductImage(fileName, response);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

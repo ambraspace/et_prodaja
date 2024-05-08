@@ -228,20 +228,10 @@ public class ProductService
 	}
 
 
-	public void downloadProductImage(Long productId, Long previewId, HttpServletResponse response) throws IOException
+	public void downloadProductImage(String fileName, HttpServletResponse response) throws IOException
 	{
 
-		Product product = getProduct(productId);
-
-		if (product == null)
-			throw new RuntimeException("Product not found!");
-
-		Preview preview = product.getPreviews().stream().filter(p -> p.getId().equals(previewId)).findFirst().orElse(null);
-
-		if (preview == null)
-			throw new RuntimeException("Preview not found!");
-
-		File file = new File(storageLocation, preview.getFileName());
+		File file = new File(storageLocation, fileName);
 
 		if (!file.exists())
 			throw new RuntimeException("File not found!");
@@ -255,10 +245,10 @@ public class ProductService
 
         response.setContentType(contentType);
 
-        response.setContentLengthLong(preview.getSize());
+        response.setContentLengthLong(Files.size(file.toPath()));
 
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                .filename(preview.getOriginalFileName(), StandardCharsets.UTF_8)
+                .filename(fileName, StandardCharsets.UTF_8)
                 .build()
                 .toString());
 
