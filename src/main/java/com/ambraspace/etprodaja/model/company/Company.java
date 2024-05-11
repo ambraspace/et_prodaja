@@ -26,11 +26,11 @@ public class Company
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull @NotBlank @Size(min = 2, max = 50, message = "Company mame must be between 1 and 50 characters long")
+	@NotNull @NotBlank @Size(min = 2, max = 50, message = "Company name must be between 2 and 50 characters long")
 	@Column(nullable = false)
 	private String name;
 
-	@NotNull @NotBlank @Size(min = 2, max = 50, message = "Company locality must be between 1 and 50 characters long")
+	@NotNull @NotBlank @Size(min = 2, max = 50, message = "Company locality must be between 2 and 50 characters long")
 	@Column(nullable = false)
 	private String locality;
 
