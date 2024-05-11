@@ -61,7 +61,7 @@ public class SecurityConfig
         http
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers("/api/authenticate", "/api/files", "/swagger-ui/**", "/v3/api-docs/**")
+                    .requestMatchers("/api/authenticate", "/api/files", "/swagger-ui/**", "/v3/api-docs/**", "/error")
                         .permitAll()
                     .anyRequest()
                         .authenticated())
@@ -76,11 +76,7 @@ public class SecurityConfig
                     .logoutSuccessHandler((request, response, authentication) -> {}))
             .httpBasic(basic -> basic.disable())
             .formLogin(form -> form.disable())
-            .csrf(c -> c.disable()
-            	//.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            	//.csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-        	)
-            //.addFilterAfter(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class)
+            .csrf(c -> c.disable())
         	.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
             return http.build();
