@@ -25,6 +25,9 @@ public class DeliveryService
 	@Autowired
 	private ItemService itemService;
 
+	/*
+	 * TODO: Riješiti upozorenje "applying in memory"
+	 */
 
 	public Delivery getDelivery(Long id)
 	{
