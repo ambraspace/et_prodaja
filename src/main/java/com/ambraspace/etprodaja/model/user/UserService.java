@@ -107,7 +107,11 @@ public class UserService implements UserDetailsService
 		if (fromRep == null)
 			throw new RuntimeException("No such user in the database!");
 
-		// TODO: fix or delete all offers by this user
+		long numOfAdmins = userRepository.countByRole(User.Role.ADMIN);
+
+		if (numOfAdmins == 1)
+			throw new RuntimeException("Cannot delete the last ADMIN user!");
+
 
 		userRepository.deleteById(username);
 
