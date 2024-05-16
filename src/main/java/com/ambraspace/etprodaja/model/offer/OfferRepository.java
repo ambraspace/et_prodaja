@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja.model.offer;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,21 +35,21 @@ WHERE
 
 
 	@Query("""
-SELECT
+SELECT DISTINCT
 	o.id
 FROM
-	Offer o
+	Offer o JOIN o.items i
 WHERE
 	o.user.username = :username AND
 	o.company.id = :companyId AND
 	o.status = :status AND
-	o.validUntil < :today
+	i.stockInfo.product.id = :product
 			""")
-	Page<String> findByUserUsernameAndCompanyIdAndStatusAndValidUntilIsBefore(
+	Page<String> findByUserUsernameAndCompanyIdAndStatusAndProductId(
 			@Param("username") String username,
 			@Param("companyId") Long companyId,
 			@Param("status") Status status,
-			@Param("today") LocalDate today,
+			@Param("product") Long productId,
 			Pageable pageable);
 
 
@@ -70,19 +69,19 @@ WHERE
 
 
 	@Query("""
-SELECT
+SELECT DISTINCT
 	o.id
 FROM
-	Offer o
+	Offer o JOIN o.items i
 WHERE
 	o.user.username = :username AND
 	o.company.id = :companyId AND
-	o.validUntil < :today
+	i.stockInfo.product.id = :product
 			""")
-	Page<String> findByUserUsernameAndCompanyIdAndValidUntilIsBefore(
+	Page<String> findByUserUsernameAndCompanyIdAndProductId(
 			@Param("username") String username,
 			@Param("companyId") Long companyId,
-			@Param("today") LocalDate today,
+			@Param("product") Long productId,
 			Pageable pageable);
 
 
@@ -102,19 +101,19 @@ WHERE
 
 
 	@Query("""
-SELECT
+SELECT DISTINCT
 	o.id
 FROM
-	Offer o
+	Offer o JOIN o.items i
 WHERE
 	o.user.username = :username AND
 	o.status = :status AND
-	o.validUntil < :today
+	i.stockInfo.product.id = :product
 			""")
-	Page<String> findByUserUsernameAndStatusAndValidUntilIsBefore(
+	Page<String> findByUserUsernameAndStatusAndProductId(
 			@Param("username") String username,
 			@Param("status") Status status,
-			@Param("today") LocalDate today,
+			@Param("product") Long productId,
 			Pageable pageable);
 
 
@@ -132,17 +131,17 @@ WHERE
 
 
 	@Query("""
-SELECT
+SELECT DISTINCT
 	o.id
 FROM
-	Offer o
+	Offer o JOIN o.items i
 WHERE
 	o.user.username = :username AND
-	o.validUntil < :today
+	i.stockInfo.product.id = :product
 			""")
-	Page<String> findByUserUsernameAndValidUntilIsBefore(
+	Page<String> findByUserUsernameAndProductId(
 			@Param("username") String username,
-			@Param("today") LocalDate today,
+			@Param("product") Long productId,
 			Pageable pageable);
 
 
@@ -162,19 +161,19 @@ WHERE
 
 
 	@Query("""
-SELECT
+SELECT DISTINCT
 	o.id
 FROM
-	Offer o
+	Offer o JOIN o.items i
 WHERE
 	o.company.id = :companyId AND
 	o.status = :status AND
-	o.validUntil < :today
+	i.stockInfo.product.id = :product
 			""")
-	Page<String> findByCompanyIdAndStatusAndValidUntilIsBefore(
+	Page<String> findByCompanyIdAndStatusAndProductId(
 			@Param("companyId") Long companyId,
 			@Param("status") Status status,
-			@Param("today") LocalDate today,
+			@Param("product") Long productId,
 			Pageable pageable);
 
 
@@ -192,17 +191,17 @@ WHERE
 
 
 	@Query("""
-SELECT
+SELECT DISTINCT
 	o.id
 FROM
-	Offer o
+	Offer o JOIN o.items i
 WHERE
 	o.company.id = :companyId AND
-	o.validUntil < :today
+	i.stockInfo.product.id = :product
 			""")
-	Page<String> findByCompanyIdAndValidUntilIsBefore(
+	Page<String> findByCompanyIdAndProductId(
 			@Param("companyId") Long companyId,
-			@Param("today") LocalDate today,
+			@Param("product") Long productId,
 			Pageable pageable);
 
 
@@ -220,30 +219,30 @@ WHERE
 
 
 	@Query("""
-SELECT
+SELECT DISTINCT
 	o.id
 FROM
-	Offer o
+	Offer o JOIN o.items i
 WHERE
 	o.status = :status AND
-	o.validUntil < :today
+	i.stockInfo.product.id = :product
 			""")
-	Page<String> findByStatusAndValidUntilIsBefore(
+	Page<String> findByStatusAndProductId(
 			@Param("status") Status status,
-			@Param("today") LocalDate today,
+			@Param("product") Long productId,
 			Pageable pageable);
 
 
 	@Query("""
-SELECT
+SELECT DISTINCT
 	o.id
 FROM
-	Offer o
+	Offer o JOIN o.items i
 WHERE
-	o.validUntil < :today
+	i.stockInfo.product.id = :product
 			""")
-	Page<String> findByValidUntilIsBefore(
-			@Param("today") LocalDate today,
+	Page<String> findByProductId(
+			@Param("product") Long productId,
 			Pageable pageable);
 
 

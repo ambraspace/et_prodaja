@@ -81,11 +81,11 @@ public class OfferController
 			@RequestParam(name = "c", required = false) Long companyId,
 			@Parameter(description = "Offer status", required = false)
 			@RequestParam(name = "s", required = false) Status status,
-			@Parameter(description = "Show only overdue offers", required = false)
-			@RequestParam(name = "o", defaultValue = "false") boolean onlyOverdue,
+			@Parameter(description = "Product", required = false)
+			@RequestParam(name = "p", required = false) Long productId,
 			@ParameterObject @PageableDefault(sort = {"offerDate", "id"}, direction = Direction.DESC) Pageable pageable)
 	{
-		return offerService.getOffers(username, companyId, status, onlyOverdue, pageable);
+		return offerService.getOffers(username, companyId, status, productId, pageable);
 	}
 
 
