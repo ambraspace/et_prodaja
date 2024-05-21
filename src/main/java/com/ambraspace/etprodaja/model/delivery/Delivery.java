@@ -9,9 +9,9 @@ import java.util.Objects;
 import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.company.Company;
-import com.ambraspace.etprodaja.model.item.Item;
+import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItem;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,10 +38,13 @@ import lombok.Setter;
 @NamedEntityGraphs({
 	@NamedEntityGraph(name = "delivery-with-details", attributeNodes = {
 			@NamedAttributeNode("supplier"),
-			@NamedAttributeNode(value = "items", subgraph = "delivery.items")
+			@NamedAttributeNode(value = "deliveryItems", subgraph = "delivery.deliveryItems")
 	}, subgraphs = {
-			@NamedSubgraph(name = "delivery.items", attributeNodes = {
-					@NamedAttributeNode("stockInfo")
+			@NamedSubgraph(name = "delivery.deliveryItems", attributeNodes = {
+					@NamedAttributeNode(value = "item", subgraph = "delivery.deliveryItems.item")
+			}),
+			@NamedSubgraph(name = "delivery.deliveryItems.item", attributeNodes = {
+					@NamedAttributeNode(value = "stockInfo")
 			})
 	})
 })
@@ -73,9 +76,9 @@ public class Delivery
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery")
-	private List<Item> items = new ArrayList<Item>();
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery", orphanRemoval = true)
+	private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>();
 
 	@Transient
 	@JsonProperty

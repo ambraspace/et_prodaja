@@ -2,16 +2,20 @@ package com.ambraspace.etprodaja.model.item;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
 
-import com.ambraspace.etprodaja.model.delivery.Delivery;
+import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItem;
 import com.ambraspace.etprodaja.model.offer.Offer;
 import com.ambraspace.etprodaja.model.order.Order;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
+import com.ambraspace.etprodaja.util.Views;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,6 +26,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -34,18 +41,27 @@ import lombok.Setter;
 @NamedEntityGraphs(value = {
 		@NamedEntityGraph(name = "offer-items", attributeNodes = {
 				@NamedAttributeNode("order"),
-				@NamedAttributeNode("delivery"),
-				@NamedAttributeNode("stockInfo")
+				@NamedAttributeNode(value = "deliveryItems", subgraph = "item.deliveryItems"),
+				@NamedAttributeNode(value = "stockInfo", subgraph = "item.stockInfo")
+		}, subgraphs = {
+				@NamedSubgraph(name = "item.deliveryItems", attributeNodes = {
+						@NamedAttributeNode("delivery")
+				}),
+				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
+						@NamedAttributeNode("product")
+				})
 		}),
 		@NamedEntityGraph(name = "order-items", attributeNodes = {
 				@NamedAttributeNode("offer"),
-				@NamedAttributeNode("delivery"),
-				@NamedAttributeNode("stockInfo")
-		}),
-		@NamedEntityGraph(name = "delivery-items", attributeNodes = {
-				@NamedAttributeNode("offer"),
-				@NamedAttributeNode("order"),
-				@NamedAttributeNode("stockInfo")
+				@NamedAttributeNode(value = "deliveryItems", subgraph = "item.deliveryItems"),
+				@NamedAttributeNode(value = "stockInfo", subgraph = "item.stockInfo")
+		}, subgraphs = {
+				@NamedSubgraph(name = "item.deliveryItems", attributeNodes = {
+						@NamedAttributeNode("delivery")
+				}),
+				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
+						@NamedAttributeNode("product")
+				})
 		})
 })
 public class Item
@@ -61,10 +77,9 @@ public class Item
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Order order;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Delivery delivery;
-
-	private String deliveryNote;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", orphanRemoval = true)
+	@JsonView(value = {Views.Item.class})
+	private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>();
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private StockInfo stockInfo;
@@ -81,6 +96,9 @@ public class Item
 	@NotNull @PositiveOrZero
 	private BigDecimal discountPercent = BigDecimal.valueOf(0, 2);
 
+	@JsonProperty
+	@Transient
+	private BigDecimal outstandingQuantity = BigDecimal.ZERO;
 
 	@JsonProperty(access = Access.READ_ONLY)
 	public BigDecimal getNetPrice()
@@ -94,7 +112,6 @@ public class Item
 	public void copyFieldsFrom(Item other)
 	{
 
-		this.setDeliveryNote(other.getDeliveryNote());
 		this.setDiscountPercent(other.getDiscountPercent());
 		this.setGrossPrice(other.getGrossPrice());
 		this.setProductName(other.getProductName());

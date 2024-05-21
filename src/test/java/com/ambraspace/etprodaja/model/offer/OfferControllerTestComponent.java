@@ -61,7 +61,7 @@ public class OfferControllerTestComponent {
 	}
 
 
-	public List<Offer> getOffers(String username, Long companyId, Status status, boolean onlyOverdue) throws Exception
+	public List<Offer> getOffers(String username, Long companyId, Status status, Long productId) throws Exception
 	{
 
 		MockHttpServletRequestBuilder builder = get("/api/offers");
@@ -75,8 +75,8 @@ public class OfferControllerTestComponent {
 		if (status != null)
 			builder.param("s", status.name());
 
-		if (onlyOverdue)
-			builder.param("o", "true");
+		if (productId != null)
+			builder.param("p", "" + productId);
 
 		MvcResult result =
 				this.mockMvc.perform(builder

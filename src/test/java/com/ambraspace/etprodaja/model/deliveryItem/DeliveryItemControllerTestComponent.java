@@ -1,4 +1,4 @@
-package com.ambraspace.etprodaja.model.item;
+package com.ambraspace.etprodaja.model.deliveryItem;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,13 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.ambraspace.etprodaja.SecurityTestComponent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class ItemControllerTestComponent {
+public class DeliveryItemControllerTestComponent {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -34,22 +33,21 @@ public class ItemControllerTestComponent {
 	}
 
 
-	public Item getOfferItem(String offerId, Long itemId) throws Exception
+	public DeliveryItem getDeliveryItem(Long deliveryId, Long id) throws Exception
 	{
 
 		MvcResult result =
-				this.mockMvc.perform(get("/api/offers/" + offerId + "/items/" + itemId)
+				this.mockMvc.perform(get("/api/deliveries/" + deliveryId + "/deliveryItems/" + id)
 						.accept(MediaType.APPLICATION_JSON)
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		Item retVal = null;
-
+		DeliveryItem retVal = null;
 		if (!result.getResponse().getContentAsString().isBlank())
 		{
-			retVal = mapper.readValue(result.getResponse().getContentAsString(), Item.class);
+			retVal = mapper.readValue(result.getResponse().getContentAsString(), DeliveryItem.class);
 		}
 
 		return retVal;
@@ -57,96 +55,73 @@ public class ItemControllerTestComponent {
 	}
 
 
-	public List<Item> getOfferItems(String offerId) throws Exception
+	public List<DeliveryItem> getDeliveryItems(Long deliveryId) throws Exception
 	{
 
 		MvcResult result =
-				this.mockMvc.perform(get("/api/offers/" + offerId + "/items")
+				this.mockMvc.perform(get("/api/deliveries/" + deliveryId + "/deliveryItems")
 						.accept(MediaType.APPLICATION_JSON)
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		return mapper.readerForListOf(Item.class)
+		return mapper.readerForListOf(DeliveryItem.class)
 				.readValue(result.getResponse().getContentAsString());
 
 	}
 
 
-	public List<Item> getOrderItems(Long orderId, boolean onlyUndelivered) throws Exception
-	{
-
-		MockHttpServletRequestBuilder builder = get("/api/orders/" + orderId + "/items")
-				.accept(MediaType.APPLICATION_JSON)
-				.header("Authorization", "Bearer " + securityTestComponent.getJwt());
-
-		if (onlyUndelivered)
-			builder.param("ou", "true");
-
-		MvcResult result =
-				this.mockMvc.perform(builder)
-				.andExpect(status().isOk())
-				.andDo(securityTestComponent.getResultHandler())
-				.andReturn();
-
-		return mapper.readerForListOf(Item.class)
-				.readValue(result.getResponse().getContentAsString());
-
-	}
-
-
-	public Item addItem(String offerNo, String body) throws Exception
+	public DeliveryItem addDeliveryItem(Long deliveryId, String body) throws Exception
 	{
 
 		MvcResult result =
-				this.mockMvc.perform(post("/api/offers/" + offerNo + "/items")
-						//.with(csrf())
+				this.mockMvc.perform(post("/api/deliveries/" + deliveryId + "/deliveryItems")
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		return mapper.readValue(result.getResponse().getContentAsString(), Item.class);
+		return mapper.readValue(result.getResponse().getContentAsString(), DeliveryItem.class);
 
 	}
 
 
-	public Item updateItem(String offerNo, Long itemId, String body) throws Exception
+
+	public DeliveryItem updateDeliveryItem(Long deliveryId, Long id, String body) throws Exception
 	{
 
 		MvcResult result =
-				this.mockMvc.perform(put("/api/offers/" + offerNo + "/items/" + itemId)
-						//.with(csrf())
+				this.mockMvc.perform(put("/api/deliveries/" + deliveryId + "/deliveryItems/" + id)
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		return mapper.readValue(result.getResponse().getContentAsString(), Item.class);
+		return mapper.readValue(result.getResponse().getContentAsString(), DeliveryItem.class);
 
 	}
 
 
-	public void deleteItem(String offerNo, Long itemId) throws Exception
+
+	public void deleteDeliveryItem(Long deliveryId, Long id) throws Exception
 	{
 
-		this.mockMvc.perform(delete("/api/offers/" + offerNo + "/items/" + itemId)
-				//.with(csrf())
+		this.mockMvc.perform(delete("/api/deliveries/" + deliveryId + "/deliveryItems/" + id)
 				.accept(MediaType.APPLICATION_JSON)
-				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 		.andExpect(status().isOk())
-		.andDo(securityTestComponent.getResultHandler());
+		.andDo(securityTestComponent.getResultHandler())
+		.andReturn();
 
 	}
 
+
 }
+

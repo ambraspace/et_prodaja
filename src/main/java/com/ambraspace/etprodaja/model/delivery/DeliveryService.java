@@ -7,13 +7,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ambraspace.etprodaja.model.delivery.Delivery.Status;
-import com.ambraspace.etprodaja.model.item.Item;
-import com.ambraspace.etprodaja.model.item.ItemService;
+import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItem;
 
 @Service
 public class DeliveryService
@@ -22,12 +22,6 @@ public class DeliveryService
 	@Autowired
 	private DeliveryRepository deliveryRepository;
 
-	@Autowired
-	private ItemService itemService;
-
-	/*
-	 * TODO: Riješiti upozorenje "applying in memory"
-	 */
 
 	public Delivery getDelivery(Long id)
 	{
@@ -40,28 +34,30 @@ public class DeliveryService
 	public Page<Delivery> getDeliveries(Long supplierId, Status status, Pageable pageable)
 	{
 
-		Page<Delivery> retVal;
+		Page<Long> ids;
 
 		if (supplierId == null)
 		{
 			if (status == null)
 			{
-				retVal = deliveryRepository.findAll(pageable);
+				ids = deliveryRepository.findAllDeliveries(pageable);
 			} else {
-				retVal = deliveryRepository.findByStatus(status, pageable);
+				ids = deliveryRepository.findByStatus(status, pageable);
 			}
 		} else {
 			if (status == null)
 			{
-				retVal = deliveryRepository.findBySupplierId(supplierId, pageable);
+				ids = deliveryRepository.findBySupplierId(supplierId, pageable);
 			} else {
-				retVal = deliveryRepository.findBySupplierIdAndStatus(supplierId, status, pageable);
+				ids = deliveryRepository.findBySupplierIdAndStatus(supplierId, status, pageable);
 			}
 		}
 
-		fillTransientFields(retVal.getContent());
+		List<Delivery> selectedDeliveries = new ArrayList<Delivery>();
+		deliveryRepository.getDeliveryData(ids.getContent(), pageable.getSort()).forEach(selectedDeliveries::add);
+		fillTransientFields(selectedDeliveries);
 
-		return retVal;
+		return new PageImpl<Delivery>(selectedDeliveries, pageable, ids.getTotalElements());
 
 	}
 
@@ -72,31 +68,7 @@ public class DeliveryService
 
 		delivery.setId(null);
 		delivery.setStatus(Status.ON_THE_WAY);
-
-		if (delivery.getItems() == null || delivery.getItems().size() == 0)
-			throw new RuntimeException("Items not supplied!");
-
-		Delivery saved = deliveryRepository.save(delivery);
-
-		List<Item> fromRep = new ArrayList<Item>();
-
-		delivery.getItems().forEach(i -> {
-			Item item = itemService.getItem(i.getId());
-			if (item == null)
-				throw new RuntimeException("Item not found in the database!");
-			item.setDelivery(saved);
-			if (i.getDeliveryNote() != null && (!i.getDeliveryNote().isBlank()))
-				item.setDeliveryNote(i.getDeliveryNote());
-			fromRep.add(item);
-		});
-
-		itemService.updateItems(fromRep);
-
-		/*
-		 * TODO: Da li ovdje vratiti kompletan EntityGraph?
-		 */
-
-		return saved;
+		return deliveryRepository.save(delivery);
 
 	}
 
@@ -123,16 +95,6 @@ public class DeliveryService
 
 		if (fromRep == null)
 			throw new RuntimeException("Delivery not found in the database!");
-
-		List<Item> updatedItems = new ArrayList<Item>();
-
-		fromRep.getItems().forEach(i -> {
-			i.setDeliveryNote(null);
-			i.setDelivery(null);
-			updatedItems.add(i);
-		});
-
-		itemService.updateItems(updatedItems);
 
 		deliveryRepository.deleteById(deliveryId);
 
@@ -176,14 +138,14 @@ public class DeliveryService
 
 			BigDecimal value = BigDecimal.ZERO;
 
-			if (d.getItems() != null && d.getItems().size() > 0)
+			if (d.getDeliveryItems() != null && d.getDeliveryItems().size() > 0)
 			{
 
-				for (Item i:d.getItems())
+				for (DeliveryItem di : d.getDeliveryItems())
 				{
 					value = value.add(
-							i.getStockInfo().getUnitPrice()
-							.multiply(i.getQuantity())
+							di.getItem().getStockInfo().getUnitPrice()
+							.multiply(di.getQuantity())
 							.setScale(2, RoundingMode.HALF_EVEN));
 				}
 

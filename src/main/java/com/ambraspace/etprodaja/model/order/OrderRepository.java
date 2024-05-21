@@ -26,15 +26,19 @@ public interface OrderRepository extends CrudRepository<Order, Long>, PagingAndS
 	Optional<Order> findById(Long id);
 
 
+	// TODO: Može li se ovaj Query optimizovati?
 	@Query("""
-SELECT o.id FROM Order o JOIN o.items i
-WHERE
-	o.warehouse.id = :w AND
-	o.status = :s
-GROUP BY
-	o.id
-HAVING
-	SUM(CASE i.delivery.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
+SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
+	SELECT o2.id, i.quantity, SUM(COALESCE(di.quantity, 0)) FROM Order o2 JOIN o2.items i LEFT JOIN i.deliveryItems di
+	WHERE
+		o1.id = o2.id AND
+		o2.warehouse.id = :w AND
+		o2.status = :s
+	GROUP BY
+		i.id
+	HAVING
+		i.quantity > SUM(COALESCE(di.quantity, 0))
+)
 			""")
 	Page<Long> findByWarehouseIdAndStatusAndOnlyUndelivered(
 			@Param("w") Long warehouseId,
@@ -65,13 +69,16 @@ WHERE
 
 
 	@Query("""
-SELECT o.id FROM Order o JOIN o.items i
-WHERE
-	o.warehouse.id = :w
-GROUP BY
-	o.id
-HAVING
-	SUM(CASE i.delivery.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
+SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
+	SELECT o2.id, i.quantity, SUM(COALESCE(di.quantity, 0)) FROM Order o2 JOIN o2.items i LEFT JOIN i.deliveryItems di
+	WHERE
+		o1.id = o2.id AND
+		o2.warehouse.id = :w
+	GROUP BY
+		i.id
+	HAVING
+		i.quantity > SUM(COALESCE(di.quantity, 0))
+)
 			""")
 	Page<Long> findByWarehouseIdAndOnlyUndelivered(
 			@Param("w") Long warehouseId,
@@ -89,13 +96,16 @@ WHERE
 
 
 	@Query("""
-SELECT o.id FROM Order o JOIN o.items i
-WHERE
-	o.status = :s
-GROUP BY
-	o.id
-HAVING
-	SUM(CASE i.delivery.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
+SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
+	SELECT o2.id, i.quantity, SUM(COALESCE(di.quantity, 0)) FROM Order o2 JOIN o2.items i LEFT JOIN i.deliveryItems di
+	WHERE
+		o1.id = o2.id AND
+		o2.status = :s
+	GROUP BY
+		i.id
+	HAVING
+		i.quantity > SUM(COALESCE(di.quantity, 0))
+)
 			""")
 	Page<Long> findByStatusAndOnlyUndelivered(
 			@Param("s") Status status,
@@ -109,11 +119,15 @@ SELECT o.id FROM Order o
 
 
 	@Query("""
-SELECT o.id FROM Order o JOIN o.items i LEFT JOIN i.delivery d
-GROUP BY
-	o.id
-HAVING
-	SUM(CASE d.status WHEN 'DELIVERED' THEN 0 ELSE 1 END) > 0
+SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
+	SELECT o2.id, i.quantity, SUM(COALESCE(di.quantity, 0)) FROM Order o2 JOIN o2.items i LEFT JOIN i.deliveryItems di
+	WHERE
+		o1.id = o2.id
+	GROUP BY
+		i.id
+	HAVING
+		i.quantity > SUM(COALESCE(di.quantity, 0))
+)
 			""")
 	Page<Long> findByOnlyUndelivered(Pageable pageable);
 

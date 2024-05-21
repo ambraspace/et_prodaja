@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import com.ambraspace.etprodaja.model.product.Product;
 
@@ -25,9 +26,17 @@ public interface ItemRepository extends CrudRepository<Item, Long>, PagingAndSor
 	@EntityGraph("order-items")
 	Iterable<Item> findByOrderId(Long orderId);
 
-
-	@EntityGraph("delivery-items")
-	Iterable<Item> findByDeliveryId(Long deliveryId);
+	@Query("""
+SELECT DISTINCT i FROM Item i LEFT JOIN i.deliveryItems di
+WHERE
+	i.order.id = :orderId
+GROUP BY
+	i.id
+HAVING i.quantity > SUM(COALESCE(di.quantity, 0))
+ORDER BY i.id
+			""")
+	@EntityGraph("order-items")
+	Iterable<Item> findByOrderIdOnlyUndelivered(@Param("orderId") Long orderId);
 
 
 	void deleteByOfferIdAndId(String offerId, Long id);

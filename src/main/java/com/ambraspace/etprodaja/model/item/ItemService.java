@@ -1,5 +1,6 @@
 package com.ambraspace.etprodaja.model.item;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItem;
 import com.ambraspace.etprodaja.model.offer.Offer;
 import com.ambraspace.etprodaja.model.offer.OfferService;
 import com.ambraspace.etprodaja.model.product.Product;
@@ -38,19 +40,29 @@ public class ItemService
 	}
 
 
-	public List<Item> getOrderItems(Long orderId)
+	public List<Item> getOrderItems(Long orderId, boolean onlyUndelivered)
 	{
-		List<Item> retVal = new ArrayList<>();
-		itemRepository.findByOrderId(orderId).forEach(retVal::add);
-		return retVal;
-	}
 
-
-	public List<Item> getDeliveryItems(Long deliveryId)
-	{
 		List<Item> retVal = new ArrayList<>();
-		itemRepository.findByDeliveryId(deliveryId).forEach(retVal::add);
+		if (onlyUndelivered)
+		{
+			itemRepository.findByOrderIdOnlyUndelivered(orderId).forEach(retVal::add);
+		} else {
+			itemRepository.findByOrderId(orderId).forEach(retVal::add);
+		}
+
+		for (Item i:retVal)
+		{
+			BigDecimal delivered = BigDecimal.ZERO;
+			for (DeliveryItem di:i.getDeliveryItems())
+			{
+				delivered = delivered.add(di.getQuantity());
+			}
+			i.setOutstandingQuantity(i.getQuantity().subtract(delivered));
+		}
+
 		return retVal;
+
 	}
 
 
@@ -65,8 +77,6 @@ public class ItemService
 
 		i.setOffer(offer);
 		i.setOrder(null);
-		i.setDelivery(null);
-		i.setDeliveryNote(null);
 
 		return itemRepository.save(i);
 
@@ -100,12 +110,6 @@ public class ItemService
 
 		return itemRepository.save(fromRep);
 
-	}
-
-
-	public Item getItem(Long itemId)
-	{
-		return itemRepository.findById(itemId).orElse(null);
 	}
 
 
@@ -171,8 +175,6 @@ public class ItemService
 		originalItems.forEach(i -> {
 			Item item = new Item();
 			item.copyFieldsFrom(i);
-			item.setDelivery(null);
-			item.setDeliveryNote(null);
 			item.setOffer(parentOffer);
 			item.setOrder(null);
 			duplicatedItems.add(item);

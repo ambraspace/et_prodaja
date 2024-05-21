@@ -21,6 +21,8 @@ import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.company.CompanyControllerTestComponent;
 import com.ambraspace.etprodaja.model.delivery.Delivery;
 import com.ambraspace.etprodaja.model.delivery.DeliveryControllerTestComponent;
+import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItem;
+import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItemControllerTestComponent;
 import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.item.ItemControllerTestComponent;
 import com.ambraspace.etprodaja.model.order.Order;
@@ -67,6 +69,9 @@ public class OfferWorkflowTests
 
 	@Autowired
 	private DeliveryControllerTestComponent deliveryControllerTestComponent;
+
+	@Autowired
+	private DeliveryItemControllerTestComponent deliveryItemControllerTestComponent;
 
 
 	@Test
@@ -432,23 +437,23 @@ public class OfferWorkflowTests
 
 		// Offer search (try all combinations)
 
-		assertEquals(offerControllerTestComponent.getOffers("none", null, null, false).size(), 0);
-		assertEquals(offerControllerTestComponent.getOffers(null, null, null, false).size(), 6);
-		assertEquals(offerControllerTestComponent.getOffers("admin", null, null, false).size(), 6);
-		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), null, false).size(), 3);
-		assertEquals(offerControllerTestComponent.getOffers(null, null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACTIVE, false).size(), 2);
-		assertEquals(offerControllerTestComponent.getOffers(null, null, null, true).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), null, false).size(), 3);
-		assertEquals(offerControllerTestComponent.getOffers("admin", null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, false).size(), 3);
-		assertEquals(offerControllerTestComponent.getOffers("admin", null, null, true).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, false).size(), 2);
-		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), null, true).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers(null, null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, true).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.CANCELED, false).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), null, true).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers("admin", null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, true).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, true).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, true).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers("none", null, null, null).size(), 0);
+		assertEquals(offerControllerTestComponent.getOffers(null, null, null, null).size(), 6);
+		assertEquals(offerControllerTestComponent.getOffers("admin", null, null, null).size(), 6);
+		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), null, null).size(), 3);
+		assertEquals(offerControllerTestComponent.getOffers(null, null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACTIVE, null).size(), 2);
+		assertEquals(offerControllerTestComponent.getOffers(null, null, null, products.get(0).getId()).size(), 2);
+		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), null, null).size(), 3);
+		assertEquals(offerControllerTestComponent.getOffers("admin", null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, null).size(), 3);
+		assertEquals(offerControllerTestComponent.getOffers("admin", null, null, products.get(1).getId()).size(), 2);
+		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, null).size(), 2);
+		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(2).getId(), null, products.get(2).getId()).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers(null, null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, products.get(3).getId()).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.CANCELED, null).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), null, products.get(2).getId()).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers("admin", null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACTIVE, products.get(2).getId()).size(), 2);
+		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, products.get(1).getId()).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, products.get(1).getId()).size(), 1);
 
 
 		List<Order> orders = orderControllerTestComponent.getOrders(null, null, false);
@@ -489,11 +494,13 @@ public class OfferWorkflowTests
 
 		List<Delivery> deliveries = new ArrayList<Delivery>();
 
+		List<DeliveryItem> deliveryItems = new ArrayList<>();
+
 		items.clear();
 
-		items.addAll(itemControllerTestComponent.getOrderItems(orders.get(4).getId()));
-		items.addAll(itemControllerTestComponent.getOrderItems(orders.get(3).getId()));
-		items.addAll(itemControllerTestComponent.getOrderItems(orders.get(0).getId()));
+		items.addAll(itemControllerTestComponent.getOrderItems(orders.get(4).getId(), true));
+		items.addAll(itemControllerTestComponent.getOrderItems(orders.get(3).getId(), true));
+		items.addAll(itemControllerTestComponent.getOrderItems(orders.get(0).getId(), true));
 
 		assertEquals(items.size(), 5);
 
@@ -504,42 +511,43 @@ public class OfferWorkflowTests
 		"id":%d
 	},
 	"supplierReference":"%s",
-	"deliveryDate":"%tF",
-	"items":
-	[
-		{
-			"id":%d
-		},
-		{
-			"id":%d
-		}
-	]
+	"deliveryDate":"%tF"
 }
-				""", companies.get(0).getId(), "Delivery 1", LocalDate.now().plusDays(10),
-				items.get(0).getId(),
+				""", companies.get(0).getId(), "Delivery 1", LocalDate.now().plusDays(10))));
+
+
+		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+				deliveries.get(0).getId(), String.format(
+				"""
+{
+	"quantity":%.2f,
+	"deliveryNote":"%s",
+	"item":{"id":%d}
+}
+				""",
+				items.get(1).getQuantity(),
+				"Poručena cjelokupna količina",
 				items.get(1).getId())));
 
-		deliveries.add(deliveryControllerTestComponent.addDelivery(String.format("""
+		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+				deliveries.get(0).getId(), String.format(
+				"""
 {
-	"supplier":
-	{
-		"id":%d
-	},
-	"supplierReference":"%s",
-	"deliveryDate":"%tF",
-	"items":
-	[
-		{
-			"id":%d
-		},
-		{
-			"id":%d
-		}
-	]
+	"quantity":%.2f,
+	"deliveryNote":"%s",
+	"item":{"id":%d}
 }
-				""", companies.get(1).getId(), "Delivery 2", LocalDate.now(),
-				items.get(2).getId(),
-				items.get(3).getId())));
+				""",
+				items.get(2).getQuantity().subtract(BigDecimal.ONE),
+				"Poručen jedan manje",
+				items.get(2).getId())));
+
+
+		assertEquals(itemControllerTestComponent.getOrderItems(orders.get(3).getId(), false).size(), 2);
+		assertEquals(itemControllerTestComponent.getOrderItems(orders.get(3).getId(), true).size(), 1);
+		assertEquals(itemControllerTestComponent.getOrderItems(orders.get(3).getId(), true)
+				.get(0).getOutstandingQuantity().compareTo(BigDecimal.ONE), 0);
+
 
 		deliveries.add(deliveryControllerTestComponent.addDelivery(String.format("""
 {
@@ -548,16 +556,63 @@ public class OfferWorkflowTests
 		"id":%d
 	},
 	"supplierReference":"%s",
-	"deliveryDate":"%tF",
-	"items":
-	[
-		{
-			"id":%d
-		}
-	]
+	"deliveryDate":"%tF"
 }
-				""", companies.get(1).getId(), "Delivery 3", LocalDate.now().minusDays(3),
+				""", companies.get(1).getId(), "Delivery 2", LocalDate.now())));
+
+
+		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+				deliveries.get(1).getId(), String.format(
+				"""
+{
+	"quantity":%.2f,
+	"deliveryNote":"%s",
+	"item":{"id":%d}
+}
+				""",
+				items.get(0).getQuantity(),
+				"",
+				items.get(0).getId())));
+
+		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+				deliveries.get(1).getId(), String.format(
+				"""
+{
+	"quantity":%.2f,
+	"deliveryNote":"%s",
+	"item":{"id":%d}
+}
+				""",
+				items.get(3).getQuantity().subtract(BigDecimal.ONE),
+				"",
+				items.get(3).getId())));
+
+
+		deliveries.add(deliveryControllerTestComponent.addDelivery(String.format("""
+{
+	"supplier":
+	{
+		"id":%d
+	},
+	"supplierReference":"%s",
+	"deliveryDate":"%tF"
+}
+				""", companies.get(1).getId(), "Delivery 3", LocalDate.now().minusDays(3))));
+
+
+		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+				deliveries.get(2).getId(), String.format(
+				"""
+{
+	"quantity":%.2f,
+	"deliveryNote":"%s",
+	"item":{"id":%d}
+}
+				""",
+				items.get(4).getQuantity(),
+				"",
 				items.get(4).getId())));
+
 
 		deliveries.set(1, deliveryControllerTestComponent.setDelivered(deliveries.get(1).getId()));
 
@@ -571,12 +626,11 @@ public class OfferWorkflowTests
 	"supplierReference":"%s",
 	"deliveryDate":"%tF"
 }
-				""", deliveries.get(2).getId(), companies.get(1).getId(), "Delivery 3", LocalDate.now(),
-				items.get(4).getId())));
+				""", deliveries.get(2).getId(), companies.get(2).getId(), "Delivery 3", LocalDate.now())));
 
-		items = itemControllerTestComponent.getDeliveryItems(deliveries.get(0).getId());
 
-		assertEquals(items.size(), 2);
+		assertEquals(deliveryItemControllerTestComponent.getDeliveryItems(deliveries.get(0).getId()).size(), 2);
+
 
 		itemControllerTestComponent.updateItem(items.get(0).getOffer().getId(), items.get(0).getId(), String.format("""
 				{
@@ -595,15 +649,11 @@ public class OfferWorkflowTests
 										items.get(0).getDiscountPercent(),
 										"Item changed with similar"));
 
-		items = itemControllerTestComponent.getDeliveryItems(deliveries.get(0).getId());
-
-		assertEquals(items.size(), 2);
-
-		assertEquals(items.get(0).getDeliveryNote(), "Item changed with similar");
-
 		deliveryControllerTestComponent.setDelivered(deliveries.get(2).getId());
 
 		deliveries.set(2, deliveryControllerTestComponent.getDelivery(deliveries.get(2).getId()));
+
+		assertEquals(deliveries.get(2).getStatus(), com.ambraspace.etprodaja.model.delivery.Delivery.Status.DELIVERED);
 
 
 		/*
@@ -677,8 +727,30 @@ public class OfferWorkflowTests
 		assertEquals(deliveryControllerTestComponent.getDeliveries(null, null).size(), 3);
 		assertEquals(deliveryControllerTestComponent.getDeliveries(companies.get(0).getId(), null).size(), 1);
 		assertEquals(deliveryControllerTestComponent.getDeliveries(null, com.ambraspace.etprodaja.model.delivery.Delivery.Status.DELIVERED).size(), 2);
-		assertEquals(deliveryControllerTestComponent.getDeliveries(companies.get(1).getId(), com.ambraspace.etprodaja.model.delivery.Delivery.Status.DELIVERED).size(), 2);
+		assertEquals(deliveryControllerTestComponent.getDeliveries(companies.get(1).getId(), com.ambraspace.etprodaja.model.delivery.Delivery.Status.DELIVERED).size(), 1);
 
+
+		deliveryItems.set(0, deliveryItemControllerTestComponent.updateDeliveryItem(
+				deliveries.get(0).getId(), deliveryItems.get(0).getId(), String.format(
+				"""
+{
+	"quantity":%.2f,
+	"deliveryNote":"%s",
+	"item":{"id":%d}
+}
+				""",
+				deliveryItems.get(0).getQuantity().subtract(BigDecimal.ONE),
+				"Umanjeno za 1",
+				deliveryItems.get(0).getItem().getId())));
+
+		assertEquals(deliveryItems.get(0).getQuantity(), items.get(1).getQuantity().subtract(BigDecimal.ONE));
+		assertEquals(deliveryItems.get(0).getDeliveryNote(), "Umanjeno za 1");
+
+		deliveryItems.set(1, deliveryItemControllerTestComponent.getDeliveryItem(
+				deliveryItems.get(1).getDelivery().getId(), deliveryItems.get(1).getId()));
+
+		deliveryItemControllerTestComponent.deleteDeliveryItem(
+				deliveries.get(0).getId(), deliveryItems.get(0).getId());
 
 		// Delete tested objects
 
