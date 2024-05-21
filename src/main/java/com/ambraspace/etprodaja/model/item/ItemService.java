@@ -32,6 +32,12 @@ public class ItemService
 	}
 
 
+	public Item getOrderItem(Long orderNo, Long itemId)
+	{
+		return itemRepository.findByOrderIdAndId(orderNo, itemId).orElse(null);
+	}
+
+
 	public List<Item> getOfferItems(String offerNo)
 	{
 		List<Item> retVal = new ArrayList<>();

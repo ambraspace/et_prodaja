@@ -19,11 +19,15 @@ public interface ItemRepository extends CrudRepository<Item, Long>, PagingAndSor
 	Optional<Item> findByOfferIdAndId(String offerId, Long id);
 
 
-	@EntityGraph("offer-items")
+	@EntityGraph("order-items")
+	Optional<Item> findByOrderIdAndId(Long orderId, Long id);
+
+
+	@EntityGraph("items")
 	Iterable<Item> findByOfferId(String offerId);
 
 
-	@EntityGraph("order-items")
+	@EntityGraph("items")
 	Iterable<Item> findByOrderId(Long orderId);
 
 	@Query("""
@@ -35,7 +39,7 @@ GROUP BY
 HAVING i.quantity > SUM(COALESCE(di.quantity, 0))
 ORDER BY i.id
 			""")
-	@EntityGraph("order-items")
+	@EntityGraph("items")
 	Iterable<Item> findByOrderIdOnlyUndelivered(@Param("orderId") Long orderId);
 
 

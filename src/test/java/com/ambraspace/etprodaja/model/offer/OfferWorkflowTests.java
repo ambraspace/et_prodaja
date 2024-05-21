@@ -632,7 +632,7 @@ public class OfferWorkflowTests
 		assertEquals(deliveryItemControllerTestComponent.getDeliveryItems(deliveries.get(0).getId()).size(), 2);
 
 
-		itemControllerTestComponent.updateItem(items.get(0).getOffer().getId(), items.get(0).getId(), String.format("""
+		itemControllerTestComponent.updateItem(offers.get(1).getId(), items.get(0).getId(), String.format("""
 				{
 				"stockInfo":{"id":%d},
 				"productName":"%s",
@@ -754,9 +754,9 @@ public class OfferWorkflowTests
 
 		// Delete tested objects
 
-		itemControllerTestComponent.deleteItem(items.get(0).getOffer().getId(), items.get(0).getId());
+		itemControllerTestComponent.deleteItem(offers.get(1).getId(), items.get(0).getId());
 
-		assertEquals(itemControllerTestComponent.getOfferItem(items.get(0).getOffer().getId(), items.get(0).getId()), null);
+		assertEquals(itemControllerTestComponent.getOfferItem(offers.get(1).getId(), items.get(0).getId()), null);
 
 		deliveryControllerTestComponent.deleteDelivery(deliveries.get(2).getId());
 

@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,22 +23,38 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-@NamedEntityGraph(
-		name = "deliveryItem-with-details",
-		attributeNodes = {
-				@NamedAttributeNode(value = "item", subgraph = "deliveryItem.item")
-		},
-		subgraphs = {
-				@NamedSubgraph(name ="deliveryItem.item", attributeNodes = {
-						@NamedAttributeNode(value = "offer"),
-						@NamedAttributeNode(value = "order"),
-						@NamedAttributeNode(value = "stockInfo", subgraph = "deliveryItem.item.stockInfo")
-				}),
-				@NamedSubgraph(name ="deliveryItem.item.stockInfo", attributeNodes = {
-						@NamedAttributeNode(value = "product")
-				})
-		}
-)
+@NamedEntityGraphs({
+	@NamedEntityGraph(
+			name = "deliveryItem",
+			attributeNodes = {
+					@NamedAttributeNode(value = "item", subgraph = "deliveryItem.item")
+			},
+			subgraphs = {
+					@NamedSubgraph(name ="deliveryItem.item", attributeNodes = {
+							@NamedAttributeNode(value = "stockInfo", subgraph = "deliveryItem.item.stockInfo")
+					}),
+					@NamedSubgraph(name ="deliveryItem.item.stockInfo", attributeNodes = {
+							@NamedAttributeNode(value = "product")
+					})
+			}
+	),
+	@NamedEntityGraph(
+			name = "deliveryItem-with-details",
+			attributeNodes = {
+					@NamedAttributeNode(value = "item", subgraph = "deliveryItem.item")
+			},
+			subgraphs = {
+					@NamedSubgraph(name ="deliveryItem.item", attributeNodes = {
+							@NamedAttributeNode(value = "offer"),
+							@NamedAttributeNode(value = "order"),
+							@NamedAttributeNode(value = "stockInfo", subgraph = "deliveryItem.item.stockInfo")
+					}),
+					@NamedSubgraph(name ="deliveryItem.item.stockInfo", attributeNodes = {
+							@NamedAttributeNode(value = "product")
+					})
+			}
+	)
+})
 public class DeliveryItem
 {
 

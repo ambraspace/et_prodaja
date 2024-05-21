@@ -39,6 +39,13 @@ import lombok.Setter;
 @Entity
 @Getter @Setter @NoArgsConstructor
 @NamedEntityGraphs(value = {
+		@NamedEntityGraph(name = "items", attributeNodes = {
+				@NamedAttributeNode(value = "stockInfo", subgraph = "item.stockInfo")
+		}, subgraphs = {
+				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
+						@NamedAttributeNode("product")
+				})
+		}),
 		@NamedEntityGraph(name = "offer-items", attributeNodes = {
 				@NamedAttributeNode("order"),
 				@NamedAttributeNode(value = "deliveryItems", subgraph = "item.deliveryItems"),

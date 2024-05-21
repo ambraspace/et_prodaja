@@ -10,7 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface DeliveryItemRepository extends CrudRepository<DeliveryItem, Long>, PagingAndSortingRepository<DeliveryItem, Long>
 {
 
-	@EntityGraph("deliveryItem-with-details")
+	@EntityGraph("deliveryItem")
 	Iterable<DeliveryItem> findByDeliveryId(Long deliveryId);
 
 
