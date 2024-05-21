@@ -26,3 +26,6 @@ et-prodaja:
 jwt:
   secret: sklfjslkfjslkdfjslkdfjslkdfjsdlkfjsdlkfjsldkfjsdfsdfsdfsdfsdfsdf
   secret2-f-a: sklfjslkfjslkdfjslkdfjslkdfjsdlkfjsdlkfjsldkfjsdfsdfsdfsdfsdfsdd
+  token-validity: 7d
+  refresh-token-validity: 2d
+  refresh-url: /api/refreshtoken
