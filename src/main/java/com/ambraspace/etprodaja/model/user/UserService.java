@@ -86,6 +86,14 @@ public class UserService implements UserDetailsService
 		if (fromRep == null)
 			throw new RuntimeException("No such user in the database!");
 
+		// If we're changing ADMIN to non-ADMIN
+		if (fromRep.getRole().equals(Role.ADMIN) && !user.getRole().equals(Role.ADMIN))
+		{
+			long numAdmins = userRepository.countByRole(Role.ADMIN);
+			if (numAdmins == 1)
+				throw new RuntimeException("Requested operation would result with no ADMIN users!");
+		}
+
 		fromRep.copyFieldsFrom(user);
 
 		if (user.getPassword() != null && !user.getPassword().trim().equals(""))
