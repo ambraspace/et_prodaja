@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ambraspace.etprodaja.util.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -45,11 +47,15 @@ public class CompanyController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/companies")
-	public Page<Company> getCompanies(@ParameterObject @PageableDefault(sort = "name") Pageable pageable)
+	public Page<Company> getCompanies(
+			@Parameter(description = "Query by which to search for companies")
+			@RequestParam(name = "q", required = false)
+			String query,
+			@ParameterObject @PageableDefault(sort = "name") Pageable pageable)
 	{
 		try
 		{
-			return companyService.getCompanies(pageable);
+			return companyService.getCompanies(query, pageable);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

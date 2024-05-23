@@ -15,8 +15,12 @@ public class CompanyService
 	private CompanyRepository companyRepository;
 
 
-	public Page<Company> getCompanies(Pageable pageable)
+	public Page<Company> getCompanies(String query, Pageable pageable)
 	{
+		if (query != null && !query.isBlank())
+		{
+			return companyRepository.findByNameIsLikeIgnoreCase("%" + query + "%", pageable);
+		}
 		return companyRepository.findAll(pageable);
 	}
 
