@@ -56,6 +56,27 @@ public class ItemController
 	}
 
 
+	@Operation(summary = "Get an item by order ID and item ID",
+			responses = {
+			@ApiResponse(responseCode = "200", description = "Item returned (may be null)", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = Item.class))
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
+	@GetMapping("/api/orders/{orderId}/items/{id}")
+	@JsonView(Views.Item.class)
+	public Item getOrderItem(@PathVariable Long orderId, @PathVariable Long id)
+	{
+		return itemService.getOrderItem(orderId, id);
+	}
+
+
 	@Operation(summary = "Get items by offer", responses = {
 			@ApiResponse(responseCode = "200", description = "List of items returned", content = {
 					@Content(mediaType = "application/json", array =
