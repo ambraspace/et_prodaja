@@ -91,6 +91,8 @@ public class Item
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private StockInfo stockInfo;
 
+	// TODO: Dodati koji je preview izabran
+
 	@NotNull @NotBlank
 	private String productName;
 
