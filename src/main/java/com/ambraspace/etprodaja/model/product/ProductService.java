@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -247,10 +244,10 @@ public class ProductService
 
         response.setContentLengthLong(Files.size(file.toPath()));
 
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                .filename(fileName, StandardCharsets.UTF_8)
-                .build()
-                .toString());
+//        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
+//                .filename(fileName, StandardCharsets.UTF_8)
+//                .build()
+//                .toString());
 
         Files.copy(file.toPath(), response.getOutputStream());
 
