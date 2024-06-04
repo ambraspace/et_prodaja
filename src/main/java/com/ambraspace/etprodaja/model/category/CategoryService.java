@@ -113,9 +113,11 @@ public class CategoryService
 
 		fromRep.addAll(categories);
 
-		categoryRepository.saveAll(fromRep);
+		List<Category> retVal = new ArrayList<Category>();
 
-		return fromRep;
+		categoryRepository.saveAll(fromRep).forEach(retVal::add);
+
+		return retVal;
 
 	}
 
