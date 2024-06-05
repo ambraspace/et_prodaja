@@ -61,7 +61,7 @@ public class ProductControllerTestComponent {
 			String query,
 			Boolean includeComments,
 			Long warehouseId,
-			List<Long> tagIds,
+			List<String> tagIds,
 			Long categoryId) throws Exception
 	{
 

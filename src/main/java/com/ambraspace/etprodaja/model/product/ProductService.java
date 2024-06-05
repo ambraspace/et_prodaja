@@ -50,7 +50,7 @@ public class ProductService
 
 
 	@Transactional(readOnly = true)
-	public Page<Product> getProducts(String query, Boolean includeComments, Long warehouseId, List<Long> tagIds, Long categoryId, Pageable pageable)
+	public Page<Product> getProducts(String query, Boolean includeComments, Long warehouseId, List<String> tagIds, Long categoryId, Pageable pageable)
 	{
 
 		Page<Long> productIds;
@@ -445,14 +445,14 @@ public class ProductService
 
 
 	@Transactional
-	public void removeTagFromProducts(Long tagId)
+	public void removeTagFromProducts(String tagId)
 	{
 
 		List<Product> modifiedProducts = new ArrayList<Product>();
 
 		getProducts(null, false, null, List.of(tagId), null, Pageable.unpaged())
 		.forEach(p -> {
-			p.getTags().removeIf(t -> t.getId().equals(tagId));
+			p.getTags().removeIf(t -> t.getName().equals(tagId));
 			modifiedProducts.add(p);
 		});
 

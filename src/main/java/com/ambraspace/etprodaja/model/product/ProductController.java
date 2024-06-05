@@ -61,7 +61,7 @@ public class ProductController
 			@Parameter(description = "Limit products to specified Warehouse ID", required = false)
 			@RequestParam(name = "w", required = false) Long warehouseId,
 			@Parameter(description = "Limit to products having all of the specified Tag IDs", required = false)
-			@RequestParam(name = "t", required = false) List<Long> tagIds,
+			@RequestParam(name = "t", required = false) List<String> tagIds,
 			@Parameter(description = "Limit products to specified Category ID", required = false)
 			@RequestParam(name = "ct", required = false) Long categoryId,
 			@ParameterObject @PageableDefault(sort = "name") Pageable pageable)

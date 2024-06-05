@@ -30,7 +30,7 @@ WHERE
 			""")
 	Page<Long> findByWarehouseTagsAndCategory(
 			@Param("w") Long warehouseId,
-			@Param("t") List<Long> tags,
+			@Param("t") List<String> tags,
 			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
@@ -44,7 +44,7 @@ WHERE
 			""")
 	Page<Long> findByWarehouseAndTags(
 			@Param("w") Long warehouseId,
-			@Param("t") List<Long> tags, Pageable pageable);
+			@Param("t") List<String> tags, Pageable pageable);
 
 
 	// Search by warehouse and category
@@ -85,7 +85,7 @@ WHERE
 	Page<Long> findByWarehouseNameCommentTagsAndCategory(
 			@Param("w") Long warehouseId,
 			@Param("q") String query,
-			@Param("t") List<Long> tags,
+			@Param("t") List<String> tags,
 			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
@@ -102,7 +102,7 @@ WHERE
 	Page<Long> findByWarehouseNameCommentAndTags(
 			@Param("w") Long warehouseId,
 			@Param("q") String query,
-			@Param("t") List<Long> tags, Pageable pageable);
+			@Param("t") List<String> tags, Pageable pageable);
 
 
 	// Search by warehouse, name, comment and category
@@ -148,7 +148,7 @@ WHERE
 	Page<Long> findByWarehouseNameTagsAndCategory(
 			@Param("w") Long warehouseId,
 			@Param("q") String query,
-			@Param("t") List<Long> tags,
+			@Param("t") List<String> tags,
 			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
@@ -164,7 +164,7 @@ WHERE
 	Page<Long> findByWarehouseNameAndTags(
 			@Param("w") Long warehouseId,
 			@Param("q") String query,
-			@Param("t") List<Long> tags, Pageable pageable);
+			@Param("t") List<String> tags, Pageable pageable);
 
 
 	// Search by warehouse, name and category
@@ -204,7 +204,7 @@ WHERE
 	p.category.id IN (:ct)
 			""")
 	Page<Long> findByTagsAndCategory(
-			@Param("t") List<Long> tags,
+			@Param("t") List<String> tags,
 			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
@@ -216,7 +216,7 @@ WHERE
 	tg.id in (:t)
 			""")
 	Page<Long> findByTags(
-			@Param("t") List<Long> tags, Pageable pageable);
+			@Param("t") List<String> tags, Pageable pageable);
 
 
 	// Search by category
@@ -249,7 +249,7 @@ WHERE
 			""")
 	Page<Long> findByNameCommentTagsAndCategory(
 			@Param("q") String query,
-			@Param("t") List<Long> tags,
+			@Param("t") List<String> tags,
 			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
@@ -264,7 +264,7 @@ WHERE
 			""")
 	Page<Long> findByNameCommentAndTags(
 			@Param("q") String query,
-			@Param("t") List<Long> tags, Pageable pageable);
+			@Param("t") List<String> tags, Pageable pageable);
 
 
 	// Search by name, comment and category
@@ -304,7 +304,7 @@ WHERE
 			""")
 	Page<Long> findByNameTagsAndCategory(
 			@Param("q") String query,
-			@Param("t") List<Long> tags,
+			@Param("t") List<String> tags,
 			@Param("ct") List<Long> categoryIds, Pageable pageable);
 
 
@@ -318,7 +318,7 @@ WHERE
 			""")
 	Page<Long> findByNameAndTags(
 			@Param("q") String query,
-			@Param("t") List<Long> tags, Pageable pageable);
+			@Param("t") List<String> tags, Pageable pageable);
 
 
 	// Search by name and category

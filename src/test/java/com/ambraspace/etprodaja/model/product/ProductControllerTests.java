@@ -100,12 +100,12 @@ public class ProductControllerTests {
 	"tags":
 		[
 			{
-				"id":%d
+				"name":"%s"
 			}
 		],
 	"comment":"This is a test"
 }
-				""", categories.get(0).getId(), tag.getId());
+				""", categories.get(0).getId(), tag.getName());
 
 		Product product = productControllerTestComponent.addProduct(productBody, 3);
 
@@ -113,7 +113,7 @@ public class ProductControllerTests {
 
 		assertEquals(product.getCategory().getId(), categories.get(0).getId());
 
-		assertEquals(product.getTags().get(0).getId(), tag.getId());
+		assertEquals(product.getTags().get(0).getName(), tag.getName());
 
 		assertEquals(product.getPrice().compareTo(BigDecimal.valueOf(12345, 2)), 0);
 
@@ -229,7 +229,7 @@ public class ProductControllerTests {
 			assertFalse(new File(storageLocation, preview.getFileName()).exists());
 		}
 
-		tagControllerTestComponent.deleteTag(tag.getId());
+		tagControllerTestComponent.deleteTag(tag.getName());
 
 		categoryControllerTestComponent.saveCategories("[]");
 
@@ -305,7 +305,7 @@ public class ProductControllerTests {
 				"tags":
 				[
 				{
-				"id":%d
+				"name":"%s"
 				}
 				]
 				}
@@ -318,28 +318,28 @@ public class ProductControllerTests {
 				"Comment def",
 				123.45,
 				categories.get(0).getId(),
-				tags.get(0).getId()), 3));
+				tags.get(0).getName()), 3));
 
 		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
 				"Product A BC",
 				"Comment DEF",
 				111.11,
 				categories.get(1).getId(),
-				tags.get(0).getId()), 3));
+				tags.get(0).getName()), 3));
 
 		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
 				"Product ghi",
 				"Comment jkl",
 				200.00,
 				categories.get(0).getId(),
-				tags.get(1).getId()), 3));
+				tags.get(1).getName()), 3));
 
 		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
 				"Product GHI",
 				"Comment JKL",
 				133.33,
 				categories.get(1).getId(),
-				tags.get(1).getId()), 3));
+				tags.get(1).getName()), 3));
 
 
 		List<StockInfo> stockInfos = new ArrayList<StockInfo>();
@@ -400,9 +400,9 @@ public class ProductControllerTests {
 
 		Long p3 = warehouses.get(0).getId();
 
-		List<Long> p4a = List.of(tags.get(0).getId());
+		List<String> p4a = List.of(tags.get(0).getName());
 
-		List<Long> p4b = tags.stream().map(t -> t.getId()).collect(Collectors.toList());
+		List<String> p4b = tags.stream().map(t -> t.getName()).collect(Collectors.toList());
 
 		Long p5 = categories.get(1).getId();
 
@@ -565,8 +565,8 @@ public class ProductControllerTests {
 
 		companyControllerTestComponent.deleteCompany(company.getId());
 
-		tagControllerTestComponent.deleteTag(tags.get(0).getId());
-		tagControllerTestComponent.deleteTag(tags.get(1).getId());
+		tagControllerTestComponent.deleteTag(tags.get(0).getName());
+		tagControllerTestComponent.deleteTag(tags.get(1).getName());
 
 		categoryControllerTestComponent.saveCategories("[]");
 

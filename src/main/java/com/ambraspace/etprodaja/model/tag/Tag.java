@@ -5,8 +5,6 @@ import java.util.Objects;
 import org.hibernate.proxy.HibernateProxy;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,9 +19,6 @@ public class Tag
 {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	@NotNull @NotBlank
 	private String name;
 
@@ -39,7 +34,7 @@ public class Tag
 		Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
 		if (thisEffectiveClass != oEffectiveClass) return false;
 		Tag other = (Tag) o;
-		return getId() != null && Objects.equals(getId(), other.getId());
+		return getName() != null && Objects.equals(getName(), other.getName());
 	}
 
 	@Override

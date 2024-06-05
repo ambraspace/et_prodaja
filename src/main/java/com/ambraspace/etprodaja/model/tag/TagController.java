@@ -72,7 +72,7 @@ public class TagController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/tags/{id}")
-	public Tag getTag(@PathVariable Long id)
+	public Tag getTag(@PathVariable String id)
 	{
 		try
 		{
@@ -119,7 +119,7 @@ public class TagController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/tags/{id}")
-	public void deleteTag(@PathVariable Long id)
+	public void deleteTag(@PathVariable String id)
 	{
 		try
 		{

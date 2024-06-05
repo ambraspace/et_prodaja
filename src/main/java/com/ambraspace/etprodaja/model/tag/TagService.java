@@ -28,7 +28,7 @@ public class TagService
 	}
 
 
-	public Tag getTag(Long id)
+	public Tag getTag(String id)
 	{
 		return tagRepository.findById(id).orElse(null);
 	}
@@ -36,12 +36,17 @@ public class TagService
 
 	public Tag addTag(Tag tag)
 	{
-		return tagRepository.save(tag);
+		Tag fromRep = getTag(tag.getName());
+		if (fromRep == null)
+		{
+			fromRep = tagRepository.save(tag);
+		}
+		return fromRep;
 	}
 
 
 	@Transactional
-	public void deleteTag(Long id)
+	public void deleteTag(String id)
 	{
 
 		Tag fromRep = getTag(id);

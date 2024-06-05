@@ -49,7 +49,7 @@ public class TagControllerTests {
 
 		assertNotEquals(tag, null);
 
-		tag = tagTestComponent.getTag(tag.getId());
+		tag = tagTestComponent.getTag(tag.getName());
 
 		assertNotEquals(tag, null);
 
@@ -80,22 +80,22 @@ public class TagControllerTests {
 	"tags":
 		[
 			{
-				"id":%d
+				"name":"%s"
 			}
 		],
 	"comment":"This is a test"
 }
-				""", categories.get(0).getId(), tag.getId());
+				""", categories.get(0).getId(), tag.getName());
 
 		Product product = productControllerTestComponent.addProduct(productBody, 3);
 
 		product = productControllerTestComponent.getProduct(product.getId());
 
-		assertEquals(product.getTags().get(0).getId(), tag.getId());
+		assertEquals(product.getTags().get(0).getName(), tag.getName());
 
-		tagTestComponent.deleteTag(tag.getId());
+		tagTestComponent.deleteTag(tag.getName());
 
-		tag = tagTestComponent.getTag(tag.getId());
+		tag = tagTestComponent.getTag(tag.getName());
 
 		assertEquals(tag, null);
 

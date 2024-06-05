@@ -29,7 +29,7 @@ public class TagControllerTestComponent {
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 
-	public Tag getTag(Long id) throws Exception
+	public Tag getTag(String id) throws Exception
 	{
 
 		MvcResult result =
@@ -115,7 +115,7 @@ public class TagControllerTestComponent {
 	}
 
 
-	public void deleteTag(Long id) throws Exception
+	public void deleteTag(String id) throws Exception
 	{
 
 		this.mockMvc.perform(delete("/api/tags/" + id)
