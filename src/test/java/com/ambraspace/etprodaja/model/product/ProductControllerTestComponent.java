@@ -2,22 +2,19 @@ package com.ambraspace.etprodaja.model.product;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 
 import com.ambraspace.etprodaja.SecurityTestComponent;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -103,94 +100,38 @@ public class ProductControllerTestComponent {
 	}
 
 
-	public byte[] downloadProductPreview(
-			String fileName) throws Exception
+	public Product addProduct(String body) throws Exception
 	{
 
-		MockHttpServletRequestBuilder builder = get("/api/files?fn=" + fileName);
-
 		MvcResult result =
-				this.mockMvc.perform(builder
-						.accept(MediaType.APPLICATION_OCTET_STREAM))
-				.andExpect(status().isOk())
-				.andDo(securityTestComponent.getResultHandler())
-				.andReturn();
-
-		return result.getResponse().getContentAsByteArray();
-
-	}
-
-
-	public Product addProduct(String body, int numFiles) throws Exception
-	{
-
-		MockMultipartHttpServletRequestBuilder builder =
-				multipart(HttpMethod.POST, "/api/products")
-				.file(new MockMultipartFile(
-						"product",
-						"product",
-						MediaType.APPLICATION_JSON_VALUE,
-						body.getBytes(StandardCharsets.UTF_8)));
-
-		for (int i = 0; i < numFiles; i++)
-		{
-			builder.file(new MockMultipartFile(
-					"files",
-					"file " + (i + 1) + ".png",
-					MediaType.IMAGE_PNG_VALUE,
-					new byte[] {0}));
-		}
-
-		MvcResult result =
-				this.mockMvc.perform(builder
-						//.with(csrf())
+				this.mockMvc.perform(post("/api/products")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(body)
 						.accept(MediaType.APPLICATION_JSON)
-						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		Product product = mapper.readValue(result.getResponse().getContentAsString(), Product.class);
-
-		return product;
+		return mapper.readValue(result.getResponse().getContentAsString(), Product.class);
 
 	}
 
 
-	public Product updateProduct(Long id, String body, int numFiles) throws Exception
+	public Product updateProduct(Long id, String body) throws Exception
 	{
 
-		MockMultipartHttpServletRequestBuilder builder =
-				multipart(HttpMethod.PUT, "/api/products/" + id)
-				.file(new MockMultipartFile(
-						"product",
-						"product",
-						MediaType.APPLICATION_JSON_VALUE,
-						body.getBytes(StandardCharsets.UTF_8)));
-
-		for (int i = 0; i < numFiles; i++)
-		{
-			builder.file(new MockMultipartFile(
-					"files",
-					"file 1.png",
-					MediaType.IMAGE_PNG_VALUE,
-					new byte[] {0}));
-		}
-
 		MvcResult result =
-				this.mockMvc.perform(builder
-						//.with(csrf())
+				this.mockMvc.perform(put("/api/products/" + id)
 						.accept(MediaType.APPLICATION_JSON)
-						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(body)
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		Product product = mapper.readValue(result.getResponse().getContentAsString(), Product.class);
-
-		return product;
+		return mapper.readValue(result.getResponse().getContentAsString(), Product.class);
 
 	}
 
@@ -199,9 +140,7 @@ public class ProductControllerTestComponent {
 	{
 
 		this.mockMvc.perform(delete("/api/products/" + id)
-				//.with(csrf())
 				.accept(MediaType.APPLICATION_JSON)
-				//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 				.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 		.andExpect(status().isOk())
 		.andDo(securityTestComponent.getResultHandler());

@@ -198,7 +198,7 @@ public class CategoryControllerTests {
 		],
 	"comment":"This is a test"
 }
-				""", categories.get(0).getId()), 0);
+				""", categories.get(0).getId()));
 
 		categories = categoryControllerTestComponent.saveCategories("[]");
 

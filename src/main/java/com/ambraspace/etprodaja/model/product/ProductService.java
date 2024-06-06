@@ -1,43 +1,36 @@
 package com.ambraspace.etprodaja.model.product;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ambraspace.etprodaja.model.category.CategoryService;
 import com.ambraspace.etprodaja.model.item.ItemService;
+import com.ambraspace.etprodaja.model.preview.PreviewService;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfoService;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Tuple;
-import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class ProductService
 {
 
-	@Value("${et-prodaja.storage-location}")
-	private String storageLocation;
-
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	private PreviewService previewService;
 
 	@Autowired
 	private CategoryService categoryService;
@@ -225,35 +218,6 @@ public class ProductService
 	}
 
 
-	public void downloadProductImage(String fileName, HttpServletResponse response) throws IOException
-	{
-
-		File file = new File(storageLocation, fileName);
-
-		if (!file.exists())
-			throw new RuntimeException("File not found!");
-
-		String contentType = Files.probeContentType(file.toPath());
-
-        if (contentType == null) {
-            // Use the default media type
-            contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-        }
-
-        response.setContentType(contentType);
-
-        response.setContentLengthLong(Files.size(file.toPath()));
-
-//        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-//                .filename(fileName, StandardCharsets.UTF_8)
-//                .build()
-//                .toString());
-
-        Files.copy(file.toPath(), response.getOutputStream());
-
-	}
-
-
 	private void fillTransientFields(Long warehouseId, List<Product> products)
 	{
 
@@ -345,36 +309,21 @@ public class ProductService
 	}
 
 
-	public Product addProduct(Product product, List<MultipartFile> files) throws IllegalStateException, IOException
+	@Transactional
+	public Product addProduct(Product product) throws IllegalStateException, IOException
 	{
 
-		product.getPreviews().clear();
+		Product saved = productRepository.save(product);
 
-		if (files != null && files.size() > 0)
-		{
-			for (MultipartFile file:files)
-			{
-				Preview preview = new Preview();
-				product.getPreviews().add(preview);
-				preview.setOriginalFileName(file.getOriginalFilename());
-				int dotPos = preview.getOriginalFileName().lastIndexOf(".");
-				if (dotPos == -1)
-					dotPos = preview.getOriginalFileName().length();
-				preview.setFileName(UUID.randomUUID().toString() +
-						preview.getOriginalFileName().substring(dotPos));
-				preview.setProduct(product);
-				preview.setSize(file.getSize());
-				file.transferTo(new File(storageLocation, preview.getFileName()));
-			}
-		}
+		previewService.linkToProduct(product.getPreviews(), product);
 
-		return productRepository.save(product);
+		return saved;
 
 	}
 
 
 	@Transactional
-	public Product updateProduct(Long id, Product product, List<MultipartFile> newFiles) throws IllegalStateException, IOException
+	public Product updateProduct(Long id, Product product) throws IllegalStateException, IOException
 	{
 
 		Product fromRep = getProduct(id);
@@ -382,38 +331,15 @@ public class ProductService
 		if (fromRep == null)
 			throw new RuntimeException("No such product in the database!");
 
-		// User can not add previews like this, so delete all which are not in the database
-	    product.getPreviews().retainAll(fromRep.getPreviews());
+		fromRep.getPreviews().removeAll(product.getPreviews());
+		// We kept only previews which are not part of the updated product.
+		previewService.unlinkPreviews(fromRep.getPreviews());
 
-	    fromRep.getPreviews().removeAll(product.getPreviews());
-
-		for (Preview p:fromRep.getPreviews())
-		{
-			File f = new File(storageLocation, p.getFileName());
-			f.delete();
-		}
+		previewService.linkToProduct(product.getPreviews(), fromRep);
 
 		fromRep.copyFieldsFrom(product);
 
 		fromRep.getPreviews().forEach(p -> p.setProduct(fromRep));
-
-		if (newFiles != null && newFiles.size() > 0)
-		{
-			for (MultipartFile file:newFiles)
-			{
-				Preview preview = new Preview();
-				fromRep.getPreviews().add(preview);
-				preview.setOriginalFileName(file.getOriginalFilename());
-				int dotPos = preview.getOriginalFileName().lastIndexOf(".");
-				if (dotPos == -1)
-					dotPos = preview.getOriginalFileName().length();
-				preview.setFileName(UUID.randomUUID().toString() +
-						preview.getOriginalFileName().substring(dotPos));
-				preview.setProduct(fromRep);
-				preview.setSize(file.getSize());
-				file.transferTo(new File(storageLocation, preview.getFileName()));
-			}
-		}
 
 		Product saved = productRepository.save(fromRep);
 
@@ -433,11 +359,7 @@ public class ProductService
 		if (fromRep == null)
 			throw new RuntimeException("No such product in the database!");
 
-		for (Preview p : fromRep.getPreviews())
-		{
-			File image = new File(storageLocation, p.getFileName());
-			image.delete();
-		}
+		previewService.unlinkPreviews(fromRep.getPreviews());
 
 		productRepository.deleteById(id);
 
@@ -458,29 +380,6 @@ public class ProductService
 
 		if (modifiedProducts.size() > 0)
 			productRepository.saveAll(modifiedProducts);
-
-	}
-
-
-
-	@PostConstruct
-	public void init()
-	{
-
-		File storageDir = new File(storageLocation);
-
-		if (!storageDir.exists())
-		{
-			if (!storageDir.mkdirs())
-			{
-				throw new RuntimeException("Storage location can not be created!");
-			}
-		}
-
-		if (!storageDir.canWrite())
-		{
-			throw new RuntimeException("Storage location is not writable!");
-		}
 
 	}
 

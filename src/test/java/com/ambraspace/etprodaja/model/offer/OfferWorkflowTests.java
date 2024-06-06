@@ -28,6 +28,9 @@ import com.ambraspace.etprodaja.model.item.ItemControllerTestComponent;
 import com.ambraspace.etprodaja.model.order.Order;
 import com.ambraspace.etprodaja.model.order.Order.Status;
 import com.ambraspace.etprodaja.model.order.OrderControllerTestComponent;
+import com.ambraspace.etprodaja.model.preview.Preview;
+import com.ambraspace.etprodaja.model.preview.PreviewControllerTestComponent;
+import com.ambraspace.etprodaja.model.preview.PreviewService;
 import com.ambraspace.etprodaja.model.product.Product;
 import com.ambraspace.etprodaja.model.product.ProductControllerTestComponent;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
@@ -53,6 +56,9 @@ public class OfferWorkflowTests
 	private CategoryControllerTestComponent categoryControllerTestComponent;
 
 	@Autowired
+	private PreviewControllerTestComponent previewControllerTestComponent;
+
+	@Autowired
 	private ProductControllerTestComponent productControllerTestComponent;
 
 	@Autowired
@@ -72,6 +78,9 @@ public class OfferWorkflowTests
 
 	@Autowired
 	private DeliveryItemControllerTestComponent deliveryItemControllerTestComponent;
+
+	@Autowired
+	private PreviewService previewService;
 
 
 	@Test
@@ -774,6 +783,8 @@ public class OfferWorkflowTests
 
 		deleteProducts(products);
 
+		previewService.deleteOrphanPreviews();
+
 		deleteCategories(categories);
 
 		deleteWarehouses(warehouses);
@@ -863,6 +874,8 @@ public class OfferWorkflowTests
 	private void addProducts(List<Category> categories, List<Product> products) throws Exception
 	{
 
+		List<Preview> previews = previewControllerTestComponent.addPreviews(15);
+
 		String productTemplate = """
 {
 	"name":"%s",
@@ -875,24 +888,51 @@ public class OfferWorkflowTests
 	"tags":
 		[
 		],
+	"previews":%s,
 	"comment":"This is a test"
 }
 				""";
 
 		products.add(productControllerTestComponent
-				.addProduct(String.format(productTemplate, "Product 1", 111.11, categories.get(0).getId()), 3));
+				.addProduct(String.format(productTemplate, "Product 1", 111.11, categories.get(0).getId(), makePreviewsObject(previews.subList(0, 3)))));
 
 		products.add(productControllerTestComponent
-				.addProduct(String.format(productTemplate, "Product 2", 123.45, categories.get(1).getId()), 3));
+				.addProduct(String.format(productTemplate, "Product 2", 123.45, categories.get(1).getId(), makePreviewsObject(previews.subList(3, 6)))));
 
 		products.add(productControllerTestComponent
-				.addProduct(String.format(productTemplate, "Product 3", 133.33, categories.get(2).getId()), 3));
+				.addProduct(String.format(productTemplate, "Product 3", 133.33, categories.get(2).getId(), makePreviewsObject(previews.subList(6, 9)))));
 
 		products.add(productControllerTestComponent
-				.addProduct(String.format(productTemplate, "Product 4", 145.45, categories.get(3).getId()), 3));
+				.addProduct(String.format(productTemplate, "Product 4", 145.45, categories.get(3).getId(), makePreviewsObject(previews.subList(9, 12)))));
 
 		products.add(productControllerTestComponent
-				.addProduct(String.format(productTemplate, "Product 5", 156.56, categories.get(4).getId()), 3));
+				.addProduct(String.format(productTemplate, "Product 5", 156.56, categories.get(4).getId(), makePreviewsObject(previews.subList(12, 15)))));
+
+	}
+
+
+	private String makePreviewsObject(List<Preview> previews)
+	{
+
+		StringBuilder retVal = new StringBuilder();
+		retVal.append("[");
+		for (int i = 0; i < previews.size(); i++)
+		{
+			Preview pr = previews.get(i);
+			retVal.append(String.format("""
+{
+		"id":%d,
+		"fileName":"%s",
+		"originalFileName":"%s",
+		"size":%d,
+		"primary":false
+}
+					""", pr.getId(), pr.getFileName(), pr.getOriginalFileName(), pr.getSize()));
+			if (i < previews.size() - 1) retVal.append(",");
+		}
+		retVal.append("]");
+
+		return retVal.toString();
 
 	}
 

@@ -1,9 +1,10 @@
-package com.ambraspace.etprodaja.model.product;
+package com.ambraspace.etprodaja.model.preview;
 
 import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
 
+import com.ambraspace.etprodaja.model.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -37,7 +38,7 @@ public class Preview
 	private String fileName;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	private Product product;
 
 	@NotNull @NotBlank

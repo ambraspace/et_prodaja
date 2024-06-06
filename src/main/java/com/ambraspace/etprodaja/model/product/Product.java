@@ -8,12 +8,12 @@ import java.util.Objects;
 import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.category.Category;
+import com.ambraspace.etprodaja.model.preview.Preview;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.model.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -55,7 +55,7 @@ public class Product
 	@NotNull @NotBlank @Size(min = 5, max = 255, message = "Product name must be between 5 and 255 characters long")
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	@NotNull
 	private List<Preview> previews = new ArrayList<Preview>();
 

@@ -23,6 +23,9 @@ import com.ambraspace.etprodaja.model.category.Category;
 import com.ambraspace.etprodaja.model.category.CategoryControllerTestComponent;
 import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.company.CompanyControllerTestComponent;
+import com.ambraspace.etprodaja.model.preview.Preview;
+import com.ambraspace.etprodaja.model.preview.PreviewControllerTestComponent;
+import com.ambraspace.etprodaja.model.preview.PreviewService;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfoControllerTestComponent;
 import com.ambraspace.etprodaja.model.tag.Tag;
@@ -54,6 +57,12 @@ public class ProductControllerTests {
 
 	@Autowired
 	private StockInfoControllerTestComponent stockInfoControllerTestComponent;
+
+	@Autowired
+	private PreviewControllerTestComponent previewControllerTestComponent;
+
+	@Autowired
+	private PreviewService previewService;
 
 
 	@Value("${et-prodaja.storage-location}")
@@ -88,6 +97,28 @@ public class ProductControllerTests {
 				""");
 
 
+		List<Preview> previews = previewControllerTestComponent.addPreviews(3);
+
+		StringBuilder previewArray = new StringBuilder();
+		previewArray.append("[");
+		for (int i = 0; i < previews.size(); i++)
+		{
+			Preview pr = previews.get(i);
+			previewArray.append(String.format("""
+{
+		"id":%d,
+		"fileName":"%s",
+		"originalFileName":"%s",
+		"size":%d,
+		"primary":false
+}
+									""", pr.getId(), pr.getFileName(), pr.getOriginalFileName(), pr.getSize()));
+			if (i < previews.size() - 1)
+				previewArray.append(",");
+		}
+
+		previewArray.append("]");
+
 		String productBody = String.format("""
 {
 	"name":"Test decoration",
@@ -103,11 +134,12 @@ public class ProductControllerTests {
 				"name":"%s"
 			}
 		],
+	"previews":%s,
 	"comment":"This is a test"
 }
-				""", categories.get(0).getId(), tag.getName());
+				""", categories.get(0).getId(), tag.getName(), previewArray.toString());
 
-		Product product = productControllerTestComponent.addProduct(productBody, 3);
+		Product product = productControllerTestComponent.addProduct(productBody);
 
 		assertNotEquals(product, null);
 
@@ -115,18 +147,42 @@ public class ProductControllerTests {
 
 		assertEquals(product.getTags().get(0).getName(), tag.getName());
 
-		assertEquals(product.getPrice().compareTo(BigDecimal.valueOf(12345, 2)), 0);
+		assertEquals(product.getPreviews().size(), previews.size());
 
-		assertEquals(product.getPreviews().size(), 3);
+		assertEquals(product.getPrice().compareTo(BigDecimal.valueOf(12345, 2)), 0);
 
 		for (Preview preview:product.getPreviews())
 		{
 			assertTrue(new File(storageLocation, preview.getFileName()).exists());
 		}
 
-		byte[] fileImage = productControllerTestComponent.downloadProductPreview(product.getPreviews().get(0).getFileName());
+		byte[] fileImage = previewControllerTestComponent.downloadProductPreview(product.getPreviews().get(0).getFileName());
 
 		assertEquals(fileImage.length, 1);
+
+		previews.addAll(previewControllerTestComponent.addPreviews(1));
+
+		previewArray.setLength(0);
+		previewArray.append("[");
+
+		for (int i = 1; i < previews.size(); i++)
+		{
+			Preview pr = previews.get(i);
+			previewArray.append(String.format("""
+					{
+							"id":%d,
+							"fileName":"%s",
+							"originalFileName":"%s",
+							"size":%d,
+							"primary":false
+					}
+									""", pr.getId(), pr.getFileName(), pr.getOriginalFileName(), pr.getSize()));
+			if (i < previews.size() - 1)
+				previewArray.append(",");
+		}
+
+		previewArray.append("]");
+
 
 		String updatedProductBody = String.format("""
 {
@@ -142,29 +198,15 @@ public class ProductControllerTests {
 		[
 		],
 	"comment":"This is an updated test",
-	"previews":
-	[
-		{
-			"id":%d,
-			"fileName":"%s",
-			"originalFileName":"%s",
-			"size":%d,
-			"primary":%b
-		}
-	]
+	"previews":%s
 }
 				""",
 				product.getId(),
 				categories.get(1).getId(),
-				product.getPreviews().get(1).getId(),
-				product.getPreviews().get(1).getFileName(),
-				product.getPreviews().get(1).getOriginalFileName(),
-				product.getPreviews().get(1).getSize(),
-				product.getPreviews().get(1).getPrimary()
-				);
+				previewArray.toString());
 
 		Product updatedProduct =
-				productControllerTestComponent.updateProduct(product.getId(), updatedProductBody, 3);
+				productControllerTestComponent.updateProduct(product.getId(), updatedProductBody);
 
 		assertEquals(updatedProduct.getCategory().getId(), categories.get(1).getId());
 
@@ -172,18 +214,17 @@ public class ProductControllerTests {
 
 		assertEquals(updatedProduct.getId(), product.getId());
 
-		assertEquals(updatedProduct.getPreviews().size(), 4);
+		assertEquals(updatedProduct.getPreviews().size(), 3);
 
 		for (Preview preview:updatedProduct.getPreviews())
 		{
 			assertTrue(new File(storageLocation, preview.getFileName()).exists());
 		}
 
-		assertEquals(updatedProduct.getPreviews().get(0).getId(), product.getPreviews().get(1).getId());
+		assertEquals(updatedProduct.getPreviews().get(0).getId(), previews.get(1).getId());
 
-		assertFalse(new File(storageLocation, product.getPreviews().get(0).getFileName()).exists());
+		assertEquals(updatedProduct.getPreviews().get(2).getId(), previews.get(3).getId());
 
-		assertFalse(new File(storageLocation, product.getPreviews().get(2).getFileName()).exists());
 
 		Company company = companyControllerTestComponent.addCompany("""
 {
@@ -224,7 +265,14 @@ public class ProductControllerTests {
 
 		productControllerTestComponent.deleteProduct(updatedProduct.getId());
 
-		for (Preview preview:updatedProduct.getPreviews())
+		for (Preview preview:previews)
+		{
+			assertTrue(new File(storageLocation, preview.getFileName()).exists());
+		}
+
+		previewService.deleteOrphanPreviews();
+
+		for (Preview preview:previews)
 		{
 			assertFalse(new File(storageLocation, preview.getFileName()).exists());
 		}
@@ -318,28 +366,28 @@ public class ProductControllerTests {
 				"Comment def",
 				123.45,
 				categories.get(0).getId(),
-				tags.get(0).getName()), 3));
+				tags.get(0).getName())));
 
 		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
 				"Product A BC",
 				"Comment DEF",
 				111.11,
 				categories.get(1).getId(),
-				tags.get(0).getName()), 3));
+				tags.get(0).getName())));
 
 		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
 				"Product ghi",
 				"Comment jkl",
 				200.00,
 				categories.get(0).getId(),
-				tags.get(1).getName()), 3));
+				tags.get(1).getName())));
 
 		products.add(productControllerTestComponent.addProduct(String.format(productTemplate,
 				"Product GHI",
 				"Comment JKL",
 				133.33,
 				categories.get(1).getId(),
-				tags.get(1).getName()), 3));
+				tags.get(1).getName())));
 
 
 		List<StockInfo> stockInfos = new ArrayList<StockInfo>();
