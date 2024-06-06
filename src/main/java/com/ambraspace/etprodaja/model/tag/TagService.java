@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +70,24 @@ public class TagService
 		tagRepository.findFirst10ByNameLikeIgnoreCase("%" + query + "%").forEach(retVal::add);
 
 		return retVal;
+
+	}
+
+
+	@Scheduled(cron = "0 0 0 * * *")
+	@Transactional
+	public void deleteOrphanTags()
+	{
+
+		List<Tag> allTags = new ArrayList<Tag>();
+		tagRepository.findAll().forEach(allTags::add);
+
+		List<Tag> assignedTags = new ArrayList<Tag>();
+		tagRepository.getAssignedTags().forEach(assignedTags::add);
+
+		allTags.removeAll(assignedTags);
+
+		tagRepository.deleteAll(allTags);
 
 	}
 

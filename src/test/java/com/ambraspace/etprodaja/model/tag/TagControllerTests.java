@@ -32,6 +32,9 @@ public class TagControllerTests {
 	@Autowired
 	private ProductControllerTestComponent productControllerTestComponent;
 
+	@Autowired
+	private TagService tagService;
+
 
 	@Test
 	public void testTagOperations() throws Exception
@@ -87,7 +90,7 @@ public class TagControllerTests {
 }
 				""", categories.get(0).getId(), tag.getName());
 
-		Product product = productControllerTestComponent.addProduct(productBody, 3);
+		Product product = productControllerTestComponent.addProduct(productBody);
 
 		product = productControllerTestComponent.getProduct(product.getId());
 
@@ -102,6 +105,26 @@ public class TagControllerTests {
 		product = productControllerTestComponent.getProduct(product.getId());
 
 		assertEquals(product.getTags().size(), 0);
+
+		tagTestComponent.addTag("""
+				{
+					"name":"Orphan 1",
+					"color":"#121212"
+				}
+								""");
+
+		tagTestComponent.addTag("""
+				{
+					"name":"Orphan 2",
+					"color":"#121212"
+				}
+								""");
+
+		assertEquals(tagTestComponent.getTags().size(), 2);
+
+		tagService.deleteOrphanTags();
+
+		assertEquals(tagTestComponent.getTags().size(), 0);
 
 		productControllerTestComponent.deleteProduct(product.getId());
 
