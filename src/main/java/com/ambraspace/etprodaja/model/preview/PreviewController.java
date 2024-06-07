@@ -53,7 +53,7 @@ public class PreviewController
 	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping(path = "/api/previews", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public List<Preview> addPreviews(
-			@RequestPart(name = "files", required = false) List<MultipartFile> files)
+			@RequestPart(name = "files", required = true) List<MultipartFile> files)
 	{
 		try
 		{
