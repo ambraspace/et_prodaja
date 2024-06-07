@@ -3,6 +3,8 @@ package com.ambraspace.etprodaja.model.tag;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,8 @@ import com.ambraspace.etprodaja.model.product.ProductService;
 @Service
 public class TagService
 {
+
+	private static final Logger logger = LoggerFactory.getLogger(TagService.class);
 
 	@Autowired
 	private TagRepository tagRepository;
@@ -78,6 +82,8 @@ public class TagService
 	@Transactional
 	public void deleteOrphanTags()
 	{
+
+		logger.info("Deleting orphan tags...");
 
 		List<Tag> allTags = new ArrayList<Tag>();
 		tagRepository.findAll().forEach(allTags::add);

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -23,6 +25,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class PreviewService
 {
+
+	private static final Logger logger = LoggerFactory.getLogger(PreviewService.class);
 
 	@Autowired
 	private PreviewRepository previewRepository;
@@ -119,12 +123,16 @@ public class PreviewService
 	@Transactional
 	public void deleteOrphanPreviews()
 	{
+
+		logger.info("Deleting orphan previews...");
+
 		List<Preview> orphans = new ArrayList<Preview>();
 		previewRepository.findByProductIsNull().forEach(pr -> {
 			new File(storageLocation, pr.getFileName()).delete();
 			orphans.add(pr);
 		});
 		previewRepository.deleteAll(orphans);
+
 	}
 
 
