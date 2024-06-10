@@ -100,7 +100,7 @@ public class PreviewService
 
 		File file = new File(storageLocation, fileName);
 
-		if (!file.exists())
+		if (file.isDirectory() || !file.exists())
 			throw new RuntimeException("File not found!");
 
 		String contentType = Files.probeContentType(file.toPath());
