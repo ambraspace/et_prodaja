@@ -195,6 +195,7 @@ public class ProductService
 		if (productIds.hasContent())
 		{
 			retVal = getProductsWithPreviews(productIds.getContent(), pageable.getSort());
+			retVal.forEach(p -> productRepository.getProductWithCategoryAndTags(p.getId()));
 			fillTransientFields(warehouseId, retVal);
 		}
 
