@@ -81,6 +81,30 @@ public class WarehouseController
 	}
 
 
+	@Operation(summary = "Get a warehouse by warehouse ID", responses = {
+			@ApiResponse(responseCode = "200", description = "Warehouse returned (may be null)", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = Warehouse.class))
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
+	@GetMapping("/api/warehouses/{id}")
+	public Warehouse getWarehouse(@PathVariable Long id)
+	{
+		try
+		{
+			return warehouseService.getWarehouse(id);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
 	@Operation(summary = "Add new warehouse",
 			requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
 					required = true,

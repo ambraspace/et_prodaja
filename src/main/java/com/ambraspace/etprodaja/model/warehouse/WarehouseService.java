@@ -36,6 +36,12 @@ public class WarehouseService
 	}
 
 
+	public Warehouse getWarehouse(Long id)
+	{
+		return warehouseRepository.findById(id).orElse(null);
+	}
+
+
 	@Transactional
 	public Warehouse addWarehouse(Long companyId, Warehouse warehouse)
 	{

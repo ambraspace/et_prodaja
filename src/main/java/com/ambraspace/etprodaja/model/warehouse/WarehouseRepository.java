@@ -16,6 +16,11 @@ public interface WarehouseRepository extends CrudRepository<Warehouse, Long>, Pa
 
 	Optional<Warehouse> findByCompanyIdAndId(Long companyId, Long id);
 
+	@Override
+	@EntityGraph("warehouse-with-company")
+	Optional<Warehouse> findById(Long id);
+
+
 	@EntityGraph("warehouse-with-company")
 	@Query("""
 SELECT w FROM Warehouse w
