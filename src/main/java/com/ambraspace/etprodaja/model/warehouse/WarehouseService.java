@@ -81,4 +81,12 @@ public class WarehouseService
 
 	}
 
+
+	public List<Warehouse> searchWarehouses(String query, Integer size)
+	{
+		List<Warehouse> retVal = new ArrayList<Warehouse>();
+		warehouseRepository.searchWarehouse("%" + query + "%", size).forEach(retVal::add);
+		return retVal;
+	}
+
 }

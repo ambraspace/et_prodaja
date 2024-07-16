@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -165,6 +166,34 @@ public class WarehouseController
 		try
 		{
 			warehouseService.deleteWarehouse(companyId, id);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+
+
+	@Operation(summary = "Search warehouses by query", responses = {
+			@ApiResponse(responseCode = "200", description = "List of warehouses returned", content = {
+					@Content(mediaType = "application/json", array =
+							@ArraySchema(schema = @Schema(implementation = Warehouse.class)))
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
+	@GetMapping("/api/warehouses/search")
+	public List<Warehouse> searchWarehouses(
+			@RequestParam("q") String query,
+			@RequestParam("size") Integer size
+	)
+	{
+		try
+		{
+			return warehouseService.searchWarehouses(query, size);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
