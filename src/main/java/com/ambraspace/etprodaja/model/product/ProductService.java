@@ -81,19 +81,19 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, comment, tags and category
-							productIds = productRepository.findByWarehouseNameCommentTagsAndCategory(warehouseId, query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByWarehouseNameCommentTagsAndCategory(warehouseId, "%" + query + "%", tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name, comment and tags
-							productIds = productRepository.findByWarehouseNameCommentAndTags(warehouseId, query, tagIds, pageable);
+							productIds = productRepository.findByWarehouseNameCommentAndTags(warehouseId, "%" + query + "%", tagIds, pageable);
 						}
 					} else {
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, comment and category
-							productIds = productRepository.findByWarehouseNameCommentAndCategory(warehouseId, query, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByWarehouseNameCommentAndCategory(warehouseId, "%" + query + "%", categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name and comment
-							productIds = productRepository.findByWarehouseNameAndComment(warehouseId, query, pageable);
+							productIds = productRepository.findByWarehouseNameAndComment(warehouseId, "%" + query + "%", pageable);
 						}
 					}
 				} else {
@@ -102,19 +102,19 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by warehouse, name, tags and category
-							productIds = productRepository.findByWarehouseNameTagsAndCategory(warehouseId, query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByWarehouseNameTagsAndCategory(warehouseId, "%" + query + "%", tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse, name and tags
-							productIds = productRepository.findByWarehouseNameAndTags(warehouseId, query, tagIds, pageable);
+							productIds = productRepository.findByWarehouseNameAndTags(warehouseId, "%" + query + "%", tagIds, pageable);
 						}
 					} else {
 						if (categoryId != null)
 						{
 							//Search by warehouse, name and category
-							productIds = productRepository.findByWarehouseNameAndCategory(warehouseId, query, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByWarehouseNameAndCategory(warehouseId, "%" + query + "%", categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by warehouse and name
-							productIds = productRepository.findByWarehouseAndName(warehouseId, query, pageable);
+							productIds = productRepository.findByWarehouseAndName(warehouseId, "%" + query + "%", pageable);
 						}
 					}
 				}
@@ -150,19 +150,19 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by name, comment, tags and category
-							productIds = productRepository.findByNameCommentTagsAndCategory(query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByNameCommentTagsAndCategory("%" + query + "%", tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name, comment and tags
-							productIds = productRepository.findByNameCommentAndTags(query, tagIds, pageable);
+							productIds = productRepository.findByNameCommentAndTags("%" + query + "%", tagIds, pageable);
 						}
 					} else {
 						if (categoryId != null)
 						{
 							//Search by name, comment and category
-							productIds = productRepository.findByNameCommentAndCategory(query, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByNameCommentAndCategory("%" + query + "%", categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name and comment
-							productIds = productRepository.findByNameAndComment(query, pageable);
+							productIds = productRepository.findByNameAndComment("%" + query + "%", pageable);
 						}
 					}
 				} else {
@@ -171,19 +171,19 @@ public class ProductService
 						if (categoryId != null)
 						{
 							//Search by name, tags and category
-							productIds = productRepository.findByNameTagsAndCategory(query, tagIds, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByNameTagsAndCategory("%" + query + "%", tagIds, categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name and tags
-							productIds = productRepository.findByNameAndTags(query, tagIds, pageable);
+							productIds = productRepository.findByNameAndTags("%" + query + "%", tagIds, pageable);
 						}
 					} else {
 						if (categoryId != null)
 						{
 							//Search by name and category
-							productIds = productRepository.findByNameAndCategory(query, categoryService.collectCategoryIds(categoryId), pageable);
+							productIds = productRepository.findByNameAndCategory("%" + query + "%", categoryService.collectCategoryIds(categoryId), pageable);
 						} else {
 							//Search by name
-							productIds = productRepository.findByName(query, pageable);
+							productIds = productRepository.findByName("%" + query + "%", pageable);
 						}
 					}
 				}

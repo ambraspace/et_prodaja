@@ -77,8 +77,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s JOIN p.tags tg
 WHERE
 	s.warehouse.id = :w AND
-	(p.name LIKE %:q% OR
-	p.comment LIKE %:q%) AND
+	(p.name LIKE :q OR
+	p.comment LIKE :q) AND
 	tg.id in (:t) AND
 	p.category.id IN (:ct)
 			""")
@@ -95,8 +95,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s JOIN p.tags tg
 WHERE
 	s.warehouse.id = :w AND
-	(p.name LIKE %:q% OR
-	p.comment LIKE %:q%) AND
+	(p.name LIKE :q OR
+	p.comment LIKE :q) AND
 	tg.id in (:t)
 			""")
 	Page<Long> findByWarehouseNameCommentAndTags(
@@ -111,8 +111,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s
 WHERE
 	s.warehouse.id = :w AND
-	(p.name LIKE %:q% OR
-	p.comment LIKE %:q%) AND
+	(p.name LIKE :q OR
+	p.comment LIKE :q) AND
 	p.category.id IN (:ct)
 			""")
 	Page<Long> findByWarehouseNameCommentAndCategory(
@@ -127,8 +127,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s
 WHERE
 	s.warehouse.id = :w AND
-	(p.name LIKE %:q% OR
-	p.comment LIKE %:q%)
+	(p.name LIKE :q OR
+	p.comment LIKE :q)
 			""")
 	Page<Long> findByWarehouseNameAndComment(
 			@Param("w") Long warehouseId,
@@ -141,7 +141,7 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s JOIN p.tags tg
 WHERE
 	s.warehouse.id = :w AND
-	p.name LIKE %:q% AND
+	p.name LIKE :q AND
 	tg.id in (:t) AND
 	p.category.id IN (:ct)
 			""")
@@ -158,7 +158,7 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s JOIN p.tags tg
 WHERE
 	s.warehouse.id = :w AND
-	p.name LIKE %:q% AND
+	p.name LIKE :q AND
 	tg.id in (:t)
 			""")
 	Page<Long> findByWarehouseNameAndTags(
@@ -173,7 +173,7 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s
 WHERE
 	s.warehouse.id = :w AND
-	p.name LIKE %:q% AND
+	p.name LIKE :q AND
 	p.category.id IN (:ct)
 			""")
 	Page<Long> findByWarehouseNameAndCategory(
@@ -188,7 +188,7 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s
 WHERE
 	s.warehouse.id = :w AND
-	p.name LIKE %:q%
+	p.name LIKE :q
 			""")
 	Page<Long> findByWarehouseAndName(
 			@Param("w") Long warehouseId,
@@ -242,8 +242,8 @@ FROM Product p
 SELECT DISTINCT p.id
 FROM Product p JOIN p.tags tg
 WHERE
-	(p.name LIKE %:q% OR
-	p.comment LIKE %:q%) AND
+	(p.name LIKE :q OR
+	p.comment LIKE :q) AND
 	tg.id in (:t) AND
 	p.category.id IN (:ct)
 			""")
@@ -258,8 +258,8 @@ WHERE
 SELECT DISTINCT p.id
 FROM Product p JOIN p.tags tg
 WHERE
-	(p.name LIKE %:q% OR
-	p.comment LIKE %:q%) AND
+	(p.name LIKE :q OR
+	p.comment LIKE :q) AND
 	tg.id in (:t)
 			""")
 	Page<Long> findByNameCommentAndTags(
@@ -272,8 +272,8 @@ WHERE
 SELECT p.id
 FROM Product p
 WHERE
-	(p.name LIKE %:q% OR
-	p.comment LIKE %:q%) AND
+	(p.name LIKE :q OR
+	p.comment LIKE :q) AND
 	p.category.id IN (:ct)
 			""")
 	Page<Long> findByNameCommentAndCategory(
@@ -286,8 +286,8 @@ WHERE
 SELECT p.id
 FROM Product p
 WHERE
-	p.name LIKE %:q% OR
-	p.comment LIKE %:q%
+	p.name LIKE :q OR
+	p.comment LIKE :q
 			""")
 	Page<Long> findByNameAndComment(
 			@Param("q") String query, Pageable pageable);
@@ -298,7 +298,7 @@ WHERE
 SELECT DISTINCT p.id
 FROM Product p JOIN p.tags tg
 WHERE
-	p.name LIKE %:q% AND
+	p.name LIKE :q AND
 	tg.id in (:t) AND
 	p.category.id IN (:ct)
 			""")
@@ -313,7 +313,7 @@ WHERE
 SELECT DISTINCT p.id
 FROM Product p JOIN p.tags tg
 WHERE
-	p.name LIKE %:q% AND
+	p.name LIKE :q AND
 	tg.id in (:t)
 			""")
 	Page<Long> findByNameAndTags(
@@ -326,7 +326,7 @@ WHERE
 SELECT p.id
 FROM Product p
 WHERE
-	p.name LIKE %:q% AND
+	p.name LIKE :q AND
 	p.category.id IN (:ct)
 			""")
 	Page<Long> findByNameAndCategory(
@@ -339,7 +339,7 @@ WHERE
 SELECT p.id
 FROM Product p
 WHERE
-	p.name LIKE %:q%
+	p.name LIKE :q
 			""")
 	Page<Long> findByName(
 			@Param("q") String query, Pageable pageable);
