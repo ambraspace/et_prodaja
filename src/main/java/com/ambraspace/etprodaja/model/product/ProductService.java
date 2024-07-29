@@ -316,7 +316,7 @@ public class ProductService
 
 		Product saved = productRepository.save(product);
 
-		previewService.linkToProduct(product.getPreviews(), product);
+		previewService.linkToProduct(product.getPreviews(), saved);
 
 		return saved;
 
