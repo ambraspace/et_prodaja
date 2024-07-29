@@ -133,6 +133,18 @@ public class PreviewService
 		});
 		previewRepository.deleteAll(orphans);
 
+		File directory = new File(storageLocation);
+		List<String> images = List.of(directory.list());
+		List<String> imagesInTheDb = new ArrayList<String>();
+
+		previewRepository.findAll().forEach(pr -> imagesInTheDb.add(pr.getFileName()));
+
+		images.removeAll(imagesInTheDb);
+
+		images.forEach(f -> {
+			new File(storageLocation, f).delete();
+		});
+
 	}
 
 
