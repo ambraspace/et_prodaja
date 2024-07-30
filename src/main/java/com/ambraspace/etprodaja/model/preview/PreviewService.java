@@ -133,9 +133,11 @@ public class PreviewService
 		});
 		previewRepository.deleteAll(orphans);
 
-		File directory = new File(storageLocation);
-		List<String> images = List.of(directory.list());
+		List<String> images = new ArrayList<String>();
 		List<String> imagesInTheDb = new ArrayList<String>();
+
+		File directory = new File(storageLocation);
+		List.of(directory.list()).forEach(images::add);
 
 		previewRepository.findAll().forEach(pr -> imagesInTheDb.add(pr.getFileName()));
 
