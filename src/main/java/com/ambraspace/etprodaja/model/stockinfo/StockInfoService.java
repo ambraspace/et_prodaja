@@ -83,12 +83,12 @@ public class StockInfoService
 
 	}
 
-	public List<StockInfo> getStockInfoByWarehouseIdAndProducts(Long warehouseId, List<Product> products)
+	public List<Tuple> getStockInfoByWarehouseIdAndProducts(Long warehouseId, List<Product> products)
 	{
 
-		List<StockInfo> retVal = new ArrayList<>();
+		List<Tuple> retVal = new ArrayList<>();
 
-		stockInfoRepository.findByWarehouseIdAndProductInOrderByProduct(warehouseId, products).forEach(retVal::add);
+		stockInfoRepository.getStockInfoByWarehouseIdAndProducts(warehouseId, products).forEach(retVal::add);
 
 		return retVal;
 

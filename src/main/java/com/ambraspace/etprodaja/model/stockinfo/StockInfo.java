@@ -17,8 +17,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedSubgraph;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -27,7 +25,6 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"warehouse_id", "product_id"}))
 @NamedEntityGraph(name = "stockinfo-with-warehouse-and-company", attributeNodes = {
 		@NamedAttributeNode(value = "warehouse", subgraph = "warehouse-and-company")
 },
@@ -74,9 +71,7 @@ public class StockInfo
 		Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
 		if (thisEffectiveClass != oEffectiveClass) return false;
 		StockInfo other = (StockInfo) o;
-		return getWarehouse() != null && getProduct() != null
-				&& Objects.equals(getWarehouse(), other.getWarehouse())
-				&& Objects.equals(getProduct(), other.getProduct());
+		return getId() != null && Objects.equals(getId(), other.getId());
 	}
 
 	@Override

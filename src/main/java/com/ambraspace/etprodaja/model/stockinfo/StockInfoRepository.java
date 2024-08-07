@@ -30,7 +30,19 @@ ORDER BY s.product.id
 	Iterable<Tuple> getStockInfoByProducts(@Param("products") Iterable<Product> products);
 
 
-	Iterable<StockInfo> findByWarehouseIdAndProductInOrderByProduct(Long warehouseId, Iterable<Product> products);
+	@Query(value = """
+SELECT
+	s.product.id,
+	SUM(s.quantity),
+	SUM(s.quantity * s.unitPrice)
+FROM StockInfo s
+WHERE
+	s.warehouse.id = :warehouseId AND
+	s.product IN (:products)
+GROUP BY s.product.id
+ORDER BY s.product.id
+			""")
+	Iterable<Tuple> getStockInfoByWarehouseIdAndProducts(Long warehouseId, Iterable<Product> products);
 
 
 	@EntityGraph("stockinfo-with-warehouse-and-company")

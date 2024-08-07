@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ambraspace.etprodaja.model.category.CategoryService;
 import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.preview.PreviewService;
-import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.model.stockinfo.StockInfoService;
 
 import jakarta.persistence.Tuple;
@@ -225,20 +224,20 @@ public class ProductService
 		if (warehouseId != null && warehouseId > 0)
 		{
 
-			List<StockInfo> stockInfos = stockInfoService.getStockInfoByWarehouseIdAndProducts(warehouseId, products);
+			List<Tuple> stockInfos = stockInfoService.getStockInfoByWarehouseIdAndProducts(warehouseId, products);
 			List<Tuple> itemDataForOffers = itemService.getItemDataForProductsInValidOffersByWarehouse(warehouseId, products);
 			List<Tuple> itemDataForOrders = itemService.getItemDataForOrderedProductsByWarehouse(warehouseId, products);
 
 			products.forEach(p -> {
 
-				StockInfo si = stockInfos.stream().filter(s -> p.getId().equals(s.getProduct().getId())).findFirst().orElse(null);
+				Tuple si = stockInfos.stream().filter(s -> p.getId().equals(s.get(0, Long.class))).findFirst().orElse(null);
 				Tuple dataForOffers = itemDataForOffers.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
 				Tuple dataForOrders = itemDataForOrders.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
 
 				BigDecimal offeredQty = dataForOffers != null ? dataForOffers.get(1, BigDecimal.class) : BigDecimal.ZERO;
 				BigDecimal orderedQty = dataForOrders != null ? dataForOrders.get(1, BigDecimal.class) : BigDecimal.ZERO;
 
-				BigDecimal availableQty = (si != null ? si.getQuantity() : BigDecimal.ZERO)
+				BigDecimal availableQty = (si != null ? si.get(1, BigDecimal.class) : BigDecimal.ZERO)
 						.subtract(offeredQty)
 						.subtract(orderedQty);
 
@@ -246,7 +245,7 @@ public class ProductService
 				BigDecimal orderedValue = dataForOrders != null ? dataForOrders.get(2, BigDecimal.class) : BigDecimal.ZERO;
 
 				BigDecimal availableValue =
-						(si != null ? si.getQuantity().multiply(si.getUnitPrice()).setScale(2, RoundingMode.HALF_EVEN) : BigDecimal.ZERO)
+						(si != null ? si.get(2, BigDecimal.class) : BigDecimal.ZERO)
 						.subtract(offeredValue)
 						.subtract(orderedValue);
 
