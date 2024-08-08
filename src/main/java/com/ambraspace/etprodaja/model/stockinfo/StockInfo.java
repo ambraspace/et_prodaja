@@ -52,6 +52,9 @@ public class StockInfo
 	@NotNull @PositiveOrZero
 	private BigDecimal unitPrice = BigDecimal.ZERO;
 
+	private BigDecimal repairableQuantity = BigDecimal.ZERO;
+
+
 
 	void copyFieldsFrom(StockInfo other)
 	{
