@@ -85,6 +85,10 @@ public class Product
 	@JsonProperty
 	private BigDecimal orderedQty = BigDecimal.ZERO;
 
+	@Transient
+	@JsonProperty
+	private BigDecimal repairableQty = BigDecimal.ZERO;
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Category category;
 

@@ -21,7 +21,8 @@ public interface StockInfoRepository extends CrudRepository<StockInfo, Long>, Pa
 SELECT
 	s.product.id,
 	SUM(s.quantity),
-	SUM(s.quantity * s.unitPrice)
+	SUM(s.quantity * s.unitPrice),
+	SUM(s.repairableQuantity)
 FROM StockInfo s
 WHERE s.product IN (:products)
 GROUP BY s.product.id
@@ -34,7 +35,8 @@ ORDER BY s.product.id
 SELECT
 	s.product.id,
 	SUM(s.quantity),
-	SUM(s.quantity * s.unitPrice)
+	SUM(s.quantity * s.unitPrice),
+	SUM(s.repairableQuantity)
 FROM StockInfo s
 WHERE
 	s.warehouse.id = :warehouseId AND

@@ -62,6 +62,7 @@ public class StockInfo
 		this.customerReference = other.getCustomerReference();
 		this.quantity = other.getQuantity();
 		this.unitPrice = other.getUnitPrice();
+		this.repairableQuantity = other.getRepairableQuantity();
 
 	}
 

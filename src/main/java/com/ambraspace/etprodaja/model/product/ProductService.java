@@ -249,6 +249,8 @@ public class ProductService
 						.subtract(offeredValue)
 						.subtract(orderedValue);
 
+				BigDecimal repairableQty = si != null ? si.get(3, BigDecimal.class) : BigDecimal.ZERO;
+
 				p.setAvailableQty(availableQty);
 				p.setOfferedQty(offeredQty);
 				p.setOrderedQty(orderedQty);
@@ -256,6 +258,7 @@ public class ProductService
 						BigDecimal.ZERO) == 0 ?
 								BigDecimal.ZERO
 								: availableValue.divide(availableQty, 2, RoundingMode.HALF_EVEN));
+				p.setRepairableQty(repairableQty);
 
 			});
 
@@ -286,6 +289,8 @@ public class ProductService
 						.subtract(offeredValue)
 						.subtract(orderedValue);
 
+				BigDecimal repairableQty = si != null ? si.get(3, BigDecimal.class) : BigDecimal.ZERO;
+
 				p.setAvailableQty(availableQty);
 				p.setOfferedQty(offeredQty);
 				p.setOrderedQty(orderedQty);
@@ -293,6 +298,7 @@ public class ProductService
 						availableQty.compareTo(BigDecimal.ZERO) == 0 ?
 								BigDecimal.ZERO
 								: availableValue.divide(availableQty, 2, RoundingMode.HALF_EVEN));
+				p.setRepairableQty(repairableQty);
 
 			});
 
