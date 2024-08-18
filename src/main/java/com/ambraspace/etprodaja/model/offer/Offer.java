@@ -38,6 +38,7 @@ import lombok.Setter;
 @NamedEntityGraphs({
 		@NamedEntityGraph(name = "offer-with-details", attributeNodes = {
 				@NamedAttributeNode("company"),
+				@NamedAttributeNode("contact"),
 				@NamedAttributeNode(value = "items", subgraph = "offer.items")
 		}, subgraphs = {
 				@NamedSubgraph(name = "offer.items", attributeNodes = {
@@ -89,15 +90,15 @@ public class Offer
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.ACTIVE;
-	
+
 	@Transient
 	@JsonProperty
 	private BigDecimal value;
-	
+
 	@Transient
 	@JsonProperty
 	private BigDecimal cost;
-	
+
 	@Transient
 	@JsonProperty
 	private BigDecimal margin;
