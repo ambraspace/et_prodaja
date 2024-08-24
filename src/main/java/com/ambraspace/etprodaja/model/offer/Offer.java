@@ -37,6 +37,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor
 @NamedEntityGraphs({
 		@NamedEntityGraph(name = "offer-with-details", attributeNodes = {
+				@NamedAttributeNode("user"),
 				@NamedAttributeNode("company"),
 				@NamedAttributeNode("contact"),
 				@NamedAttributeNode(value = "items", subgraph = "offer.items")
