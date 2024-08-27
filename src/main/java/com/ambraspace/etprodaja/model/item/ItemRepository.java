@@ -1,5 +1,6 @@
 package com.ambraspace.etprodaja.model.item;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -98,5 +99,28 @@ GROUP BY s.product.id
 ORDER BY s.product.id
 	""")
 	Iterable<Tuple> getItemDataForOrderedProductsByWarehouse(Long warehouseId, Iterable<Product> products);
+
+
+	@Query("""
+SELECT SUM(i.quantity)
+FROM Item i
+WHERE
+	i.stockInfo.id = :id AND
+	i.offer.status = 'ACTIVE' AND
+	i.offer.validUntil >= CURRENT_DATE
+			""")
+	BigDecimal getOfferedStockInfoQty(Long id);
+
+
+	@Query("""
+SELECT SUM(i.quantity)
+FROM Item i
+WHERE
+	i.stockInfo.id = :id AND
+	i.offer.status <> 'ACTIVE' AND
+	i.offer.status <> 'CANCELED'
+			""")
+	BigDecimal getOrderedStockInfoQty(Long id);
+
 
 }

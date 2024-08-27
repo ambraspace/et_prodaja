@@ -1,5 +1,6 @@
 package com.ambraspace.etprodaja.model.stockinfo;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.product.Product;
 
 import jakarta.persistence.Tuple;
@@ -20,16 +22,23 @@ public class StockInfoService
 	@Autowired
 	private StockInfoRepository stockInfoRepository;
 
+	@Autowired
+	private ItemService itemService;
+
 
 	public StockInfo getStockInfo(Long productId, Long id)
 	{
-		return stockInfoRepository.findByProductIdAndId(productId, id).orElse(null);
+		StockInfo retVal = stockInfoRepository.findByProductIdAndId(productId, id).orElse(null);
+		fillTransientFields(List.of(retVal));
+		return retVal;
 	}
 
 
 	public Page<StockInfo> getStockInfosByProduct(Long productId, Pageable pageable)
 	{
-		return stockInfoRepository.findByProductId(productId, pageable);
+		Page<StockInfo> retVal = stockInfoRepository.findByProductId(productId, pageable);
+		fillTransientFields(retVal.getContent());
+		return retVal;
 	}
 
 
@@ -53,7 +62,11 @@ public class StockInfoService
 
 		fromRep.copyFieldsFrom(si);
 
-		return stockInfoRepository.save(fromRep);
+		StockInfo retVal = stockInfoRepository.save(fromRep);
+
+		fillTransientFields(List.of(retVal));
+
+		return retVal;
 
 	}
 
@@ -91,6 +104,23 @@ public class StockInfoService
 		stockInfoRepository.getStockInfoByWarehouseIdAndProducts(warehouseId, products).forEach(retVal::add);
 
 		return retVal;
+
+	}
+
+
+	private void fillTransientFields(List<StockInfo> stockInfos)
+	{
+
+		for (StockInfo si:stockInfos)
+		{
+			BigDecimal offeredQty = itemService.getOfferedStockInfo(si.getId());
+			BigDecimal orderedQty = itemService.getOrderedStockInfo(si.getId());
+			si.setAvailableQuantity(
+					si.getQuantity()
+						.subtract(offeredQty == null ? BigDecimal.ZERO : offeredQty)
+						.subtract(orderedQty == null ? BigDecimal.ZERO : orderedQty)
+			);
+		}
 
 	}
 

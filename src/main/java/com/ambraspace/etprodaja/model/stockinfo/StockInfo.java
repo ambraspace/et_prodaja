@@ -7,6 +7,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.product.Product;
 import com.ambraspace.etprodaja.model.warehouse.Warehouse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedSubgraph;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -53,6 +55,10 @@ public class StockInfo
 	private BigDecimal unitPrice = BigDecimal.ZERO;
 
 	private BigDecimal repairableQuantity = BigDecimal.ZERO;
+
+	@Transient
+	@JsonProperty
+	private BigDecimal availableQuantity = BigDecimal.ZERO;
 
 
 

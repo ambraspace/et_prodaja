@@ -195,4 +195,15 @@ public class ItemService
 	}
 
 
+	public BigDecimal getOfferedStockInfo(Long stockInfo)
+	{
+		return itemRepository.getOfferedStockInfoQty(stockInfo);
+	}
+
+
+	public BigDecimal getOrderedStockInfo(Long stockInfo)
+	{
+		return itemRepository.getOrderedStockInfoQty(stockInfo);
+	}
+
 }
