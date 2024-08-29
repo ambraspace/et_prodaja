@@ -91,10 +91,10 @@ public class Item
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private StockInfo stockInfo;
 
-	// TODO: Dodati koji je preview izabran
-
 	@NotNull @NotBlank
 	private String productName;
+
+	private String preview;
 
 	@NotNull @PositiveOrZero
 	private BigDecimal quantity = BigDecimal.valueOf(0, 2);
@@ -124,6 +124,7 @@ public class Item
 		this.setDiscountPercent(other.getDiscountPercent());
 		this.setGrossPrice(other.getGrossPrice());
 		this.setProductName(other.getProductName());
+		this.setPreview(other.getPreview());
 		this.setQuantity(other.getQuantity());
 		this.setStockInfo(other.getStockInfo());
 
