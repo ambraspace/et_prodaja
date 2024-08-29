@@ -29,7 +29,8 @@ public class StockInfoService
 	public StockInfo getStockInfo(Long productId, Long id)
 	{
 		StockInfo retVal = stockInfoRepository.findByProductIdAndId(productId, id).orElse(null);
-		fillTransientFields(List.of(retVal));
+		if (retVal != null)
+			fillTransientFields(List.of(retVal));
 		return retVal;
 	}
 
