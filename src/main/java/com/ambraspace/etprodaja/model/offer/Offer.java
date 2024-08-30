@@ -12,8 +12,12 @@ import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.contact.Contact;
 import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.user.User;
+import com.ambraspace.etprodaja.util.LocalDateDeserializer;
+import com.ambraspace.etprodaja.util.LocalDateSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -67,8 +71,12 @@ public class Offer
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private User user; // who created the offer
 
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
 	private LocalDate offerDate;
 
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
 	private LocalDate validUntil;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
