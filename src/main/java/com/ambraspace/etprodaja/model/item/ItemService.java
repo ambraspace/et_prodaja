@@ -127,7 +127,10 @@ public class ItemService
 
 		for (Item i:fromRep)
 		{
-			Item updatedItem = items.stream().filter(it -> it.getId() == i.getId()).findFirst().orElseThrow();
+			int itemIndex = items.indexOf(i);
+			if (itemIndex < 0)
+				throw new RuntimeException("Item not found in returned list!");
+			Item updatedItem = items.get(itemIndex);
 			i.copyFieldsFrom(updatedItem);
 		}
 
