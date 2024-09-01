@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,34 +126,30 @@ public class OfferWorkflowTests
 
 		offers.add(offerControllerTestComponent.addOffer(String.format("""
 {
-	"validUntil":"%tF",
+	"validUntil":"%s",
 	"company":{"id":%d},
 	"vat":17.00,
 	"notes":"Lead time: 10 days",
 	"comments":"",
 	"status":"ACTIVE"
 }
-							""", LocalDate.now().plusDays(7), companies.get(0).getId()), "admin"));
+							""", ZonedDateTime.of(LocalDate.now().plusDays(7), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT), companies.get(0).getId()), "admin"));
 
-		itemControllerTestComponent.addItem(offers.get(0).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(0).getId(), products.get(0).getName(), 5.0, products.get(0).getPrice(), 11.00));
+		String itemTemplate = """
+				{
+				"stockInfo":{"id":%d},
+				"productName":"%s",
+				"quantity":%.2f,
+				"grossPrice":%.2f,
+				"discountPercent":%.2f
+			}
+		""";
 
-		itemControllerTestComponent.addItem(offers.get(0).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(1).getId(), products.get(0).getName(), 5.0, products.get(0).getPrice(), 11.00));
+		String itemBody = "[";
+		itemBody = itemBody + String.format(itemTemplate, stockInfos.get(0).getId(), products.get(0).getName(), 5.0, products.get(0).getPrice(), 11.00) + ",";
+		itemBody = itemBody + String.format(itemTemplate, stockInfos.get(1).getId(), products.get(0).getName(), 5.0, products.get(0).getPrice(), 11.00) + "]";
+
+		itemControllerTestComponent.addItems(offers.get(0).getId(), itemBody);
 
 		// Verify that transient fields are correctly calculated
 
@@ -176,14 +176,14 @@ public class OfferWorkflowTests
 
 		offers.set(0, offerControllerTestComponent.updateOffer(offers.get(0).getId(), String.format("""
 {
-	"validUntil":"%tF",
+	"validUntil":"%s",
 	"company":{"id":%d},
 	"vat":17.00,
 	"notes":"Lead time: 10 days",
 	"comments":"",
 	"status":"ACTIVE"
 }
-							""", LocalDate.now().plusDays(2), companies.get(1).getId()), "admin"));
+							""", ZonedDateTime.of(LocalDate.now().plusDays(2), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT), companies.get(1).getId()), "admin"));
 
 
 		// Try item operations
@@ -246,44 +246,20 @@ public class OfferWorkflowTests
 
 		offers.add(offerControllerTestComponent.addOffer(String.format("""
 {
-	"validUntil":"%tF",
+	"validUntil":"%s",
 	"company":{"id":%d},
 	"vat":17.00,
 	"notes":"Lead time: 10 days",
 	"comments":"",
 	"status":"ACTIVE"
 }
-							""", LocalDate.now().plusDays(-1), companies.get(1).getId()), "admin"));
+							""", ZonedDateTime.of(LocalDate.now().plusDays(-1), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT), companies.get(1).getId()), "admin"));
 
-		itemControllerTestComponent.addItem(offers.get(2).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(2).getId(), products.get(1).getName(), 3.0, products.get(1).getPrice(), 5.00));
+		itemBody  = "[" + String.format(itemTemplate, stockInfos.get(2).getId(), products.get(1).getName(), 3.0, products.get(1).getPrice(), 5.00) + ",";
+		itemBody += 	  String.format(itemTemplate, stockInfos.get(3).getId(), products.get(1).getName(), 7.0, products.get(1).getPrice(), 5.00) + ",";
+		itemBody += 	  String.format(itemTemplate, stockInfos.get(5).getId(), products.get(2).getName(), 5.0, products.get(2).getPrice(), 5.00) + "]";
 
-		itemControllerTestComponent.addItem(offers.get(2).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(3).getId(), products.get(1).getName(), 7.0, products.get(1).getPrice(), 5.00));
-
-		itemControllerTestComponent.addItem(offers.get(2).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(5).getId(), products.get(2).getName(), 5.0, products.get(2).getPrice(), 5.00));
+		itemControllerTestComponent.addItems(offers.get(2).getId(), itemBody);
 
 		offers.set(2, offerControllerTestComponent.getOffer(offers.get(2).getId()));
 
@@ -295,44 +271,21 @@ public class OfferWorkflowTests
 
 		offers.add(offerControllerTestComponent.addOffer(String.format("""
 {
-	"validUntil":"%tF",
+	"validUntil":"%s",
 	"company":{"id":%d},
 	"vat":17.00,
 	"notes":"Lead time: 10 days",
 	"comments":"",
 	"status":"ACTIVE"
 }
-							""", LocalDate.now().plusDays(0), companies.get(2).getId()), "admin"));
+							""", ZonedDateTime.of(LocalDate.now().plusDays(0), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT), companies.get(2).getId()), "admin"));
 
-		itemControllerTestComponent.addItem(offers.get(3).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(3).getId(), products.get(1).getName(), 2.0, products.get(1).getPrice(), 0.00));
+		itemBody = "[" + String.format(itemTemplate, stockInfos.get(3).getId(), products.get(1).getName(), 2.0, products.get(1).getPrice(), 0.00) + ",";
+		itemBody +=      String.format(itemTemplate, stockInfos.get(5).getId(), products.get(2).getName(), 8.0, products.get(2).getPrice(), 0.00) + ",";
+		itemBody +=      String.format(itemTemplate, stockInfos.get(6).getId(), products.get(3).getName(), 4.0, products.get(3).getPrice(), 0.00) + "]";
 
-		itemControllerTestComponent.addItem(offers.get(3).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(5).getId(), products.get(2).getName(), 8.0, products.get(2).getPrice(), 0.00));
+		itemControllerTestComponent.addItems(offers.get(3).getId(), itemBody);
 
-		itemControllerTestComponent.addItem(offers.get(3).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(6).getId(), products.get(3).getName(), 4.0, products.get(3).getPrice(), 0.00));
 
 		offers.set(3, offerControllerTestComponent.getOffer(offers.get(3).getId()));
 
@@ -344,44 +297,21 @@ public class OfferWorkflowTests
 
 		offers.add(offerControllerTestComponent.addOffer(String.format("""
 {
-	"validUntil":"%tF",
+	"validUntil":"%s",
 	"company":{"id":%d},
 	"vat":17.00,
 	"notes":"Lead time: 10 days",
 	"comments":"",
 	"status":"ACTIVE"
 }
-							""", LocalDate.now().plusDays(7), companies.get(3).getId()), "admin"));
+							""", ZonedDateTime.of(LocalDate.now().plusDays(7), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT), companies.get(3).getId()), "admin"));
 
-		itemControllerTestComponent.addItem(offers.get(4).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(4).getId(), products.get(2).getName(), 1.0, products.get(2).getPrice(), 0.00));
+		itemBody = "[" + String.format(itemTemplate, stockInfos.get(4).getId(), products.get(2).getName(),  1.0, products.get(2).getPrice(), 0.00) + ",";
+		itemBody +=      String.format(itemTemplate, stockInfos.get(5).getId(), products.get(2).getName(), 12.0, products.get(2).getPrice(), 0.00) + ",";
+		itemBody +=      String.format(itemTemplate, stockInfos.get(7).getId(), products.get(3).getName(),  5.0, products.get(3).getPrice(), 0.00) + "]";
 
-		itemControllerTestComponent.addItem(offers.get(4).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(5).getId(), products.get(2).getName(), 12.0, products.get(2).getPrice(), 0.00));
+		itemControllerTestComponent.addItems(offers.get(4).getId(), itemBody);
 
-		itemControllerTestComponent.addItem(offers.get(4).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(7).getId(), products.get(3).getName(), 5.0, products.get(3).getPrice(), 0.00));
 
 		offers.set(4, offerControllerTestComponent.getOffer(offers.get(4).getId()));
 
@@ -393,34 +323,21 @@ public class OfferWorkflowTests
 
 		offers.add(offerControllerTestComponent.addOffer(String.format("""
 {
-	"validUntil":"%tF",
+	"validUntil":"%s",
 	"company":{"id":%d},
 	"vat":17.00,
 	"notes":"Lead time: 10 days",
 	"comments":"",
 	"status":"ACTIVE"
 }
-							""", LocalDate.now().plusDays(7), companies.get(4).getId()), "admin"));
+							""", ZonedDateTime.of(LocalDate.now().plusDays(7), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT), companies.get(4).getId()), "admin"));
 
-		itemControllerTestComponent.addItem(offers.get(5).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(7).getId(), products.get(3).getName(), 2.0, products.get(3).getPrice(), 0.00));
 
-		itemControllerTestComponent.addItem(offers.get(5).getId(), String.format("""
-{
-	"stockInfo":{"id":%d},
-	"productName":"%s",
-	"quantity":%.2f,
-	"grossPrice":%.2f,
-	"discountPercent":%.2f
-}
-							""", stockInfos.get(8).getId(), products.get(4).getName(), 2.0, products.get(4).getPrice(), 0.00));
+		itemBody = "[" + String.format(itemTemplate, stockInfos.get(7).getId(), products.get(3).getName(), 2.0, products.get(3).getPrice(), 0.00) + ",";
+		itemBody +=      String.format(itemTemplate, stockInfos.get(8).getId(), products.get(4).getName(), 2.0, products.get(4).getPrice(), 0.00) + "]";
+
+		itemControllerTestComponent.addItems(offers.get(5).getId(), itemBody);
+
 
 		offers.set(5, offerControllerTestComponent.getOffer(offers.get(5).getId()));
 
@@ -520,9 +437,9 @@ public class OfferWorkflowTests
 		"id":%d
 	},
 	"supplierReference":"%s",
-	"deliveryDate":"%tF"
+	"deliveryDate":"%s"
 }
-				""", companies.get(0).getId(), "Delivery 1", LocalDate.now().plusDays(10))));
+				""", companies.get(0).getId(), "Delivery 1", ZonedDateTime.of(LocalDate.now().plusDays(10), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT))));
 
 
 		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
@@ -565,9 +482,9 @@ public class OfferWorkflowTests
 		"id":%d
 	},
 	"supplierReference":"%s",
-	"deliveryDate":"%tF"
+	"deliveryDate":"%s"
 }
-				""", companies.get(1).getId(), "Delivery 2", LocalDate.now())));
+				""", companies.get(1).getId(), "Delivery 2", ZonedDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT))));
 
 
 		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
@@ -604,9 +521,9 @@ public class OfferWorkflowTests
 		"id":%d
 	},
 	"supplierReference":"%s",
-	"deliveryDate":"%tF"
+	"deliveryDate":"%s"
 }
-				""", companies.get(1).getId(), "Delivery 3", LocalDate.now().minusDays(3))));
+				""", companies.get(1).getId(), "Delivery 3", ZonedDateTime.of(LocalDate.now().plusDays(-3), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT))));
 
 
 		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
@@ -633,24 +550,25 @@ public class OfferWorkflowTests
 		"id":%d
 	},
 	"supplierReference":"%s",
-	"deliveryDate":"%tF"
+	"deliveryDate":"%s"
 }
-				""", deliveries.get(2).getId(), companies.get(2).getId(), "Delivery 3", LocalDate.now())));
+				""", deliveries.get(2).getId(), companies.get(2).getId(), "Delivery 3", ZonedDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT))));
 
 
 		assertEquals(deliveryItemControllerTestComponent.getDeliveryItems(deliveries.get(0).getId()).size(), 2);
 
 
-		itemControllerTestComponent.updateItem(offers.get(1).getId(), items.get(0).getId(), String.format("""
-				{
+		itemControllerTestComponent.updateItems(offers.get(1).getId(), String.format("""
+			[{
+				"id":%d,
 				"stockInfo":{"id":%d},
 				"productName":"%s",
 				"quantity":%.2f,
 				"grossPrice":%.2f,
-				"discountPercent":%.2f,
-				"deliveryNote":"%s"
-			}
-										""",
+				"discountPercent":%.2f
+			}]
+			""",
+										items.get(0).getId(),
 										items.get(0).getStockInfo().getId(),
 										items.get(0).getProductName(),
 										items.get(0).getQuantity(),

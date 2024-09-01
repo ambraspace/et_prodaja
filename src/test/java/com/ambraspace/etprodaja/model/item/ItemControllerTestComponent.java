@@ -96,42 +96,38 @@ public class ItemControllerTestComponent {
 	}
 
 
-	public Item addItem(String offerNo, String body) throws Exception
+	public List<Item> addItems(String offerNo, String body) throws Exception
 	{
 
 		MvcResult result =
 				this.mockMvc.perform(post("/api/offers/" + offerNo + "/items")
-						//.with(csrf())
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		return mapper.readValue(result.getResponse().getContentAsString(), Item.class);
+		return mapper.readerForListOf(Item.class).readValue(result.getResponse().getContentAsString());
 
 	}
 
 
-	public Item updateItem(String offerNo, Long itemId, String body) throws Exception
+	public List<Item> updateItems(String offerNo, String body) throws Exception
 	{
 
 		MvcResult result =
-				this.mockMvc.perform(put("/api/offers/" + offerNo + "/items/" + itemId)
-						//.with(csrf())
+				this.mockMvc.perform(put("/api/offers/" + offerNo + "/items")
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body)
-						//.header("X-XSRF-TOKEN", securityTestComponent.getXsrf())
 						.header("Authorization", "Bearer " + securityTestComponent.getJwt()))
 				.andExpect(status().isOk())
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		return mapper.readValue(result.getResponse().getContentAsString(), Item.class);
+		return mapper.readerForListOf(Item.class).readValue(result.getResponse().getContentAsString());
 
 	}
 

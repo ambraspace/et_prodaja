@@ -124,11 +124,12 @@ public class ItemController
 	}
 
 
-	@Operation(summary = "Adds an item to the offer",
+	@Operation(summary = "Adds items to the offer",
 			responses = {
-			@ApiResponse(responseCode = "200", description = "Item saved and returned", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = Item.class))
+			@ApiResponse(responseCode = "200", description = "Items saved and returned", content = {
+					@Content(mediaType = "application/json", array =
+							@ArraySchema(schema =
+							@Schema(implementation = Item.class)))
 			}),
 			@ApiResponse(responseCode = "400", description = "Bad request", content = {
 					@Content(mediaType = "application/json", schema =
@@ -139,22 +140,23 @@ public class ItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/offers/{offerId}/items")
 	@JsonView(Views.Item.class)
-	public Item addItem(@PathVariable("offerId") String offerId, @RequestBody Item item)
+	public List<Item> addItems(@PathVariable("offerId") String offerId, @RequestBody List<Item> items)
 	{
 		try
 		{
-			return itemService.addItem(offerId, item);
+			return itemService.addItems(offerId, items);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 
 	}
 
-	@Operation(summary = "Updates existing item",
+	@Operation(summary = "Updates existing items",
 			responses = {
-			@ApiResponse(responseCode = "200", description = "Item saved and returned", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = Item.class))
+			@ApiResponse(responseCode = "200", description = "Items saved and returned", content = {
+					@Content(mediaType = "application/json", array =
+							@ArraySchema(schema =
+							@Schema(implementation = Item.class)))
 			}),
 			@ApiResponse(responseCode = "400", description = "Bad request", content = {
 					@Content(mediaType = "application/json", schema =
@@ -163,16 +165,15 @@ public class ItemController
 	})
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
-	@PutMapping("/api/offers/{offerId}/items/{id}")
+	@PutMapping("/api/offers/{offerId}/items")
 	@JsonView(Views.Item.class)
-	public Item updateItem(
+	public List<Item> updateItems(
 			@PathVariable("offerId") String offerId,
-			@PathVariable("id") Long itemId,
-			@RequestBody Item item)
+			@RequestBody List<Item> items)
 	{
 		try
 		{
-			return itemService.updateItem(offerId, itemId, item);
+			return itemService.updateItems(offerId, items);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

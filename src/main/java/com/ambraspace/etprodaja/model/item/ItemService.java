@@ -73,7 +73,7 @@ public class ItemService
 
 
 	@Transactional
-	public Item addItem(String offerId, Item i)
+	public List<Item> addItems(String offerId, List<Item> items)
 	{
 
 		Offer offer = offerService.getOffer(offerId);
@@ -81,10 +81,17 @@ public class ItemService
 		if (offer == null)
 			throw new RuntimeException("Offer not found in the database!");
 
-		i.setOffer(offer);
-		i.setOrder(null);
+		for (Item i:items)
+		{
+			i.setOffer(offer);
+			i.setOrder(null);
+		}
 
-		return itemRepository.save(i);
+		List<Item> retVal = new ArrayList<Item>();
+
+		itemRepository.saveAll(items).forEach(retVal::add);
+
+		return retVal;
 
 	}
 
@@ -104,17 +111,31 @@ public class ItemService
 
 
 	@Transactional
-	public Item updateItem(String offerNo, Long itemId, Item i)
+	public List<Item> updateItems(String offerNo, List<Item> items)
 	{
 
-		Item fromRep = getOfferItem(offerNo, itemId);
+		List<Long> ids = new ArrayList<Long>();
 
-		if (fromRep == null)
-			throw new RuntimeException("Item not found in the database!");
+		items.stream().map(i -> i.getId()).forEach(ids::add);
 
-		fromRep.copyFieldsFrom(i);
+		List<Item> fromRep = new ArrayList<Item>();
 
-		return itemRepository.save(fromRep);
+		itemRepository.findAllById(ids).forEach(fromRep::add);
+
+		if (fromRep.size() != ids.size())
+			throw new RuntimeException("Some items not found in the database! Cannot update.");
+
+		for (Item i:fromRep)
+		{
+			Item updatedItem = items.stream().filter(it -> it.getId() == i.getId()).findFirst().orElseThrow();
+			i.copyFieldsFrom(updatedItem);
+		}
+
+		List<Item> retVal = new ArrayList<Item>();
+
+		itemRepository.saveAll(fromRep).forEach(retVal::add);
+
+		return retVal;
 
 	}
 
