@@ -1,0 +1,31 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
+    properties:
+      '[hibernate.max_fetch_depth]': 3
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver        
+    url: jdbc:mariadb://localhost:3306/et_prodaja_test
+    username: ambra
+  jackson:
+    mapper:
+      default-view-inclusion: true
+server:
+  port: 8080
+  error:
+    include-stacktrace: never
+springdoc:
+  swagger-ui:
+    csrf:
+      enabled: true
+et-prodaja:
+  storage-location: /home/ambra/et_prodaja_test
+jwt:
+  secret: sklfjslkfjslkdfjslkdfjslkdfjsdlkfjsdlkfjsldkfjsdfsdfsdfsdfsdfsdf
+  secret2-f-a: sklfjslkfjslkdfjslkdfjslkdfjsdlkfjsdlkfjsldkfjsdfsdfsdfsdfsdfsdd
+  token-validity: 7d
+  refresh-token-validity: 2d
+  refresh-url: /api/refreshtoken
