@@ -2,6 +2,7 @@ package com.ambraspace.etprodaja.model.order;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -115,6 +116,7 @@ public class OrderService
 		Order order = new Order();
 
 		order.setStatus(Status.OPEN);
+		order.setCreationDate(LocalDate.now());
 		order.setWarehouse(wh);
 
 		return orderRepository.save(order);

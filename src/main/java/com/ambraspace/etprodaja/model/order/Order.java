@@ -1,6 +1,7 @@
 package com.ambraspace.etprodaja.model.order;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,12 @@ import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.warehouse.Warehouse;
+import com.ambraspace.etprodaja.util.LocalDateDeserializer;
+import com.ambraspace.etprodaja.util.LocalDateSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -68,6 +73,11 @@ public class Order
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Status status;
+
+	@NotNull
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	private LocalDate creationDate = null;
 
 	private LocalDateTime closureTime = null;
 
