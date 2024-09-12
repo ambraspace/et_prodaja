@@ -76,6 +76,7 @@ public class ReportingService
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put("offerDate", offer.getOfferDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")));
+		params.put("offerValidity", offer.getValidUntil().format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")));
 		params.put("userMobile", offer.getUser().getPhone());
 		params.put("userPhone", "051/217-989");
 		params.put("userEmail", offer.getUser().getEmail());
@@ -88,7 +89,9 @@ public class ReportingService
 		params.put("customerContactName", offer.getContact() != null ? offer.getContact().getName() : "");
 		params.put("imageLocation", imageLocation);
 		params.put("REPORT_LOCALE", java.util.Locale.of("bs", "BA"));
-		params.put("notes", offer.getNotes());
+		params.put("notes", "Važnost ponude: "
+				+ offer.getValidUntil().format(DateTimeFormatter.ofPattern("dd.MM.yyyy."))
+				+ "\n\n" + offer.getNotes());
 		params.put("offerValue", offer.getValue());
 		params.put("vat", offer.getVat());
 		params.put("signature", offer.getUser().getSignature());
