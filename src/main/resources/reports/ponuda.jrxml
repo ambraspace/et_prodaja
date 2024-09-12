@@ -1,5 +1,5 @@
 <!-- Created with Jaspersoft Studio version 7.0.0.final using JasperReports Library version 7.0.0-b478feaa9aab4375eba71de77b4ca138ad2f62aa  -->
-<jasperReport name="ponuda" language="java" columnCount="1" pageWidth="595" pageHeight="842" orientation="Landscape" columnWidth="535" columnSpacing="3" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="08b509a0-79d2-4266-a398-a47258a80bff" floatColumnFooter="true">
+<jasperReport name="ponuda" language="java" columnCount="1" pageWidth="595" pageHeight="842" orientation="Landscape" columnWidth="535" columnSpacing="3" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="08b509a0-79d2-4266-a398-a47258a80bff" summaryWithPageHeaderAndFooter="true" floatColumnFooter="true">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="523"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="463"/>
@@ -416,7 +416,7 @@
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</pageFooter>
-	<summary height="107">
+	<summary height="107" splitType="Prevent">
 		<element kind="textField" uuid="54a86640-4259-4f39-bbd8-9b9a4e30b57e" x="470" y="0" width="65" height="15" fontSize="9.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" pattern="#,##0.00" bold="true" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{offerValue}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
