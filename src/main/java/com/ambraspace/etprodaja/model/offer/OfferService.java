@@ -238,9 +238,10 @@ public class OfferService
 
 		if (offer.getNotes() == null)
 			offer.setNotes("""
-Plaćanje: po dogovoru
-Rok realizacije: po dogovoru
-Garantni period: 2 godine
+Cijene su u KM (BAM).
+Plaćanje: po dogovoru.
+Rok realizacije: po dogovoru.
+Garantni period: 2 godine.
 """);
 
 		offer.setOfferDate(LocalDate.now());
