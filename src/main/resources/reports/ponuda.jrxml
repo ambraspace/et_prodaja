@@ -13,9 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Style1" markup="none" blankWhenNull="true" fontName="DejaVu Sans" fontSize="9.0" bold="false" pdfFontName="Helvetica" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true"/>
-	<parameter name="offerDate" class="java.lang.String">
-		<defaultValueExpression><![CDATA[java.time.LocalDate.now()]]></defaultValueExpression>
-	</parameter>
+	<parameter name="offerDate" class="java.lang.String"/>
 	<parameter name="userMobile" class="java.lang.String"/>
 	<parameter name="userPhone" class="java.lang.String"/>
 	<parameter name="userEmail" class="java.lang.String"/>
@@ -93,87 +91,87 @@
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 		</element>
-		<element kind="staticText" uuid="3b4e9f65-b1fa-4439-b45a-2607901fa9ee" x="0" y="100" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="3b4e9f65-b1fa-4439-b45a-2607901fa9ee" x="0" y="100" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Firma:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="9b43f5bb-e3e7-4126-ad7c-413cd04a7b1b" x="0" y="115" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="9b43f5bb-e3e7-4126-ad7c-413cd04a7b1b" x="0" y="115" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Ime:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="d8cc83d5-f918-4284-aa8b-d7c63900b1ad" x="0" y="130" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="d8cc83d5-f918-4284-aa8b-d7c63900b1ad" x="0" y="130" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Mjesto:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="b7468866-933e-4f27-a467-c54f0f8c7052" x="0" y="145" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="b7468866-933e-4f27-a467-c54f0f8c7052" x="0" y="145" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Tel:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="503217d0-2baa-426f-8c68-84619093b835" x="0" y="160" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="503217d0-2baa-426f-8c68-84619093b835" x="0" y="160" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[El. pošta:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="8e6abd2b-a15c-42c9-9928-c32edc1eeca4" x="0" y="175" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="8e6abd2b-a15c-42c9-9928-c32edc1eeca4" x="0" y="175" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Datum:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="581d5a25-4839-4771-8a6f-9a637a30ba7b" x="270" y="100" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="581d5a25-4839-4771-8a6f-9a637a30ba7b" x="270" y="100" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Od:]]></text>
 			<property name="com.jaspersoft.studio.unit.x" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="6226505f-32b0-4a93-b0dd-99bfe4514102" x="270" y="115" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="6226505f-32b0-4a93-b0dd-99bfe4514102" x="270" y="115" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Ime:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="9e60c14d-ff7b-4218-87a1-8a1fd9355141" x="270" y="130" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="9e60c14d-ff7b-4218-87a1-8a1fd9355141" x="270" y="130" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Mjesto:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="6811bd4d-7572-4521-afaa-04eb31b98e2c" x="270" y="145" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="6811bd4d-7572-4521-afaa-04eb31b98e2c" x="270" y="145" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Tel:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="a44bd760-788d-4666-88dc-80ea5cfb4d6a" x="270" y="160" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="a44bd760-788d-4666-88dc-80ea5cfb4d6a" x="270" y="160" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Mob:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="staticText" uuid="de94e311-9f0b-453e-bfed-1507326688ff" x="270" y="175" width="59" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="de94e311-9f0b-453e-bfed-1507326688ff" x="270" y="175" width="59" height="15" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[El. pošta:]]></text>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="7f996dcf-933c-4c6c-ac57-1545482b0c03" x="59" y="100" width="200" height="15" fontName="DejaVu Sans" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" bold="false" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="7f996dcf-933c-4c6c-ac57-1545482b0c03" x="59" y="100" width="200" height="15" blankWhenNull="true" bold="false" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{customerName}.toUpperCase()]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="e715f290-edef-4a89-a5c8-9162bec3e79c" x="59" y="115" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="e715f290-edef-4a89-a5c8-9162bec3e79c" x="59" y="115" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{customerContactName}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="e0949b88-5b05-419e-a339-176449b85e37" x="59" y="130" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="e0949b88-5b05-419e-a339-176449b85e37" x="59" y="130" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{customerLocality}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="af407f71-4c38-454b-8775-3f89dec7159a" x="59" y="145" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="af407f71-4c38-454b-8775-3f89dec7159a" x="59" y="145" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{customerPhone}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="ec774480-c7a5-4c1f-aca5-441165d62162" x="59" y="160" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="ec774480-c7a5-4c1f-aca5-441165d62162" x="59" y="160" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{customerEmail}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="31953702-11af-4b7e-8626-07142240c6c8" x="59" y="175" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="31953702-11af-4b7e-8626-07142240c6c8" x="59" y="175" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{offerDate}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="cdc4d2da-d581-4cf8-ab23-426669911829" mode="Transparent" x="329" y="100" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="cdc4d2da-d581-4cf8-ab23-426669911829" mode="Transparent" x="329" y="100" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA["ELEKTRO TIM d.o.o."
 ]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -181,28 +179,28 @@
 			<property name="com.jaspersoft.studio.unit.x" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="d0529f67-ce08-4848-9b06-bf0fed9dc465" mode="Transparent" x="329" y="115" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="d0529f67-ce08-4848-9b06-bf0fed9dc465" mode="Transparent" x="329" y="115" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{userName}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="74f3051b-67e2-4d81-8fb8-ce25ce2cce5b" mode="Transparent" x="329" y="130" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="74f3051b-67e2-4d81-8fb8-ce25ce2cce5b" mode="Transparent" x="329" y="130" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA["Banja Luka"
 ]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="7acfb336-d882-4356-85ae-923e47b3cbdd" mode="Transparent" x="329" y="145" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="7acfb336-d882-4356-85ae-923e47b3cbdd" mode="Transparent" x="329" y="145" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{userPhone}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="94ef99c8-8fce-4816-9bbc-8a3d4f6d6614" mode="Transparent" x="329" y="160" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="94ef99c8-8fce-4816-9bbc-8a3d4f6d6614" mode="Transparent" x="329" y="160" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{userMobile}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
 		</element>
-		<element kind="textField" uuid="caa4980f-487b-4f03-9814-7f64c7eeae7e" mode="Transparent" x="329" y="175" width="200" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="caa4980f-487b-4f03-9814-7f64c7eeae7e" mode="Transparent" x="329" y="175" width="200" height="15" blankWhenNull="true" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{userEmail}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" style="Style1"/>
@@ -210,15 +208,15 @@
 	</title>
 	<pageHeader height="35" splitType="Stretch">
 		<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
-		<element kind="staticText" uuid="0aa65b72-74cb-4a40-8aec-7eb2517c0df6" x="0" y="0" width="535" height="20" fontName="DejaVu Sans" fontSize="12.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" bold="true" underline="true" pdfEmbedded="true" style="Style1">
+		<element kind="staticText" uuid="0aa65b72-74cb-4a40-8aec-7eb2517c0df6" x="0" y="0" width="535" height="20" fontSize="12.0" bold="true" underline="true" style="Style1">
 			<text><![CDATA[ELEKTRO TIM d.o.o. Banja Luka]]></text>
 		</element>
 	</pageHeader>
 	<columnHeader height="64" splitType="Stretch">
-		<element kind="textField" uuid="7bd7b924-bb45-4e8d-8f9d-c5dbad8fb6e6" x="0" y="0" width="535" height="20" fontSize="14.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" style="Style1">
+		<element kind="textField" uuid="7bd7b924-bb45-4e8d-8f9d-c5dbad8fb6e6" x="0" y="0" width="535" height="20" fontSize="12.0" bold="true" style="Style1">
 			<expression><![CDATA["Ponuda br. ".concat($P{offerNo})]]></expression>
 		</element>
-		<element kind="staticText" uuid="ae29eee0-4649-4be4-870f-4be0c698292e" x="0" y="34" width="25" height="30" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="ae29eee0-4649-4be4-870f-4be0c698292e" x="0" y="34" width="25" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[RB]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box style="Style1">
@@ -228,7 +226,7 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="694c20f8-20d6-40a8-b138-17cf261d6c90" x="25" y="34" width="75" height="30" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="694c20f8-20d6-40a8-b138-17cf261d6c90" x="25" y="34" width="75" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Slika]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box style="Style1">
@@ -238,7 +236,7 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="1a8e041a-adea-4879-8a13-e35093ed0161" x="100" y="34" width="229" height="30" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="1a8e041a-adea-4879-8a13-e35093ed0161" x="100" y="34" width="229" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Opis]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box style="Style1">
@@ -248,7 +246,7 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="0479c18e-5bb1-4ba1-a0f4-e1d5a519354f" x="329" y="34" width="41" height="30" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="0479c18e-5bb1-4ba1-a0f4-e1d5a519354f" x="329" y="34" width="41" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Jed. mj.]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box style="Style1">
@@ -258,7 +256,7 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="62680350-1284-4853-af3b-a934b2f3d3ad" x="370" y="34" width="40" height="30" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="62680350-1284-4853-af3b-a934b2f3d3ad" x="370" y="34" width="40" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Kol.]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box style="Style1">
@@ -268,7 +266,7 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="6ec81bec-586f-4d0c-ad16-4308403b0586" x="410" y="34" width="60" height="30" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="6ec81bec-586f-4d0c-ad16-4308403b0586" x="410" y="34" width="60" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Cijena]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box style="Style1">
@@ -278,7 +276,7 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="94a5dabe-2d1b-4bd7-a7f5-83229c13c3cf" x="470" y="34" width="65" height="30" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="94a5dabe-2d1b-4bd7-a7f5-83229c13c3cf" x="470" y="34" width="65" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Iznos]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box style="Style1">
@@ -302,7 +300,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="37a283e8-72b0-4c1a-b5e3-4643b7b165b3" stretchType="ElementGroupHeight" x="0" y="0" width="25" height="78" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" pdfEmbedded="true" hTextAlign="Center" style="Style1">
+			<element kind="textField" uuid="37a283e8-72b0-4c1a-b5e3-4643b7b165b3" stretchType="ElementGroupHeight" x="0" y="0" width="25" height="78" textAdjust="StretchHeight" hTextAlign="Center" style="Style1">
 				<expression><![CDATA[$V{REPORT_COUNT}]]></expression>
 				<box leftPadding="3" bottomPadding="0" rightPadding="3" style="Style1">
 					<topPen lineWidth="1.0"/>
@@ -311,7 +309,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="841ae110-1428-4a1d-a59c-d93ab491e126" stretchType="ElementGroupHeight" x="100" y="0" width="229" height="78" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" pdfEmbedded="true" hTextAlign="Left" style="Style1">
+			<element kind="textField" uuid="841ae110-1428-4a1d-a59c-d93ab491e126" stretchType="ElementGroupHeight" x="100" y="0" width="229" height="78" textAdjust="StretchHeight" hTextAlign="Left" style="Style1">
 				<expression><![CDATA[$F{productName}]]></expression>
 				<box leftPadding="3" bottomPadding="0" rightPadding="3" style="Style1">
 					<topPen lineWidth="1.0"/>
@@ -320,7 +318,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="351d6a6f-4119-4525-8fcd-bcb7051dfa5f" stretchType="ElementGroupHeight" x="329" y="0" width="41" height="78" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Bottom" style="Style1">
+			<element kind="textField" uuid="351d6a6f-4119-4525-8fcd-bcb7051dfa5f" stretchType="ElementGroupHeight" x="329" y="0" width="41" height="78" textAdjust="StretchHeight" hTextAlign="Center" vTextAlign="Bottom" style="Style1">
 				<expression><![CDATA[$F{unit}]]></expression>
 				<box leftPadding="3" bottomPadding="0" rightPadding="3" style="Style1">
 					<topPen lineWidth="1.0"/>
@@ -329,7 +327,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="26e56e28-0386-44ed-8fe4-5770b40c1fa1" stretchType="ElementGroupHeight" x="370" y="0" width="40" height="78" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" pattern="#,##0.##" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Bottom" style="Style1">
+			<element kind="textField" uuid="26e56e28-0386-44ed-8fe4-5770b40c1fa1" stretchType="ElementGroupHeight" x="370" y="0" width="40" height="78" textAdjust="StretchHeight" pattern="#,##0.##" hTextAlign="Center" vTextAlign="Bottom" style="Style1">
 				<expression><![CDATA[$F{quantity}]]></expression>
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box leftPadding="3" bottomPadding="0" rightPadding="3" style="Style1">
@@ -339,7 +337,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="0f244f21-56eb-4cb1-80dd-2ee8d58d145b" stretchType="ElementGroupHeight" x="410" y="63" width="60" height="15" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" pattern="#,##0.00" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Bottom" style="Style1">
+			<element kind="textField" uuid="0f244f21-56eb-4cb1-80dd-2ee8d58d145b" stretchType="ElementGroupHeight" x="410" y="63" width="60" height="15" textAdjust="StretchHeight" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Bottom" style="Style1">
 				<expression><![CDATA[$F{netPrice}]]></expression>
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -350,7 +348,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="0ba9755a-677d-468d-81d8-a2de185b6b32" stretchType="ElementGroupHeight" x="470" y="0" width="65" height="78" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" pattern="#,##0.00" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Bottom" style="Style1">
+			<element kind="textField" uuid="0ba9755a-677d-468d-81d8-a2de185b6b32" stretchType="ElementGroupHeight" x="470" y="0" width="65" height="78" textAdjust="StretchHeight" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Bottom" style="Style1">
 				<expression><![CDATA[$F{quantity}.multiply( $F{netPrice} ).setScale( 2, RoundingMode.HALF_EVEN )]]></expression>
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box leftPadding="3" bottomPadding="0" rightPadding="3" style="Style1">
@@ -360,7 +358,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="b3e879a4-7f3e-4af1-b62b-ecf0ace0daf1" stretchType="ElementGroupHeight" x="410" y="48" width="60" height="15" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" pattern="#,##0.##%" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Bottom" style="Style1">
+			<element kind="textField" uuid="b3e879a4-7f3e-4af1-b62b-ecf0ace0daf1" stretchType="ElementGroupHeight" x="410" y="48" width="60" height="15" textAdjust="StretchHeight" pattern="#,##0.##%" hTextAlign="Right" vTextAlign="Bottom" style="Style1">
 				<printWhenExpression><![CDATA[$F{discountPercent}.compareTo( java.math.BigDecimal.ZERO ) != 0]]></printWhenExpression>
 				<expression><![CDATA[$F{discountPercent}.movePointLeft( 2).negate()]]></expression>
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -372,7 +370,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="5e7c2c98-539f-4d8c-a0ec-6ad737acac8b" stretchType="ElementGroupHeight" x="410" y="0" width="60" height="48" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" pattern="#,##0.00" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Bottom" style="Style1">
+			<element kind="textField" uuid="5e7c2c98-539f-4d8c-a0ec-6ad737acac8b" stretchType="ElementGroupHeight" x="410" y="0" width="60" height="48" textAdjust="StretchHeight" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Bottom" style="Style1">
 				<printWhenExpression><![CDATA[$F{discountPercent}.compareTo( java.math.BigDecimal.ZERO ) != 0]]></printWhenExpression>
 				<expression><![CDATA[$F{grossPrice}]]></expression>
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -405,19 +403,19 @@
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 		</element>
-		<element kind="textField" uuid="0f70502c-60c1-428a-b78e-fabf4294d29d" x="502" y="34" width="33" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" evaluationTime="Report" pdfEmbedded="true" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="0f70502c-60c1-428a-b78e-fabf4294d29d" x="502" y="34" width="33" height="15" evaluationTime="Report" vTextAlign="Middle" style="Style1">
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}>1]]></printWhenExpression>
 			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="textField" uuid="84e3daf3-17c3-403c-bc1f-14e8822c1a8f" x="470" y="34" width="30" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="84e3daf3-17c3-403c-bc1f-14e8822c1a8f" x="470" y="34" width="30" height="15" hTextAlign="Right" vTextAlign="Middle" style="Style1">
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}>1]]></printWhenExpression>
 			<expression><![CDATA["" + $V{PAGE_NUMBER} + " / "]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</pageFooter>
 	<summary height="107" splitType="Prevent">
-		<element kind="textField" uuid="54a86640-4259-4f39-bbd8-9b9a4e30b57e" x="470" y="0" width="65" height="15" fontSize="9.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" pattern="#,##0.00" bold="true" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="54a86640-4259-4f39-bbd8-9b9a4e30b57e" x="470" y="0" width="65" height="15" pattern="#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{offerValue}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" rightPadding="3" style="Style1">
@@ -427,7 +425,7 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="13e62fff-b805-4105-bfd2-56294564d188" x="470" y="15" width="65" height="15" fontSize="9.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" pattern="#,##0.00" bold="true" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="13e62fff-b805-4105-bfd2-56294564d188" x="470" y="15" width="65" height="15" pattern="#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{offerValue}.multiply( $P{vat}.movePointLeft(2) ).setScale( 2, RoundingMode.HALF_EVEN )]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" rightPadding="3" style="Style1">
@@ -437,7 +435,7 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="3bec56bf-690c-43bc-a54f-6b2d0efbd4c5" x="470" y="30" width="65" height="15" fontSize="9.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" pattern="#,##0.00" bold="true" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="3bec56bf-690c-43bc-a54f-6b2d0efbd4c5" x="470" y="30" width="65" height="15" pattern="#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA[$P{offerValue}.multiply( $P{vat}.movePointLeft(2) .add(BigDecimal.ONE)).setScale( 2, RoundingMode.HALF_EVEN )]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="3" rightPadding="3" style="Style1">
@@ -447,19 +445,19 @@
 				<rightPen lineWidth="1.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="1483203b-83b5-4f27-b1f6-1aacca7966cb" x="329" y="0" width="140" height="15" fontSize="9.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="1483203b-83b5-4f27-b1f6-1aacca7966cb" x="329" y="0" width="140" height="15" bold="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Ukupno bez PDV-a:]]></text>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="textField" uuid="026a0a86-858d-47fb-84a1-c3355bb037c4" x="329" y="15" width="140" height="15" fontSize="9.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
+		<element kind="textField" uuid="026a0a86-858d-47fb-84a1-c3355bb037c4" x="329" y="15" width="140" height="15" bold="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
 			<expression><![CDATA["PDV (" + $P{vat} + "%):"]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="staticText" uuid="62656c27-98f0-4a5a-a628-e278a689f691" x="329" y="30" width="140" height="15" fontSize="9.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1250" bold="true" pdfEmbedded="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
+		<element kind="staticText" uuid="62656c27-98f0-4a5a-a628-e278a689f691" x="329" y="30" width="140" height="15" bold="true" hTextAlign="Right" vTextAlign="Middle" style="Style1">
 			<text><![CDATA[Ukupno sa PDV-om:]]></text>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="textField" uuid="e8ea3cf4-11fd-44a3-a00d-328ff655add7" stretchType="NoStretch" x="0" y="60" width="370" height="15" fontSize="9.0" pdfFontName="Helvetica" pdfEncoding="Cp1250" textAdjust="StretchHeight" blankWhenNull="true" pdfEmbedded="true" style="Style1">
+		<element kind="textField" uuid="e8ea3cf4-11fd-44a3-a00d-328ff655add7" stretchType="NoStretch" x="0" y="60" width="370" height="15" textAdjust="StretchHeight" blankWhenNull="true" style="Style1">
 			<expression><![CDATA[$P{notes}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -470,7 +468,7 @@
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="f2858f92-8df0-4a78-9098-87404841218f" positionType="FixRelativeToBottom" x="370" y="92" width="165" height="15" pdfFontName="Helvetica" pdfEncoding="Cp1250" blankWhenNull="true" pdfEmbedded="true" hTextAlign="Center" style="Style1">
+		<element kind="textField" uuid="f2858f92-8df0-4a78-9098-87404841218f" positionType="FixRelativeToBottom" x="370" y="92" width="165" height="15" blankWhenNull="true" hTextAlign="Center" style="Style1">
 			<expression><![CDATA[$P{signature}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box style="Style1">
