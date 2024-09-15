@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -157,6 +158,8 @@ public class ReportingService
 		font.setFontName("Arial");
 		font.setFontHeightInPoints((short) 12);
 		font.setBold(false);
+		itemStyle.setWrapText(true);
+		itemStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		itemStyle.setFont(font);
 
 		for (int i = 0; i < items.size(); i++)
@@ -167,7 +170,7 @@ public class ReportingService
 			currentCell.setCellValue(i + 1);
 
 			currentCell = itemRow.createCell(1);
-			currentCell.setCellValue(items.get(i).getStockInfo().getProduct().getName());
+			currentCell.setCellValue(items.get(i).getProductName());
 
 			currentCell = itemRow.createCell(2);
 			currentCell.setCellValue(items.get(i).getStockInfo().getCustomerReference());
