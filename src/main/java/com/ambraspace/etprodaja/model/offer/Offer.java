@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -92,8 +93,10 @@ public class Offer
 	@NotNull @PositiveOrZero
 	private BigDecimal vat;
 
+	@Column(length = 500)
 	private String notes;
 
+	@Column(length = 500)
 	private String comments;
 
 	@NotNull
