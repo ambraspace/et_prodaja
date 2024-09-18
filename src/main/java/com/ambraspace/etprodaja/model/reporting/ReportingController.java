@@ -36,12 +36,12 @@ public class ReportingController
 	})
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
-	@GetMapping("/api/offers/{id}/dl")
-	public void downloadOffer(@PathVariable("id") String offerId, HttpServletResponse response)
+	@GetMapping("/api/files/offers/{fn}")
+	public void downloadOffer(@PathVariable("fn") String fileName, HttpServletResponse response)
 	{
 		try
 		{
-			reportingService.downloadOffer(offerId, response);
+			reportingService.downloadOffer(fileName, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

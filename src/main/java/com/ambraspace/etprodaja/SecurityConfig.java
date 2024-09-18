@@ -61,7 +61,7 @@ public class SecurityConfig
         http
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers("/api/authenticate", "/api/files", "/swagger-ui/**", "/v3/api-docs/**", "/error")
+                    .requestMatchers("/api/authenticate", "/api/images/**", "/swagger-ui/**", "/v3/api-docs/**", "/error")
                         .permitAll()
                     .anyRequest()
                         .authenticated())

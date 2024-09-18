@@ -35,7 +35,7 @@ public class PreviewControllerTestComponent {
 			String fileName) throws Exception
 	{
 
-		MockHttpServletRequestBuilder builder = get("/api/files?fn=" + fileName);
+		MockHttpServletRequestBuilder builder = get("/api/images/" + fileName);
 
 		MvcResult result =
 				this.mockMvc.perform(builder

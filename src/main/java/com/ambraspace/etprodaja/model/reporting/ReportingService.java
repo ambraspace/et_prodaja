@@ -58,12 +58,15 @@ public class ReportingService
 
 
 	@Transactional
-	public void downloadOffer(String offerId, HttpServletResponse response) throws IOException
+	public void downloadOffer(String fileName, HttpServletResponse response) throws IOException
 	{
 
-		/*
-		 * Force PDF output to prevent users changing of offers outside of this system
-		 */
+		if (!fileName.endsWith(".pdf") && !fileName.endsWith(".xlsx"))
+		{
+			throw new RuntimeException("No such file!");
+		}
+
+		String offerId = fileName.substring(0, fileName.lastIndexOf("."));
 
 		Offer offer = offerService.getOffer(offerId);
 
@@ -101,17 +104,27 @@ public class ReportingService
 		params.put("head", resourceLoader.getResource("classpath:reports/head.png").getURL().toString());
 		params.put("foot", resourceLoader.getResource("classpath:reports/foot.png").getURL().toString());
 
-		response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-
-		try
+		if (fileName.endsWith(".pdf"))
 		{
-//			InputStream report = resourceLoader.getResource("classpath:reports/ponuda.jrxml").getInputStream();
-//			JasperReport compiledReport = JasperCompileManager.compileReport(report);
-			InputStream compiledReport = resourceLoader.getResource("classpath:reports/ponuda.jasper").getInputStream();
-			JasperPrint print = JasperFillManager.fillReport(compiledReport, params, data);
-			JasperExportManager.exportReportToPdfStream(print, response.getOutputStream());
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+
+			try
+			{
+//				InputStream report = resourceLoader.getResource("classpath:reports/ponuda.jrxml").getInputStream();
+//				JasperReport compiledReport = JasperCompileManager.compileReport(report);
+				InputStream compiledReport = resourceLoader.getResource("classpath:reports/ponuda.jasper").getInputStream();
+				JasperPrint print = JasperFillManager.fillReport(compiledReport, params, data);
+				byte[] pdfFile = JasperExportManager.exportReportToPdf(print);
+				response.setContentLengthLong(pdfFile.length);
+				response.getOutputStream().write(pdfFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} else {
+			// TODO: Implement this
+			throw new RuntimeException("Not yet implemented!");
 		}
 
 
