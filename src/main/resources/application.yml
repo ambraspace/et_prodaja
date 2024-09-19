@@ -17,6 +17,9 @@ server:
   port: 8080
   error:
     include-stacktrace: never
+    whitelabel:
+      enabled: false
+    include-message: always
 springdoc:
   swagger-ui:
     csrf:
