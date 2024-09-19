@@ -47,7 +47,7 @@ public class ProductController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/products")
 	public Page<Product> getProducts(
 			@Parameter(description = "Search query", required = false)
@@ -84,7 +84,7 @@ public class ProductController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/products/{id}")
 	public Product getProduct(@PathVariable Long id)
 	{

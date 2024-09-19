@@ -44,7 +44,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/companies/{companyId}/warehouses")
 	public List<Warehouse> getWarehouses(@PathVariable Long companyId)
 	{
@@ -68,7 +68,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/companies/{companyId}/warehouses/{id}")
 	public Warehouse getWarehouse(@PathVariable Long companyId, @PathVariable Long id)
 	{
@@ -92,7 +92,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/warehouses/{id}")
 	public Warehouse getWarehouse(@PathVariable Long id)
 	{
@@ -208,7 +208,7 @@ public class WarehouseController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/warehouses/search")
 	public List<Warehouse> searchWarehouses(
 			@RequestParam("q") String query,

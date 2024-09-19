@@ -39,7 +39,7 @@ public class CategoryController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/categories")
 	public List<Category> getCategories()
 	{

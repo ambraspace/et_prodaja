@@ -65,7 +65,7 @@ public class UserController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
     @GetMapping("/api/user")
     public User getUser(Principal user)
     {

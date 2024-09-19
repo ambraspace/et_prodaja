@@ -46,7 +46,7 @@ public class TagController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/tags")
 	public Page<Tag> getTags(@ParameterObject @PageableDefault(sort = "name") Pageable pageable)
 	{
@@ -70,7 +70,7 @@ public class TagController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/tags/{id}")
 	public Tag getTag(@PathVariable String id)
 	{
@@ -142,7 +142,7 @@ public class TagController
 			})
 	})
 	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
+	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/tags/search")
 	public List<Tag> searchTags(@RequestParam(required = true, name = "q") String query)
 	{
