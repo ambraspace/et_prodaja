@@ -522,7 +522,7 @@
 				</box>
 			</element>
 			<element kind="textField" uuid="596a5612-3bfb-4e9a-9f0c-8220c15eb04f" stretchType="ElementGroupHeight" x="410" y="0" width="60" height="15" textAdjust="StretchHeight" style="Ćelija BR">
-				<paragraph lineSpacing="Single" lineSpacingSize="1.0" style="Ćelija BR"/>
+				<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
 				<expression><![CDATA[$F{discountPercent}.compareTo( java.math.BigDecimal.ZERO ) == 1 ? TEXT($F{grossPrice},"#,##0.00") + "\n- " +
 TEXT($F{discountPercent},"#,##0.##") + "%\n" +
 TEXT($F{netPrice},"#,##0.00") : TEXT($F{netPrice},"#,##0.00")]]></expression>
@@ -546,7 +546,7 @@ TEXT($F{netPrice},"#,##0.00") : TEXT($F{netPrice},"#,##0.00")]]></expression>
 			<element kind="frame" uuid="80fae76c-179d-405f-9800-b441d17bf422" stretchType="ElementGroupHeight" x="25" y="0" width="75" height="15" style="Ćelija TL">
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<element kind="image" uuid="afe240a6-35fb-4210-9466-df62b205b647" stretchType="ElementGroupHeight" x="0" y="0" width="75" height="15" scaleImage="RealHeight" removeLineWhenBlank="true" printWhenDetailOverflows="true" vImageAlign="Top" style="Ćelija TC">
+				<element kind="image" uuid="afe240a6-35fb-4210-9466-df62b205b647" stretchType="ElementGroupHeight" x="0" y="0" width="75" height="15" scaleImage="RealHeight" onErrorType="Blank" removeLineWhenBlank="true" printWhenDetailOverflows="true" vImageAlign="Top" style="Ćelija TC">
 					<printWhenExpression><![CDATA[$F{preview} != null && !$F{preview}.isBlank()]]></printWhenExpression>
 					<expression><![CDATA[$P{imageLocation}.concat("/").concat($F{preview})]]></expression>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
