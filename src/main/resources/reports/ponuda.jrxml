@@ -670,7 +670,7 @@ TEXT($F{netPrice},"#,##0.00") : TEXT($F{netPrice},"#,##0.00")]]></expression>
 			</box>
 		</element>
 		<element kind="textField" uuid="026a0a86-858d-47fb-84a1-c3355bb037c4" x="329" y="15" width="141" height="15" bold="true" hTextAlign="Right" vTextAlign="Middle" style="Ćelija MR">
-			<expression><![CDATA["PDV (" + $P{vat} + "%):"]]></expression>
+			<expression><![CDATA["PDV (" + TEXT($P{vat}, "#,##0.##") + "%):"]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box style="Ćelija MR">
 				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
