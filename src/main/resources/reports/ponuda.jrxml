@@ -116,7 +116,7 @@
 	<field name="quantity" class="java.math.BigDecimal">
 		<description><![CDATA[quantity]]></description>
 	</field>
-	<title height="217" splitType="Stretch">
+	<title height="247" splitType="Stretch">
 		<element kind="image" uuid="a970ad34-bd9a-42bf-9794-4826ff20ea7a" x="183" y="0" width="168" height="78" hImageAlign="Center">
 			<expression><![CDATA[$P{head}]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -387,8 +387,17 @@
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
+		<element kind="textField" uuid="bd97ea6b-f90e-4b0d-b664-4d9aea6b8dd4" x="0" y="210" width="535" height="20" fontSize="12.0" bold="true" style="Ćelija ML">
+			<expression><![CDATA["Ponuda br. ".concat($P{offerNo})]]></expression>
+			<box style="Ćelija ML">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
 	</title>
-	<pageHeader height="35" splitType="Stretch">
+	<pageHeader height="67" splitType="Stretch">
 		<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
 		<element kind="staticText" uuid="0aa65b72-74cb-4a40-8aec-7eb2517c0df6" x="0" y="0" width="535" height="20" fontSize="12.0" bold="true" underline="true" style="Ćelija ML">
 			<text><![CDATA[ELEKTRO TIM d.o.o. Banja Luka]]></text>
@@ -399,9 +408,7 @@
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
-	</pageHeader>
-	<columnHeader height="64" splitType="Stretch">
-		<element kind="textField" uuid="7bd7b924-bb45-4e8d-8f9d-c5dbad8fb6e6" x="0" y="0" width="535" height="20" fontSize="12.0" bold="true" style="Ćelija ML">
+		<element kind="textField" uuid="7bd7b924-bb45-4e8d-8f9d-c5dbad8fb6e6" x="0" y="31" width="535" height="20" fontSize="12.0" bold="true" style="Ćelija ML">
 			<expression><![CDATA["Ponuda br. ".concat($P{offerNo})]]></expression>
 			<box style="Ćelija ML">
 				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -410,9 +417,12 @@
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="ae29eee0-4649-4be4-870f-4be0c698292e" x="0" y="34" width="25" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
+	</pageHeader>
+	<columnHeader height="30" splitType="Stretch">
+		<element kind="staticText" uuid="ae29eee0-4649-4be4-870f-4be0c698292e" x="0" y="0" width="25" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
 			<text><![CDATA[RB]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<box style="Ćelija MC">
 				<topPen lineWidth="1.0"/>
 				<leftPen lineWidth="0.0"/>
@@ -420,9 +430,10 @@
 				<rightPen lineWidth="0.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="694c20f8-20d6-40a8-b138-17cf261d6c90" x="25" y="34" width="75" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
+		<element kind="staticText" uuid="694c20f8-20d6-40a8-b138-17cf261d6c90" x="25" y="0" width="75" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
 			<text><![CDATA[Slika]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<box style="Ćelija MC">
 				<topPen lineWidth="1.0"/>
 				<leftPen lineWidth="0.0"/>
@@ -430,9 +441,10 @@
 				<rightPen lineWidth="0.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="1a8e041a-adea-4879-8a13-e35093ed0161" x="100" y="34" width="229" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
+		<element kind="staticText" uuid="1a8e041a-adea-4879-8a13-e35093ed0161" x="100" y="0" width="229" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
 			<text><![CDATA[Opis]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<box style="Ćelija MC">
 				<topPen lineWidth="1.0"/>
 				<leftPen lineWidth="0.0"/>
@@ -440,9 +452,10 @@
 				<rightPen lineWidth="0.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="0479c18e-5bb1-4ba1-a0f4-e1d5a519354f" x="329" y="34" width="41" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
+		<element kind="staticText" uuid="0479c18e-5bb1-4ba1-a0f4-e1d5a519354f" x="329" y="0" width="41" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
 			<text><![CDATA[Jed. mj.]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<box style="Ćelija MC">
 				<topPen lineWidth="1.0"/>
 				<leftPen lineWidth="0.0"/>
@@ -450,9 +463,10 @@
 				<rightPen lineWidth="0.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="62680350-1284-4853-af3b-a934b2f3d3ad" x="370" y="34" width="40" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
+		<element kind="staticText" uuid="62680350-1284-4853-af3b-a934b2f3d3ad" x="370" y="0" width="40" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
 			<text><![CDATA[Kol.]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<box style="Ćelija MC">
 				<topPen lineWidth="1.0"/>
 				<leftPen lineWidth="0.0"/>
@@ -460,9 +474,10 @@
 				<rightPen lineWidth="0.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="6ec81bec-586f-4d0c-ad16-4308403b0586" x="410" y="34" width="60" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
+		<element kind="staticText" uuid="6ec81bec-586f-4d0c-ad16-4308403b0586" x="410" y="0" width="60" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
 			<text><![CDATA[Cijena]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<box style="Ćelija MC">
 				<topPen lineWidth="1.0"/>
 				<leftPen lineWidth="0.0"/>
@@ -470,9 +485,10 @@
 				<rightPen lineWidth="0.0"/>
 			</box>
 		</element>
-		<element kind="staticText" uuid="94a5dabe-2d1b-4bd7-a7f5-83229c13c3cf" x="470" y="34" width="65" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
+		<element kind="staticText" uuid="94a5dabe-2d1b-4bd7-a7f5-83229c13c3cf" x="470" y="0" width="65" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Ćelija MC">
 			<text><![CDATA[Iznos]]></text>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<box style="Ćelija MC">
 				<topPen lineWidth="1.0"/>
 				<leftPen lineWidth="0.0"/>
@@ -480,6 +496,7 @@
 				<rightPen lineWidth="0.0"/>
 			</box>
 		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Prevent">
@@ -489,7 +506,7 @@
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2" style="Ćelija TL">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 			</element>
@@ -499,6 +516,7 @@
 				<box style="Ćelija TC">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 			</element>
@@ -508,6 +526,7 @@
 				<box style="Ćelija BC">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 			</element>
@@ -518,6 +537,7 @@
 				<box style="Ćelija BC">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 			</element>
@@ -530,6 +550,7 @@ TEXT($F{netPrice},"#,##0.00") : TEXT($F{netPrice},"#,##0.00")]]></expression>
 				<box style="Ćelija BR">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 			</element>
@@ -540,29 +561,31 @@ TEXT($F{netPrice},"#,##0.00") : TEXT($F{netPrice},"#,##0.00")]]></expression>
 				<box style="Ćelija BR">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 			</element>
 			<element kind="frame" uuid="80fae76c-179d-405f-9800-b441d17bf422" stretchType="ElementGroupHeight" x="25" y="0" width="75" height="15" style="Ćelija TL">
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<element kind="image" uuid="afe240a6-35fb-4210-9466-df62b205b647" stretchType="ElementGroupHeight" x="0" y="0" width="75" height="15" scaleImage="RealHeight" onErrorType="Blank" removeLineWhenBlank="true" printWhenDetailOverflows="true" vImageAlign="Top" style="Ćelija TC">
+				<element kind="image" uuid="afe240a6-35fb-4210-9466-df62b205b647" stretchType="ElementGroupHeight" x="0" y="0" width="75" height="11" scaleImage="RealHeight" onErrorType="Blank" removeLineWhenBlank="true" printWhenDetailOverflows="true" vImageAlign="Top" style="Ćelija TC">
 					<printWhenExpression><![CDATA[$F{preview} != null && !$F{preview}.isBlank()]]></printWhenExpression>
 					<expression><![CDATA[$P{imageLocation}.concat("/").concat($F{preview})]]></expression>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<box padding="0" style="Ćelija TC">
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 				</element>
-				<box padding="0" style="Ćelija TL">
+				<box topPadding="2" leftPadding="0" bottomPadding="2" rightPadding="0" style="Ćelija TL">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 			</element>
