@@ -118,9 +118,7 @@ public class ReportingService
 
 			try
 			{
-//				InputStream report = resourceLoader.getResource("classpath:reports/ponuda.jrxml").getInputStream();
-//				JasperReport compiledReport = JasperCompileManager.compileReport(report);
-				InputStream compiledReport = resourceLoader.getResource("classpath:reports/ponuda.jasper").getInputStream();
+				InputStream compiledReport = resourceLoader.getResource("classpath:reports/offer-pdf.jasper").getInputStream();
 				JasperPrint print = JasperFillManager.fillReport(compiledReport, params, data);
 				byte[] pdfFile = JasperExportManager.exportReportToPdf(print);
 				response.setContentLengthLong(pdfFile.length);
@@ -135,7 +133,7 @@ public class ReportingService
 
 			try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();)
 			{
-				InputStream compiledReport = resourceLoader.getResource("classpath:reports/ponuda.jasper").getInputStream();
+				InputStream compiledReport = resourceLoader.getResource("classpath:reports/offer-xlsx.jasper").getInputStream();
 				JasperPrint print = JasperFillManager.fillReport(compiledReport, params, data);
 				JRXlsxExporter exporter = new JRXlsxExporter();
 				SimpleXlsxReportConfiguration config = new SimpleXlsxReportConfiguration();

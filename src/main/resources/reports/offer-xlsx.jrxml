@@ -1,0 +1,220 @@
+<!-- Created with Jaspersoft Studio version 7.0.0.final using JasperReports Library version 7.0.0-b478feaa9aab4375eba71de77b4ca138ad2f62aa  -->
+<jasperReport name="ponuda" language="java" columnCount="1" pageWidth="842" pageHeight="595" columnWidth="782" columnSpacing="3" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="08b509a0-79d2-4266-a398-a47258a80bff" ignorePagination="true" summaryWithPageHeaderAndFooter="true">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="523"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="463"/>
+	<style name="Ćelija TL" hTextAlign="Left" vTextAlign="Top" markup="none" blankWhenNull="true" fontName="DejaVu Sans" fontSize="9.0" bold="false" pdfFontName="Helvetica" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true">
+		<box padding="2">
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Ćelija TC" hTextAlign="Center" vTextAlign="Top" markup="none" blankWhenNull="true" fontName="DejaVu Sans" fontSize="9.0" bold="false" pdfFontName="Helvetica" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true">
+		<box padding="2">
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Ćelija BC" hTextAlign="Center" vTextAlign="Bottom" markup="none" blankWhenNull="true" fontName="DejaVu Sans" fontSize="9.0" bold="false" pdfFontName="Helvetica" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true">
+		<box padding="2">
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Ćelija BR" hTextAlign="Right" vTextAlign="Bottom" markup="none" blankWhenNull="true" fontName="DejaVu Sans" fontSize="9.0" bold="false" pdfFontName="Helvetica" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true">
+		<box padding="2">
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Ćelija ML" hTextAlign="Left" vTextAlign="Middle" markup="none" blankWhenNull="true" fontName="DejaVu Sans" fontSize="9.0" bold="false" pdfFontName="Helvetica" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true">
+		<box padding="2">
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Ćelija MC" hTextAlign="Center" vTextAlign="Middle" markup="none" blankWhenNull="true" fontName="DejaVu Sans" fontSize="9.0" bold="false" pdfFontName="Helvetica" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true">
+		<box padding="2">
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Ćelija MR" hTextAlign="Right" vTextAlign="Middle" markup="none" blankWhenNull="true" fontName="DejaVu Sans" fontSize="9.0" bold="false" pdfFontName="Helvetica" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true">
+		<box padding="2">
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Title" hTextAlign="Left" vTextAlign="Top" blankWhenNull="true" fontName="DejaVu Sans" fontSize="12.0" bold="true" pdfEncoding="Identity-H (Unicode with horizontal writing)" pdfEmbedded="true"/>
+	<parameter name="offerDate" class="java.lang.String"/>
+	<parameter name="userMobile" class="java.lang.String"/>
+	<parameter name="userPhone" class="java.lang.String"/>
+	<parameter name="userEmail" class="java.lang.String"/>
+	<parameter name="customerEmail" class="java.lang.String"/>
+	<parameter name="customerName" class="java.lang.String"/>
+	<parameter name="customerPhone" class="java.lang.String"/>
+	<parameter name="customerLocality" class="java.lang.String"/>
+	<parameter name="offerNo" class="java.lang.String"/>
+	<parameter name="userName" class="java.lang.String"/>
+	<parameter name="customerContactName" class="java.lang.String"/>
+	<parameter name="head" forPrompting="false" class="java.lang.String"/>
+	<parameter name="foot" class="java.lang.String"/>
+	<parameter name="imageLocation" class="java.lang.String"/>
+	<parameter name="notes" class="java.lang.String"/>
+	<parameter name="offerValue" class="java.math.BigDecimal"/>
+	<parameter name="vat" class="java.math.BigDecimal"/>
+	<parameter name="signature" class="java.lang.String"/>
+	<parameter name="numOfItems" class="java.lang.Integer"/>
+	<query language="EJBQL"><![CDATA[]]></query>
+	<field name="netPrice" class="java.math.BigDecimal">
+		<description><![CDATA[netPrice]]></description>
+	</field>
+	<field name="discountPercent" class="java.math.BigDecimal">
+		<description><![CDATA[discountPercent]]></description>
+	</field>
+	<field name="grossPrice" class="java.math.BigDecimal">
+		<description><![CDATA[grossPrice]]></description>
+	</field>
+	<field name="productName" class="java.lang.String">
+		<description><![CDATA[productName]]></description>
+	</field>
+	<field name="preview" class="java.lang.String">
+		<description><![CDATA[preview]]></description>
+	</field>
+	<field name="unit" class="java.lang.String">
+		<description><![CDATA[stockInfo.product.unit]]></description>
+	</field>
+	<field name="quantity" class="java.math.BigDecimal">
+		<description><![CDATA[quantity]]></description>
+	</field>
+	<title height="53">
+		<element kind="textField" uuid="dcd498e0-6ca4-4905-b554-ea8c4aa0277c" x="0" y="0" width="779" height="20" style="Title">
+			<expression><![CDATA["Kupac: " +  $P{customerName}]]></expression>
+		</element>
+		<element kind="textField" uuid="9a2d5d1c-f24b-4d03-bfdc-3328b17114a0" x="0" y="30" width="779" height="22" style="Title">
+			<expression><![CDATA["Ponuda br. " + $P{offerNo}]]></expression>
+		</element>
+	</title>
+	<columnHeader height="30">
+		<element kind="staticText" uuid="f170481c-b49c-4986-9ec7-980b07f64faa" x="0" y="0" width="29" height="30" style="Ćelija MC">
+			<text><![CDATA[RB]]></text>
+		</element>
+		<element kind="staticText" uuid="dc8a26d3-3d11-4d67-a3be-38c68d986633" x="29" y="0" width="75" height="30" style="Ćelija MC">
+			<text><![CDATA[Slika]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="staticText" uuid="f7c3894f-f54d-4498-bc0f-7f40ff8d7641" x="104" y="0" width="334" height="30" style="Ćelija MC">
+			<text><![CDATA[Opis]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="staticText" uuid="d8f8214a-789e-46a4-8a52-f9464d7e6f11" x="438" y="0" width="30" height="30" style="Ćelija MC">
+			<text><![CDATA[Jed. mj.]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="staticText" uuid="0990f31f-de77-442f-8169-54928ead7ff7" x="518" y="0" width="70" height="30" style="Ćelija MC">
+			<text><![CDATA[Cijena]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="staticText" uuid="9375efea-6a46-415f-a1f6-307c6061fc7d" x="588" y="0" width="50" height="30" style="Ćelija MC">
+			<text><![CDATA[Popust]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="staticText" uuid="94a78c2a-1e83-4132-bd4b-1bbdc34b62af" x="638" y="0" width="70" height="30" style="Ćelija MC">
+			<text><![CDATA[Cijena sa popustom]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="staticText" uuid="94a00154-8169-4b05-a835-1787fef11590" x="708" y="0" width="70" height="30" style="Ćelija MC">
+			<text><![CDATA[Iznos]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="staticText" uuid="8e94d3cf-911f-4c4e-84f2-a14b57fd2684" x="468" y="0" width="50" height="30" style="Ćelija MC">
+			<text><![CDATA[Količina]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</columnHeader>
+	<detail>
+		<band height="15">
+			<element kind="textField" uuid="bbbd5866-be6a-4718-9bbb-d43197c01aad" stretchType="ElementGroupHeight" x="0" y="0" width="29" height="15" style="Ćelija MC">
+				<expression><![CDATA[$V{REPORT_COUNT}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="fe265687-28d6-4f73-8241-bd72f6a6d12c" stretchType="ElementGroupHeight" x="104" y="0" width="334" height="15" style="Ćelija ML">
+				<expression><![CDATA[$F{productName}]]></expression>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="69bdddf4-4518-4fcb-900e-c52602d74ce2" stretchType="ElementGroupHeight" x="438" y="0" width="30" height="15" style="Ćelija MC">
+				<expression><![CDATA[$F{unit}]]></expression>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="1f6875cf-8e39-4aed-8bea-8db27d247dc3" stretchType="ElementGroupHeight" x="518" y="0" width="70" height="15" pattern="#,##0.00" style="Ćelija MR">
+				<expression><![CDATA[$F{grossPrice}]]></expression>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="fd6fb2af-4a04-42ff-a7a8-da90711ac522" stretchType="ElementGroupHeight" x="588" y="0" width="50" height="15" pattern="#,##0.##%" style="Ćelija MR">
+				<expression><![CDATA[$F{discountPercent}.movePointLeft( 2 )]]></expression>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="84dd430f-d810-473a-84c2-bf65aee43537" stretchType="ElementGroupHeight" x="638" y="0" width="70" height="15" pattern="#,##0.00" style="Ćelija MR">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<propertyExpression name="net.sf.jasperreports.export.xls.formula"><![CDATA["=ROUND(G" + ($V{REPORT_COUNT} + 6) + "*(1-H" + ($V{REPORT_COUNT} + 6) + "), 2)"]]></propertyExpression>
+			</element>
+			<element kind="textField" uuid="62c1d903-bd98-4533-b7e0-ef172239dd56" stretchType="ElementGroupHeight" x="708" y="0" width="70" height="15" pattern="#,##0.00" style="Ćelija MR">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<propertyExpression name="net.sf.jasperreports.export.xls.formula"><![CDATA["=ROUND(F" + ($V{REPORT_COUNT} + 6) + "*I" + ($V{REPORT_COUNT} + 6) + ",2)"]]></propertyExpression>
+			</element>
+			<element kind="textField" uuid="e7ddeb1e-ab18-4113-ba81-80e080824135" stretchType="ElementGroupHeight" x="468" y="0" width="50" height="15" pattern="#,##0.##" style="Ćelija MC">
+				<expression><![CDATA[$F{quantity}]]></expression>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="frame" uuid="ab3e5b6f-0fcd-4867-b279-59609e5b17f2" stretchType="ElementGroupHeight" x="29" y="0" width="75" height="15">
+				<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<element kind="image" uuid="a6bf7f39-ab9f-45e6-81c3-8583e49bda30" stretchType="ElementGroupHeight" x="0" y="0" width="75" height="15" scaleImage="RealHeight" onErrorType="Blank">
+					<expression><![CDATA[$P{imageLocation}.concat("/").concat($F{preview})]]></expression>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</element>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</detail>
+	<summary height="50"/>
+</jasperReport>
