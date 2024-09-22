@@ -541,10 +541,10 @@
 					<rightPen lineWidth="0.0"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="596a5612-3bfb-4e9a-9f0c-8220c15eb04f" stretchType="ElementGroupHeight" x="410" y="0" width="60" height="15" textAdjust="StretchHeight" style="Ćelija BR">
+			<element kind="textField" uuid="596a5612-3bfb-4e9a-9f0c-8220c15eb04f" stretchType="ElementGroupHeight" x="410" y="0" width="60" height="15" markup="html" textAdjust="StretchHeight" style="Ćelija BR">
 				<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
-				<expression><![CDATA[$F{discountPercent}.compareTo( java.math.BigDecimal.ZERO ) == 1 ? TEXT($F{grossPrice},"#,##0.00") + "\n- " +
-TEXT($F{discountPercent},"#,##0.##") + "%\n" +
+				<expression><![CDATA[$F{discountPercent}.compareTo( java.math.BigDecimal.ZERO ) == 1 ? "<font color=gray>" + TEXT($F{grossPrice},"#,##0.00") + "<br>- " +
+TEXT($F{discountPercent},"#,##0.##") + "%</font><br>" +
 TEXT($F{netPrice},"#,##0.00") : TEXT($F{netPrice},"#,##0.00")]]></expression>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<box style="Ćelija BR">
