@@ -1,5 +1,6 @@
 package com.ambraspace.etprodaja.model.reporting;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
@@ -18,9 +19,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.item.ItemService;
@@ -34,6 +37,10 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 @Service
 public class ReportingService
@@ -122,9 +129,33 @@ public class ReportingService
 				e.printStackTrace();
 			}
 
+		} else if (fileName.endsWith(".xlsx")) {
+
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+			try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();)
+			{
+				InputStream compiledReport = resourceLoader.getResource("classpath:reports/ponuda.jasper").getInputStream();
+				JasperPrint print = JasperFillManager.fillReport(compiledReport, params, data);
+				JRXlsxExporter exporter = new JRXlsxExporter();
+				SimpleXlsxReportConfiguration config = new SimpleXlsxReportConfiguration();
+				config.setDetectCellType(true);
+				config.setFitWidth(1);
+				config.setSheetNames(new String[] {offer.getId()});
+				exporter.setConfiguration(config);
+				exporter.setExporterInput(new SimpleExporterInput(print));
+				exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(byteArrayOutputStream));
+				exporter.exportReport();
+				response.setContentLengthLong(byteArrayOutputStream.size());
+				response.getOutputStream().write(byteArrayOutputStream.toByteArray());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		} else {
-			// TODO: Implement this
-			throw new RuntimeException("Not yet implemented!");
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Format not supported!");
+
 		}
 
 
