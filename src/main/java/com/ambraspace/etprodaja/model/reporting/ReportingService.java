@@ -3,6 +3,8 @@ package com.ambraspace.etprodaja.model.reporting;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +84,20 @@ public class ReportingService
 
 		List<Item> items = itemService.getOfferItems(offerId);
 
+		BigDecimal offerGrossValue = BigDecimal.ZERO;
+
+		for (Item i:items)
+		{
+			offerGrossValue = offerGrossValue
+					.add(
+							i.getQuantity()
+								.multiply(
+										i.getGrossPrice()
+								)
+								.setScale(2, RoundingMode.HALF_EVEN)
+					);
+		}
+
 		JRBeanCollectionDataSource data = new JRBeanCollectionDataSource(items);
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -104,6 +120,7 @@ public class ReportingService
 				+ offer.getValidUntil().format(DateTimeFormatter.ofPattern("dd.MM.yyyy."))
 				+ "\n\n" + offer.getNotes());
 		params.put("offerValue", offer.getValue());
+		params.put("offerGrossValue", offerGrossValue);
 		params.put("vat", offer.getVat());
 		params.put("signature", offer.getUser().getSignature());
 		params.put("numOfItems", items.size());
