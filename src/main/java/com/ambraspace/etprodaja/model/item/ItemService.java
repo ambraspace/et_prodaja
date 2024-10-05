@@ -3,8 +3,11 @@ package com.ambraspace.etprodaja.model.item;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +72,23 @@ public class ItemService
 
 		return retVal;
 
+	}
+
+
+	@Transactional
+	Page<Item> getUnorderedItems(Pageable pageable)
+	{
+		Page<Item> items = itemRepository.findOnlyUndelivered(pageable);
+		List<Tuple> qtys = itemRepository.getOrderedQtys(items.getContent()
+				.stream().map(i -> i.getId()).collect(Collectors.toList()));
+		for (Tuple t:qtys)
+		{
+			Long itemId = t.get(0, Long.class);
+			BigDecimal qty = t.get(1, BigDecimal.class);
+			Item item = items.getContent().stream().filter(i -> i.getId().equals(itemId)).findFirst().orElseThrow();
+			item.setOutstandingQuantity(item.getQuantity().subtract(qty));
+		}
+		return items;
 	}
 
 

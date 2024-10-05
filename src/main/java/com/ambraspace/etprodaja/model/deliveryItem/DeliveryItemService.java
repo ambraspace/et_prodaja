@@ -45,7 +45,7 @@ public class DeliveryItemService
 
 
 	@Transactional
-	public DeliveryItem addDeliveryItem(Long deliveryId, DeliveryItem di)
+	public List<DeliveryItem> addDeliveryItems(Long deliveryId, List<DeliveryItem> dis)
 	{
 
 		Delivery delivery = deliveryService.getDelivery(deliveryId);
@@ -53,9 +53,16 @@ public class DeliveryItemService
 		if (delivery == null)
 			throw new RuntimeException("No such delivery in the database!");
 
-		di.setDelivery(delivery);
+		for (DeliveryItem di:dis)
+		{
+			di.setDelivery(delivery);
+		}
 
-		return deliveryItemRepository.save(di);
+		List<DeliveryItem> saved = new ArrayList<DeliveryItem>();
+
+		deliveryItemRepository.saveAll(dis).forEach(saved::add);
+
+		return saved;
 
 	}
 

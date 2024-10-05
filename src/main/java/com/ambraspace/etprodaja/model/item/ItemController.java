@@ -3,6 +3,8 @@ package com.ambraspace.etprodaja.model.item;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -121,6 +123,29 @@ public class ItemController
 			)
 	{
 		return itemService.getOrderItems(offerId, onlyUndelivered);
+	}
+
+
+	@Operation(summary = "Get items which haven't been ordered yet", responses = {
+			@ApiResponse(responseCode = "200", description = "List of items returned", content = {
+					@Content(mediaType = "application/json", array =
+							@ArraySchema(schema =
+							@Schema(implementation = Item.class)))
+			}),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = {
+					@Content(mediaType = "application/json", schema =
+							@Schema(implementation = ErrorResponse.class))
+			})
+	})
+	@SecurityRequirement(name = "JWT")
+	@RolesAllowed({"ADMIN", "USER"})
+	@GetMapping("/api/items")
+	@JsonView(Views.Item.class)
+	public Page<Item> getUnorderedItems(
+		Pageable pageable
+	)
+	{
+		return itemService.getUnorderedItems(pageable);
 	}
 
 

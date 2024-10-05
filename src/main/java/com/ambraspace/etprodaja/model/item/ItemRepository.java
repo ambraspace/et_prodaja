@@ -1,8 +1,11 @@
 package com.ambraspace.etprodaja.model.item;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -42,6 +45,34 @@ ORDER BY i.id
 			""")
 	@EntityGraph("items")
 	Iterable<Item> findByOrderIdOnlyUndelivered(@Param("orderId") Long orderId);
+
+
+	@Query(value = """
+			SELECT i FROM Item i LEFT JOIN i.deliveryItems di
+			WHERE i.order IS NOT NULL AND i.order.status = 'CLOSED'
+			GROUP BY i.id
+			HAVING i.quantity > SUM(COALESCE(di.quantity, 0))
+			""", countQuery = """
+			SELECT i FROM Item i LEFT JOIN i.deliveryItems di
+			WHERE i.order IS NOT NULL AND i.order.status = 'CLOSED'
+			GROUP BY i.id
+			HAVING i.quantity > SUM(COALESCE(di.quantity, 0))
+					""")
+	@EntityGraph("delivery-items")
+	Page<Item> findOnlyUndelivered(Pageable pageable);
+
+
+	@Query("""
+SELECT
+	i.id, SUM(COALESCE(di.quantity, 0))
+FROM
+	Item i LEFT JOIN i.deliveryItems di
+WHERE
+	i.id in (:ids)
+GROUP BY
+	i.id
+			""")
+	List<Tuple> getOrderedQtys(Iterable<Long> ids);
 
 
 	void deleteByOfferIdAndId(String offerId, Long id);

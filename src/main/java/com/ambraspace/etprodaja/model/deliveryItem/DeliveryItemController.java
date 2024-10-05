@@ -79,10 +79,11 @@ public class DeliveryItemController
 	}
 
 
-	@Operation(summary = "Add new delivery item", responses = {
-			@ApiResponse(responseCode = "200", description = "A delivery item saved and returned", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = DeliveryItem.class))
+	@Operation(summary = "Add new delivery items", responses = {
+			@ApiResponse(responseCode = "200", description = "A delivery items saved and returned", content = {
+					@Content(mediaType = "application/json", array =
+							@ArraySchema(schema =
+							@Schema(implementation = DeliveryItem.class)))
 			}),
 			@ApiResponse(responseCode = "400", description = "Bad request", content = {
 					@Content(mediaType = "application/json", schema =
@@ -92,13 +93,13 @@ public class DeliveryItemController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/deliveries/{deliveryId}/deliveryItems")
-	public DeliveryItem addDeliveryItem(
+	public List<DeliveryItem> addDeliveryItems(
 			@PathVariable("deliveryId") Long deliveryId,
-			@RequestBody DeliveryItem di)
+			@RequestBody List<DeliveryItem> dis)
 	{
 		try
 		{
-			return deliveryItemService.addDeliveryItem(deliveryId, di);
+			return deliveryItemService.addDeliveryItems(deliveryId, dis);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

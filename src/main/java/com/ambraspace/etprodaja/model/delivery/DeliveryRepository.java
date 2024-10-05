@@ -39,6 +39,7 @@ public interface DeliveryRepository extends CrudRepository<Delivery, Long>, Pagi
 
 
 	@Override
+	@EntityGraph("delivery-with-details")
 	Optional<Delivery> findById(Long id);
 
 }
