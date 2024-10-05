@@ -72,7 +72,7 @@ public class DeliveryItemControllerTestComponent {
 	}
 
 
-	public DeliveryItem addDeliveryItem(Long deliveryId, String body) throws Exception
+	public List<DeliveryItem> addDeliveryItems(Long deliveryId, String body) throws Exception
 	{
 
 		MvcResult result =
@@ -85,7 +85,7 @@ public class DeliveryItemControllerTestComponent {
 				.andDo(securityTestComponent.getResultHandler())
 				.andReturn();
 
-		return mapper.readValue(result.getResponse().getContentAsString(), DeliveryItem.class);
+		return mapper.readerForListOf(DeliveryItem.class).readValue(result.getResponse().getContentAsString());
 
 	}
 

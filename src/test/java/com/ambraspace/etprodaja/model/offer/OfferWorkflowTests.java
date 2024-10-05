@@ -442,27 +442,27 @@ public class OfferWorkflowTests
 				""", companies.get(0).getId(), "Delivery 1", ZonedDateTime.of(LocalDate.now().plusDays(10), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT))));
 
 
-		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+		deliveryItems.addAll(deliveryItemControllerTestComponent.addDeliveryItems(
 				deliveries.get(0).getId(), String.format(
 				"""
-{
+[{
 	"quantity":%.2f,
 	"deliveryNote":"%s",
 	"item":{"id":%d}
-}
+}]
 				""",
 				items.get(1).getQuantity(),
 				"Poručena cjelokupna količina",
 				items.get(1).getId())));
 
-		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+		deliveryItems.addAll(deliveryItemControllerTestComponent.addDeliveryItems(
 				deliveries.get(0).getId(), String.format(
 				"""
-{
+[{
 	"quantity":%.2f,
 	"deliveryNote":"%s",
 	"item":{"id":%d}
-}
+}]
 				""",
 				items.get(2).getQuantity().subtract(BigDecimal.ONE),
 				"Poručen jedan manje",
@@ -487,27 +487,27 @@ public class OfferWorkflowTests
 				""", companies.get(1).getId(), "Delivery 2", ZonedDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT))));
 
 
-		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+		deliveryItems.addAll(deliveryItemControllerTestComponent.addDeliveryItems(
 				deliveries.get(1).getId(), String.format(
 				"""
-{
+[{
 	"quantity":%.2f,
 	"deliveryNote":"%s",
 	"item":{"id":%d}
-}
+}]
 				""",
 				items.get(0).getQuantity(),
 				"",
 				items.get(0).getId())));
 
-		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+		deliveryItems.addAll(deliveryItemControllerTestComponent.addDeliveryItems(
 				deliveries.get(1).getId(), String.format(
 				"""
-{
+[{
 	"quantity":%.2f,
 	"deliveryNote":"%s",
 	"item":{"id":%d}
-}
+}]
 				""",
 				items.get(3).getQuantity().subtract(BigDecimal.ONE),
 				"",
@@ -526,14 +526,14 @@ public class OfferWorkflowTests
 				""", companies.get(1).getId(), "Delivery 3", ZonedDateTime.of(LocalDate.now().plusDays(-3), LocalTime.MIDNIGHT, ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT))));
 
 
-		deliveryItems.add(deliveryItemControllerTestComponent.addDeliveryItem(
+		deliveryItems.addAll(deliveryItemControllerTestComponent.addDeliveryItems(
 				deliveries.get(2).getId(), String.format(
 				"""
-{
+[{
 	"quantity":%.2f,
 	"deliveryNote":"%s",
 	"item":{"id":%d}
-}
+}]
 				""",
 				items.get(4).getQuantity(),
 				"",
