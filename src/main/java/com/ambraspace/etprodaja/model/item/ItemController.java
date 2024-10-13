@@ -73,7 +73,7 @@ public class ItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/orders/{orderId}/items/{id}")
 	@JsonView(Views.Item.class)
-	public Item getOrderItem(@PathVariable Long orderId, @PathVariable Long id)
+	public Item getOrderItem(@PathVariable String orderId, @PathVariable Long id)
 	{
 		return itemService.getOrderItem(orderId, id);
 	}
@@ -117,7 +117,7 @@ public class ItemController
 	@JsonView(Views.Item.class)
 	public List<Item> getOrderItems(
 			@Parameter(description = "Order ID", required = false)
-			@PathVariable("orderId") Long offerId,
+			@PathVariable("orderId") String offerId,
 			@Parameter(description = "Whether to return only items which have not been ordered", required = false)
 			@RequestParam(name = "ou", defaultValue = "false") boolean onlyUndelivered
 			)

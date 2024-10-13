@@ -21,13 +21,13 @@ public class DeliveryItemService
 	private DeliveryItemRepository deliveryItemRepository;
 
 
-	public DeliveryItem getDeliveryItem(Long deliveryId, Long id)
+	public DeliveryItem getDeliveryItem(String deliveryId, Long id)
 	{
 		return deliveryItemRepository.findByDeliveryIdAndId(deliveryId, id).orElse(null);
 	}
 
 
-	public List<DeliveryItem> getDeliveryItems(Long deliveryId)
+	public List<DeliveryItem> getDeliveryItems(String deliveryId)
 	{
 
 		Delivery delivery = deliveryService.getDelivery(deliveryId);
@@ -45,7 +45,7 @@ public class DeliveryItemService
 
 
 	@Transactional
-	public List<DeliveryItem> addDeliveryItems(Long deliveryId, List<DeliveryItem> dis)
+	public List<DeliveryItem> addDeliveryItems(String deliveryId, List<DeliveryItem> dis)
 	{
 
 		Delivery delivery = deliveryService.getDelivery(deliveryId);
@@ -68,7 +68,7 @@ public class DeliveryItemService
 
 
 	@Transactional
-	public DeliveryItem updateDeliveryItem(Long deliveryId, Long id, DeliveryItem di)
+	public DeliveryItem updateDeliveryItem(String deliveryId, Long id, DeliveryItem di)
 	{
 
 		DeliveryItem fromRep = getDeliveryItem(deliveryId, id);
@@ -84,7 +84,7 @@ public class DeliveryItemService
 
 
 	@Transactional
-	public void deleteDeliveryItem(Long deliveryId, Long id)
+	public void deleteDeliveryItem(String deliveryId, Long id)
 	{
 
 		DeliveryItem fromRep = getDeliveryItem(deliveryId, id);

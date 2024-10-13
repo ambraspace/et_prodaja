@@ -74,7 +74,7 @@ public class ItemControllerTestComponent {
 	}
 
 
-	public List<Item> getOrderItems(Long orderId, boolean onlyUndelivered) throws Exception
+	public List<Item> getOrderItems(String orderId, boolean onlyUndelivered) throws Exception
 	{
 
 		MockHttpServletRequestBuilder builder = get("/api/orders/" + orderId + "/items")

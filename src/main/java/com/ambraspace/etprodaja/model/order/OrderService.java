@@ -38,7 +38,7 @@ public class OrderService
 
 
 	@Transactional
-	private void deleteOrderById(Long id)
+	private void deleteOrderById(String id)
 	{
 
 		Order fromRep = getOrder(id);
@@ -124,7 +124,7 @@ public class OrderService
 	}
 
 
-	public Order getOrder(Long id)
+	public Order getOrder(String id)
 	{
 		Order retVal = orderRepository.findById(id).orElse(null);
 		if (retVal != null)
@@ -135,7 +135,7 @@ public class OrderService
 
 	public Page<Order> getOrders(Long warehouseId, Status status, boolean onlyUndelivered, Pageable pageable)
 	{
-		Page<Long> orderIds = null;
+		Page<String> orderIds = null;
 
 		if (warehouseId == null)
 		{
@@ -182,57 +182,57 @@ public class OrderService
 	}
 
 
-	private Page<Long> getOrdersByWarehouseAndStatus(Long warehouseId, Status status, Pageable pageable)
+	private Page<String> getOrdersByWarehouseAndStatus(Long warehouseId, Status status, Pageable pageable)
 	{
 		return orderRepository.findByWarehouseIdAndStatus(warehouseId, status, pageable);
 	}
 
 
-	private Page<Long> getOrdersByWarehouseAndStatusAndOnlyUndelivered(Long warehouseId, Status status,
+	private Page<String> getOrdersByWarehouseAndStatusAndOnlyUndelivered(Long warehouseId, Status status,
 			Pageable pageable)
 	{
 		return orderRepository.findByWarehouseIdAndStatusAndOnlyUndelivered(warehouseId, status, pageable);
 	}
 
 
-	private Page<Long> getOrdersByWarehouse(Long warehouseId, Pageable pageable)
+	private Page<String> getOrdersByWarehouse(Long warehouseId, Pageable pageable)
 	{
 		return orderRepository.findByWarehouseId(warehouseId, pageable);
 	}
 
 
-	private Page<Long> getOrdersByWarehouseAndOnlyUndelivered(Long warehouseId, Pageable pageable)
+	private Page<String> getOrdersByWarehouseAndOnlyUndelivered(Long warehouseId, Pageable pageable)
 	{
 		return orderRepository.findByWarehouseIdAndOnlyUndelivered(warehouseId, pageable);
 	}
 
 
-	private Page<Long> getOrdersByStatus(Status status, Pageable pageable)
+	private Page<String> getOrdersByStatus(Status status, Pageable pageable)
 	{
 		return orderRepository.findByStatus(status, pageable);
 	}
 
 
-	private Page<Long> getOrdersByStatusAndOnlyUndelivered(Status status, Pageable pageable)
+	private Page<String> getOrdersByStatusAndOnlyUndelivered(Status status, Pageable pageable)
 	{
 		return orderRepository.findByStatusAndOnlyUndelivered(status, pageable);
 	}
 
 
-	private Page<Long> getAllOrders(Pageable pageable)
+	private Page<String> getAllOrders(Pageable pageable)
 	{
 		return orderRepository.findAllOrders(pageable);
 	}
 
 
-	private Page<Long> getOrdersByOnlyUndelivered(Pageable pageable)
+	private Page<String> getOrdersByOnlyUndelivered(Pageable pageable)
 	{
 		return orderRepository.findByOnlyUndelivered(pageable);
 	}
 
 
 	@Transactional
-	public Order closeOrder(Long orderId)
+	public Order closeOrder(String orderId)
 	{
 
 		Order fromRep = getOrder(orderId);

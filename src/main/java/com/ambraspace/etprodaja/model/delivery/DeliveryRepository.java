@@ -14,32 +14,32 @@ import org.springframework.data.repository.query.Param;
 
 import com.ambraspace.etprodaja.model.delivery.Delivery.Status;
 
-public interface DeliveryRepository extends CrudRepository<Delivery, Long>, PagingAndSortingRepository<Delivery, Long>
+public interface DeliveryRepository extends CrudRepository<Delivery, String>, PagingAndSortingRepository<Delivery, String>
 {
 
 	@Query("SELECT d.id FROM Delivery d WHERE d.supplier.id = :companyId AND d.status = :status")
-	Page<Long> findBySupplierIdAndStatus(@Param("companyId") Long companyId, @Param("status") Status status, Pageable pageable);
+	Page<String> findBySupplierIdAndStatus(@Param("companyId") Long companyId, @Param("status") Status status, Pageable pageable);
 
 
 	@Query("SELECT d.id FROM Delivery d WHERE d.supplier.id = :companyId")
-	Page<Long> findBySupplierId(Long companyId, Pageable pageable);
+	Page<String> findBySupplierId(Long companyId, Pageable pageable);
 
 
 	@Query("SELECT d.id FROM Delivery d WHERE d.status = :status")
-	Page<Long> findByStatus(Status status, Pageable pageable);
+	Page<String> findByStatus(Status status, Pageable pageable);
 
 
 	@Query("SELECT d.id FROM Delivery d")
-	Page<Long> findAllDeliveries(Pageable pageable);
+	Page<String> findAllDeliveries(Pageable pageable);
 
 
 	@Query("SELECT d FROM Delivery d WHERE d.id in (:ids)")
 	@EntityGraph("delivery-with-details")
-	Iterable<Delivery> getDeliveryData(@Param("ids") List<Long> ids, Sort sort);
+	Iterable<Delivery> getDeliveryData(@Param("ids") List<String> ids, Sort sort);
 
 
 	@Override
 	@EntityGraph("delivery-with-details")
-	Optional<Delivery> findById(Long id);
+	Optional<Delivery> findById(String id);
 
 }

@@ -14,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.ambraspace.etprodaja.model.order.Order.Status;
 
-public interface OrderRepository extends CrudRepository<Order, Long>, PagingAndSortingRepository<Order, Long>
+public interface OrderRepository extends CrudRepository<Order, String>, PagingAndSortingRepository<Order, String>
 {
 
 
@@ -23,7 +23,7 @@ public interface OrderRepository extends CrudRepository<Order, Long>, PagingAndS
 
 	@Override
 	@EntityGraph("order-with-details")
-	Optional<Order> findById(Long id);
+	Optional<Order> findById(String id);
 
 
 	// TODO: Može li se ovaj Query optimizovati?
@@ -40,7 +40,7 @@ SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
 		i.quantity > SUM(COALESCE(di.quantity, 0))
 )
 			""")
-	Page<Long> findByWarehouseIdAndStatusAndOnlyUndelivered(
+	Page<String> findByWarehouseIdAndStatusAndOnlyUndelivered(
 			@Param("w") Long warehouseId,
 			@Param("s") Status status,
 			Pageable pageable);
@@ -52,7 +52,7 @@ WHERE
 	o.warehouse.id = :w AND
 	o.status = :s
 			""")
-	Page<Long> findByWarehouseIdAndStatus(
+	Page<String> findByWarehouseIdAndStatus(
 			@Param("w") Long warehouseId,
 			@Param("s") Status status,
 			Pageable pageable);
@@ -63,7 +63,7 @@ SELECT o.id FROM Order o
 WHERE
 	o.warehouse.id = :w
 			""")
-	Page<Long> findByWarehouseId(
+	Page<String> findByWarehouseId(
 			@Param("w") Long warehouseId,
 			Pageable pageable);
 
@@ -80,7 +80,7 @@ SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
 		i.quantity > SUM(COALESCE(di.quantity, 0))
 )
 			""")
-	Page<Long> findByWarehouseIdAndOnlyUndelivered(
+	Page<String> findByWarehouseIdAndOnlyUndelivered(
 			@Param("w") Long warehouseId,
 			Pageable pageable);
 
@@ -90,7 +90,7 @@ SELECT o.id FROM Order o
 WHERE
 	o.status = :s
 			""")
-	Page<Long> findByStatus(
+	Page<String> findByStatus(
 			@Param("s") Status status,
 			Pageable pageable);
 
@@ -107,7 +107,7 @@ SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
 		i.quantity > SUM(COALESCE(di.quantity, 0))
 )
 			""")
-	Page<Long> findByStatusAndOnlyUndelivered(
+	Page<String> findByStatusAndOnlyUndelivered(
 			@Param("s") Status status,
 			Pageable pageable);
 
@@ -115,7 +115,7 @@ SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
 	@Query("""
 SELECT o.id FROM Order o
 			""")
-	Page<Long> findAllOrders(Pageable pageable);
+	Page<String> findAllOrders(Pageable pageable);
 
 
 	@Query("""
@@ -129,11 +129,11 @@ SELECT DISTINCT o1.id FROM Order o1 WHERE EXISTS (
 		i.quantity > SUM(COALESCE(di.quantity, 0))
 )
 			""")
-	Page<Long> findByOnlyUndelivered(Pageable pageable);
+	Page<String> findByOnlyUndelivered(Pageable pageable);
 
 
 	@Query("SELECT o FROM Order o WHERE o.id in (:ids)")
 	@EntityGraph("order-with-details")
-	Iterable<Order> getOrderDetails(@Param("ids") List<Long> ids, Sort sort);
+	Iterable<Order> getOrderDetails(@Param("ids") List<String> ids, Sort sort);
 
 }

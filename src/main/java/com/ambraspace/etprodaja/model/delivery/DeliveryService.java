@@ -23,7 +23,7 @@ public class DeliveryService
 	private DeliveryRepository deliveryRepository;
 
 
-	public Delivery getDelivery(Long id)
+	public Delivery getDelivery(String id)
 	{
 		Delivery retVal = deliveryRepository.findById(id).orElse(null);
 		fillTransientFields(List.of(retVal));
@@ -34,7 +34,7 @@ public class DeliveryService
 	public Page<Delivery> getDeliveries(Long supplierId, Status status, Pageable pageable)
 	{
 
-		Page<Long> ids;
+		Page<String> ids;
 
 		if (supplierId == null)
 		{
@@ -73,7 +73,7 @@ public class DeliveryService
 	}
 
 
-	public Delivery updateDelivery(Long deliveryId, Delivery delivery)
+	public Delivery updateDelivery(String deliveryId, Delivery delivery)
 	{
 
 		Delivery fromRep = getDelivery(deliveryId);
@@ -88,7 +88,7 @@ public class DeliveryService
 	}
 
 
-	public void deleteDelivery(Long deliveryId)
+	public void deleteDelivery(String deliveryId)
 	{
 
 		Delivery fromRep = getDelivery(deliveryId);
@@ -101,7 +101,7 @@ public class DeliveryService
 	}
 
 
-	public Delivery setDelivered(Long deliveryId)
+	public Delivery setDelivered(String deliveryId)
 	{
 
 		Delivery fromRep = getDelivery(deliveryId);

@@ -33,7 +33,7 @@ public class DeliveryItemControllerTestComponent {
 	}
 
 
-	public DeliveryItem getDeliveryItem(Long deliveryId, Long id) throws Exception
+	public DeliveryItem getDeliveryItem(String deliveryId, Long id) throws Exception
 	{
 
 		MvcResult result =
@@ -55,7 +55,7 @@ public class DeliveryItemControllerTestComponent {
 	}
 
 
-	public List<DeliveryItem> getDeliveryItems(Long deliveryId) throws Exception
+	public List<DeliveryItem> getDeliveryItems(String deliveryId) throws Exception
 	{
 
 		MvcResult result =
@@ -72,7 +72,7 @@ public class DeliveryItemControllerTestComponent {
 	}
 
 
-	public List<DeliveryItem> addDeliveryItems(Long deliveryId, String body) throws Exception
+	public List<DeliveryItem> addDeliveryItems(String deliveryId, String body) throws Exception
 	{
 
 		MvcResult result =
@@ -91,7 +91,7 @@ public class DeliveryItemControllerTestComponent {
 
 
 
-	public DeliveryItem updateDeliveryItem(Long deliveryId, Long id, String body) throws Exception
+	public DeliveryItem updateDeliveryItem(String deliveryId, Long id, String body) throws Exception
 	{
 
 		MvcResult result =
@@ -110,7 +110,7 @@ public class DeliveryItemControllerTestComponent {
 
 
 
-	public void deleteDeliveryItem(Long deliveryId, Long id) throws Exception
+	public void deleteDeliveryItem(String deliveryId, Long id) throws Exception
 	{
 
 		this.mockMvc.perform(delete("/api/deliveries/" + deliveryId + "/deliveryItems/" + id)

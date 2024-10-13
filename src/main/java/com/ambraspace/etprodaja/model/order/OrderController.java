@@ -47,7 +47,7 @@ public class OrderController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/orders/{id}")
-	public Order getOrder(@PathVariable("id") Long id)
+	public Order getOrder(@PathVariable("id") String id)
 	{
 		return orderService.getOrder(id);
 	}
@@ -97,7 +97,7 @@ public class OrderController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/orders/{id}/close")
-	public Order closeOrder(@PathVariable("id") Long id)
+	public Order closeOrder(@PathVariable("id") String id)
 	{
 		try
 		{

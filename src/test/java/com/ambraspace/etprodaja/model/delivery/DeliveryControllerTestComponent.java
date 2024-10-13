@@ -37,7 +37,7 @@ public class DeliveryControllerTestComponent
 	}
 
 
-	public Delivery getDelivery(Long id) throws Exception
+	public Delivery getDelivery(String id) throws Exception
 	{
 
 		MvcResult result = this.mockMvc.perform(get("/api/deliveries/" + id)
@@ -104,7 +104,7 @@ public class DeliveryControllerTestComponent
 	}
 
 
-	public Delivery updateDelivery(Long id, String body) throws Exception
+	public Delivery updateDelivery(String id, String body) throws Exception
 	{
 
 		MvcResult result = this.mockMvc.perform(put("/api/deliveries/" + id)
@@ -123,7 +123,7 @@ public class DeliveryControllerTestComponent
 	}
 
 
-	public void deleteDelivery(Long id) throws Exception
+	public void deleteDelivery(String id) throws Exception
 	{
 
 		this.mockMvc.perform(delete("/api/deliveries/" + id)
@@ -137,7 +137,7 @@ public class DeliveryControllerTestComponent
 	}
 
 
-	public Delivery setDelivered(Long id) throws Exception
+	public Delivery setDelivered(String id) throws Exception
 	{
 
 		MvcResult result = this.mockMvc.perform(put("/api/deliveries/" + id + "/delivered")

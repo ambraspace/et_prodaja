@@ -36,7 +36,7 @@ public class OrderControllerTestComponent
 	}
 
 
-	public Order getOrder(Long id) throws Exception
+	public Order getOrder(String id) throws Exception
 	{
 
 		MvcResult result = this.mockMvc.perform(get("/api/orders/" + id)
@@ -86,7 +86,7 @@ public class OrderControllerTestComponent
 	}
 
 
-	public Order closeOrder(Long id) throws Exception
+	public Order closeOrder(String id) throws Exception
 	{
 
 		MvcResult result = this.mockMvc.perform(put("/api/orders/" + id + "/close")

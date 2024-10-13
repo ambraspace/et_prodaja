@@ -43,7 +43,7 @@ public class DeliveryItemController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/deliveries/{deliveryId}/deliveryItems/{id}")
-	public DeliveryItem getDeliveryItem(@PathVariable Long deliveryId, @PathVariable Long id)
+	public DeliveryItem getDeliveryItem(@PathVariable String deliveryId, @PathVariable Long id)
 	{
 		try
 		{
@@ -68,7 +68,7 @@ public class DeliveryItemController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/deliveries/{deliveryId}/deliveryItems")
-	public List<DeliveryItem> getDeliveryItems(@PathVariable Long deliveryId)
+	public List<DeliveryItem> getDeliveryItems(@PathVariable String deliveryId)
 	{
 		try
 		{
@@ -94,7 +94,7 @@ public class DeliveryItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/deliveries/{deliveryId}/deliveryItems")
 	public List<DeliveryItem> addDeliveryItems(
-			@PathVariable("deliveryId") Long deliveryId,
+			@PathVariable("deliveryId") String deliveryId,
 			@RequestBody List<DeliveryItem> dis)
 	{
 		try
@@ -121,7 +121,7 @@ public class DeliveryItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/deliveries/{deliveryId}/deliveryItems/{id}")
 	public DeliveryItem updateDeliveryItem(
-			@PathVariable Long deliveryId,
+			@PathVariable String deliveryId,
 			@PathVariable Long id,
 			@RequestBody DeliveryItem di)
 	{
@@ -147,7 +147,7 @@ public class DeliveryItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/deliveries/{deliveryId}/deliveryItems/{id}")
 	public void deleteDeliveryItem(
-			@PathVariable Long deliveryId,
+			@PathVariable String deliveryId,
 			@PathVariable Long id)
 	{
 		try

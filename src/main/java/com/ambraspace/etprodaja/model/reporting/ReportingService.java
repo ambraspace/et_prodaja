@@ -179,7 +179,7 @@ public class ReportingService
 
 
 	@Transactional
-	public void downloadOrder(long orderId, HttpServletResponse response) throws IOException
+	public void downloadOrder(String orderId, HttpServletResponse response) throws IOException
 	{
 
 		Order order = orderService.getOrder(orderId);

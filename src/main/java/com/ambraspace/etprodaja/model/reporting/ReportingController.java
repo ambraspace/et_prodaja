@@ -62,7 +62,7 @@ public class ReportingController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/orders/{id}/dl")
-	public void downloadOrder(@PathVariable long id, HttpServletResponse response)
+	public void downloadOrder(@PathVariable String id, HttpServletResponse response)
 	{
 		try
 		{

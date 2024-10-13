@@ -48,7 +48,7 @@ public class DeliveryController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/deliveries/{id}")
-	public Delivery getDelivery(@PathVariable("id") Long id)
+	public Delivery getDelivery(@PathVariable("id") String id)
 	{
 		return deliveryService.getDelivery(id);
 	}
@@ -119,7 +119,7 @@ public class DeliveryController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/deliveries/{id}")
-	public Delivery updateDelivery(@PathVariable("id") Long deliveryId, @RequestBody Delivery delivery)
+	public Delivery updateDelivery(@PathVariable("id") String deliveryId, @RequestBody Delivery delivery)
 	{
 		try
 		{
@@ -143,7 +143,7 @@ public class DeliveryController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/deliveries/{id}")
-	public void deleteDelivery(@PathVariable("id") Long deliveryId)
+	public void deleteDelivery(@PathVariable("id") String deliveryId)
 	{
 		try
 		{
@@ -168,7 +168,7 @@ public class DeliveryController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/deliveries/{id}/delivered")
-	public Delivery setDelivered(@PathVariable("id") Long deliveryId)
+	public Delivery setDelivered(@PathVariable("id") String deliveryId)
 	{
 		try
 		{

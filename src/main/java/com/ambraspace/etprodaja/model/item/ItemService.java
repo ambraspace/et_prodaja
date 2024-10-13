@@ -35,7 +35,7 @@ public class ItemService
 	}
 
 
-	public Item getOrderItem(Long orderNo, Long itemId)
+	public Item getOrderItem(String orderNo, Long itemId)
 	{
 		return itemRepository.findByOrderIdAndId(orderNo, itemId).orElse(null);
 	}
@@ -49,7 +49,7 @@ public class ItemService
 	}
 
 
-	public List<Item> getOrderItems(Long orderId, boolean onlyUndelivered)
+	public List<Item> getOrderItems(String orderId, boolean onlyUndelivered)
 	{
 
 		List<Item> retVal = new ArrayList<>();

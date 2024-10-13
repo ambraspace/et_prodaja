@@ -22,8 +22,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
@@ -64,8 +62,8 @@ public class Order
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@OrderNoSequence(name = "order_no_seq")
+	private String id;  // "N-" + year + sequence no. (N-2023-001)
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Warehouse warehouse;

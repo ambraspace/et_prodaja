@@ -11,10 +11,10 @@ public interface DeliveryItemRepository extends CrudRepository<DeliveryItem, Lon
 {
 
 	@EntityGraph("deliveryItem")
-	Iterable<DeliveryItem> findByDeliveryId(Long deliveryId);
+	Iterable<DeliveryItem> findByDeliveryId(String deliveryId);
 
 
 	@EntityGraph("deliveryItem-with-details")
-	Optional<DeliveryItem> findByDeliveryIdAndId(Long deliveryId, Long id);
+	Optional<DeliveryItem> findByDeliveryIdAndId(String deliveryId, Long id);
 
 }

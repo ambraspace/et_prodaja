@@ -544,7 +544,7 @@ public class OfferWorkflowTests
 
 		deliveries.set(2, deliveryControllerTestComponent.updateDelivery(deliveries.get(2).getId(), String.format("""
 {
-	"id":%d,
+	"id":"%s",
 	"supplier":
 	{
 		"id":%d

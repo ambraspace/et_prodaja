@@ -24,7 +24,7 @@ public interface ItemRepository extends CrudRepository<Item, Long>, PagingAndSor
 
 
 	@EntityGraph("order-items")
-	Optional<Item> findByOrderIdAndId(Long orderId, Long id);
+	Optional<Item> findByOrderIdAndId(String orderId, Long id);
 
 
 	@EntityGraph("items")
@@ -32,7 +32,7 @@ public interface ItemRepository extends CrudRepository<Item, Long>, PagingAndSor
 
 
 	@EntityGraph("items")
-	Iterable<Item> findByOrderId(Long orderId);
+	Iterable<Item> findByOrderId(String orderId);
 
 	@Query("""
 SELECT DISTINCT i FROM Item i LEFT JOIN i.deliveryItems di
@@ -44,7 +44,7 @@ HAVING i.quantity > SUM(COALESCE(di.quantity, 0))
 ORDER BY i.id
 			""")
 	@EntityGraph("items")
-	Iterable<Item> findByOrderIdOnlyUndelivered(@Param("orderId") Long orderId);
+	Iterable<Item> findByOrderIdOnlyUndelivered(@Param("orderId") String orderId);
 
 
 	@Query(value = """
