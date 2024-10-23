@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.8</version>
+		<version>3.3.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ambraspace</groupId>
@@ -14,7 +14,8 @@
 	<name>et-prodaja</name>
 	<description>Izrada ponuda, praćenje nabavke</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>23</java.version>
+		<maven.compiler.proc>full</maven.compiler.proc>
 	</properties>
 	<dependencies>
 		<dependency>
