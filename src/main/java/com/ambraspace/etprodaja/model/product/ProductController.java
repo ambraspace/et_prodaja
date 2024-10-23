@@ -1,5 +1,6 @@
 package com.ambraspace.etprodaja.model.product;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -46,8 +47,8 @@ public class ProductController
 							@Schema(implementation = ErrorResponse.class))
 			})
 	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
+//	@SecurityRequirement(name = "JWT")
+//	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/products")
 	public Page<Product> getProducts(
 			@Parameter(description = "Search query", required = false)
@@ -60,12 +61,12 @@ public class ProductController
 			@RequestParam(name = "t", required = false) List<String> tags,
 			@Parameter(description = "Limit products to specified Category ID", required = false)
 			@RequestParam(name = "ct", required = false) Long categoryId,
-			@ParameterObject @PageableDefault(sort = "name") Pageable pageable)
+			@ParameterObject @PageableDefault(sort = "name") Pageable pageable, Principal principal)
 	{
 		try
 		{
 			Page<Product> retVal =
-			productService.getProducts(query, includeComments, warehouseId, tags, categoryId, pageable);
+			productService.getProducts(query, includeComments, warehouseId, tags, categoryId, pageable, principal);
 			return retVal;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

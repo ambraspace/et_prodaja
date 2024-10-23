@@ -61,8 +61,16 @@ public class SecurityConfig
         http
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers("/api/authenticate", "/api/images/**", "/swagger-ui/**", "/v3/api-docs/**", "/error")
-                        .permitAll()
+                    .requestMatchers(
+                    		"/api/authenticate",
+                    		"/api/images/**",
+                    		"/swagger-ui/**",
+                    		"/v3/api-docs/**",
+                    		"/error",
+                    		"/api/categories",
+                    		"/api/products",
+                    		"/api/tags/search"
+            		).permitAll()
                     .anyRequest()
                         .authenticated())
             .exceptionHandling(exception ->

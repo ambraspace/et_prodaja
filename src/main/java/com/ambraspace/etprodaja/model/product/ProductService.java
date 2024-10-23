@@ -3,6 +3,7 @@ package com.ambraspace.etprodaja.model.product;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ProductService
 
 
 	@Transactional(readOnly = true)
-	public Page<Product> getProducts(String query, Boolean includeComments, Long warehouseId, List<String> tagIds, Long categoryId, Pageable pageable)
+	public Page<Product> getProducts(String query, Boolean includeComments, Long warehouseId, List<String> tagIds, Long categoryId, Pageable pageable, Principal principal)
 	{
 
 		Page<Long> productIds;
@@ -196,6 +197,8 @@ public class ProductService
 			retVal = getProductsWithPreviews(productIds.getContent(), pageable.getSort());
 			retVal.forEach(p -> productRepository.getProductWithCategoryAndTags(p.getId()));
 			fillTransientFields(warehouseId, retVal);
+			if (principal == null)
+				cleanupForPublic(retVal);
 		}
 
 		return new PageImpl<Product>(retVal, pageable, productIds.getTotalElements());
@@ -307,6 +310,21 @@ public class ProductService
 	}
 
 
+	private void cleanupForPublic(List<Product> products)
+	{
+
+		for (Product p:products)
+		{
+			p.setComment("");
+			p.setOfferedQty(BigDecimal.ZERO);
+			p.setOrderedQty(BigDecimal.ZERO);
+			p.setPurchasePrice(BigDecimal.ZERO);
+			p.setRepairableQty(BigDecimal.ZERO);
+		}
+		
+	}
+
+
 	private List<Product> getProductsWithPreviews(List<Long> productIds, Sort sort)
 	{
 		List<Product> retVal = new ArrayList<Product>();
@@ -378,7 +396,7 @@ public class ProductService
 
 		List<Product> modifiedProducts = new ArrayList<Product>();
 
-		getProducts(null, false, null, List.of(tagId), null, Pageable.unpaged())
+		getProducts(null, false, null, List.of(tagId), null, Pageable.unpaged(), null)
 		.forEach(p -> {
 			p.getTags().removeIf(t -> t.getName().equals(tagId));
 			modifiedProducts.add(p);

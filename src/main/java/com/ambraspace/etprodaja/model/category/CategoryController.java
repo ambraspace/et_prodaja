@@ -38,8 +38,8 @@ public class CategoryController
 							@Schema(implementation = ErrorResponse.class))
 			})
 	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
+//	@SecurityRequirement(name = "JWT")
+//	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/categories")
 	public List<Category> getCategories()
 	{

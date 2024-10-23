@@ -141,8 +141,8 @@ public class TagController
 							@Schema(implementation = ErrorResponse.class))
 			})
 	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
+//	@SecurityRequirement(name = "JWT")
+//	@RolesAllowed({"ADMIN", "USER", "CUSTOMER"})
 	@GetMapping("/api/tags/search")
 	public List<Tag> searchTags(@RequestParam(required = true, name = "q") String query)
 	{
