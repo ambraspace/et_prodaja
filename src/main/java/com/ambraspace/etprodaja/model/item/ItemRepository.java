@@ -50,14 +50,9 @@ ORDER BY i.id
 	@Query(value = """
 			SELECT i FROM Item i LEFT JOIN i.deliveryItems di
 			WHERE i.order IS NOT NULL AND i.order.status = 'CLOSED'
-			GROUP BY i.id
+			GROUP BY i.id, i.quantity
 			HAVING i.quantity > SUM(COALESCE(di.quantity, 0))
-			""", countQuery = """
-			SELECT i FROM Item i LEFT JOIN i.deliveryItems di
-			WHERE i.order IS NOT NULL AND i.order.status = 'CLOSED'
-			GROUP BY i.id
-			HAVING i.quantity > SUM(COALESCE(di.quantity, 0))
-					""")
+			""")
 	@EntityGraph("delivery-items")
 	Page<Item> findOnlyUndelivered(Pageable pageable);
 
