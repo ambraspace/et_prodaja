@@ -203,7 +203,7 @@ public class ReportingService
 		font.setBold(true);
 		headerStyle.setFont(font);
 
-		List<String> columns = List.of("RB", "Ponuda", "Proizvod", "Ref.", "JM", "Kol.", "Cijena", "Vrijednost");
+		List<String> columns = List.of("RB", "Ponuda", "Kupac",  "Proizvod", "Ref.", "JM", "Kol.", "Cijena", "Vrijednost");
 
 		for (int i=0; i<columns.size(); i++)
 		{
@@ -232,24 +232,27 @@ public class ReportingService
 			currentCell.setCellValue(items.get(i).getOffer().getId());
 
 			currentCell = itemRow.createCell(2);
-			currentCell.setCellValue(items.get(i).getProductName());
+			currentCell.setCellValue(items.get(i).getOffer().getCompany().getName());
 
 			currentCell = itemRow.createCell(3);
-			currentCell.setCellValue(items.get(i).getStockInfo().getCustomerReference());
+			currentCell.setCellValue(items.get(i).getProductName());
 
 			currentCell = itemRow.createCell(4);
-			currentCell.setCellValue(items.get(i).getStockInfo().getProduct().getUnit());
+			currentCell.setCellValue(items.get(i).getStockInfo().getCustomerReference());
 
 			currentCell = itemRow.createCell(5);
-			currentCell.setCellValue(items.get(i).getQuantity().doubleValue());
+			currentCell.setCellValue(items.get(i).getStockInfo().getProduct().getUnit());
 
 			currentCell = itemRow.createCell(6);
-			currentCell.setCellValue(items.get(i).getStockInfo().getUnitPrice().doubleValue());
+			currentCell.setCellValue(items.get(i).getQuantity().doubleValue());
 
 			currentCell = itemRow.createCell(7);
-			currentCell.setCellFormula("F" + (i+2) + "*G" + (i+2));
+			currentCell.setCellValue(items.get(i).getStockInfo().getUnitPrice().doubleValue());
 
-			for (int j = 0; j < 8; j++)
+			currentCell = itemRow.createCell(8);
+			currentCell.setCellFormula("G" + (i+2) + "*H" + (i+2));
+
+			for (int j = 0; j < 9; j++)
 			{
 				itemRow.getCell(j).setCellStyle(itemStyle);
 			}
@@ -258,12 +261,13 @@ public class ReportingService
 
 		sheet.setColumnWidth(0, 5 * 256);
 		sheet.setColumnWidth(1, 20 * 256);
-		sheet.setColumnWidth(2, 50 * 256);
-		sheet.setColumnWidth(3, 30 * 256);
-		sheet.setColumnWidth(4, 10 * 256);
+		sheet.setColumnWidth(2, 30 * 256);
+		sheet.setColumnWidth(3, 50 * 256);
+		sheet.setColumnWidth(4, 30 * 256);
 		sheet.setColumnWidth(5, 10 * 256);
-		sheet.setColumnWidth(6, 15 * 256);
-		sheet.setColumnWidth(7, 20 * 256);
+		sheet.setColumnWidth(6, 10 * 256);
+		sheet.setColumnWidth(7, 15 * 256);
+		sheet.setColumnWidth(8, 20 * 256);
 
 		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
