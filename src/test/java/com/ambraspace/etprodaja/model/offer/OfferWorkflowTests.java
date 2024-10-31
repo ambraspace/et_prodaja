@@ -367,19 +367,19 @@ public class OfferWorkflowTests
 		assertEquals(offerControllerTestComponent.getOffers(null, null, null, null).size(), 6);
 		assertEquals(offerControllerTestComponent.getOffers("admin", null, null, null).size(), 6);
 		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), null, null).size(), 3);
-		assertEquals(offerControllerTestComponent.getOffers(null, null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACTIVE, null).size(), 2);
+		assertEquals(offerControllerTestComponent.getOffers(null, null, List.of(com.ambraspace.etprodaja.model.offer.Offer.Status.ACTIVE), null).size(), 2);
 		assertEquals(offerControllerTestComponent.getOffers(null, null, null, products.get(0).getId()).size(), 2);
 		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), null, null).size(), 3);
-		assertEquals(offerControllerTestComponent.getOffers("admin", null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, null).size(), 3);
+		assertEquals(offerControllerTestComponent.getOffers("admin", null, List.of(com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED), null).size(), 3);
 		assertEquals(offerControllerTestComponent.getOffers("admin", null, null, products.get(1).getId()).size(), 2);
-		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, null).size(), 2);
+		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), List.of(com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED), null).size(), 2);
 		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(2).getId(), null, products.get(2).getId()).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers(null, null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, products.get(3).getId()).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.CANCELED, null).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers(null, null, List.of(com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED), products.get(3).getId()).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), List.of(com.ambraspace.etprodaja.model.offer.Offer.Status.CANCELED), null).size(), 1);
 		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), null, products.get(2).getId()).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers("admin", null, com.ambraspace.etprodaja.model.offer.Offer.Status.ACTIVE, products.get(2).getId()).size(), 2);
-		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, products.get(1).getId()).size(), 1);
-		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED, products.get(1).getId()).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers("admin", null, List.of(com.ambraspace.etprodaja.model.offer.Offer.Status.ACTIVE), products.get(2).getId()).size(), 2);
+		assertEquals(offerControllerTestComponent.getOffers(null, companies.get(1).getId(), List.of(com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED), products.get(1).getId()).size(), 1);
+		assertEquals(offerControllerTestComponent.getOffers("admin", companies.get(1).getId(), List.of(com.ambraspace.etprodaja.model.offer.Offer.Status.ACCEPTED), products.get(1).getId()).size(), 1);
 
 
 		List<Order> orders = orderControllerTestComponent.getOrders(null, null, false);

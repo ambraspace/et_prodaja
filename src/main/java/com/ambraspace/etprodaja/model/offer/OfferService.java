@@ -31,7 +31,7 @@ public class OfferService
 
 	public Offer getOffer(String offerId)
 	{
-		Offer retVal = offerRepository.findById(offerId).orElse(null); 
+		Offer retVal = offerRepository.findById(offerId).orElse(null);
 		if (retVal != null)
 			fillTransientFields(List.of(retVal));
 		return retVal;
@@ -39,7 +39,7 @@ public class OfferService
 
 
 	@Transactional(readOnly = true)
-	public Page<Offer> getOffers(String username, Long companyId, Status status, Long productId, Pageable pageable)
+	public Page<Offer> getOffers(String username, Long companyId, List<Status> statuses, Long productId, Pageable pageable)
 	{
 
 		Page<String> offerIds;
@@ -48,7 +48,7 @@ public class OfferService
 		{
 			if (companyId == null)
 			{
-				if (status == null)
+				if (statuses == null || statuses.size() == 0)
 				{
 					if (productId != null)
 					{
@@ -59,13 +59,13 @@ public class OfferService
 				} else {
 					if (productId != null)
 					{
-						offerIds = getOffersByStatusAndProductId(status, productId, pageable);
+						offerIds = getOffersByStatusAndProductId(statuses, productId, pageable);
 					} else {
-						offerIds = getOffersByStatus(status, pageable);
+						offerIds = getOffersByStatus(statuses, pageable);
 					}
 				}
 			} else {
-				if (status == null)
+				if (statuses == null || statuses.size() == 0)
 				{
 					if (productId != null)
 					{
@@ -76,16 +76,16 @@ public class OfferService
 				} else {
 					if (productId != null)
 					{
-						offerIds = getOffersByCompanyIdAndStatusAndProductId(companyId, status, productId, pageable);
+						offerIds = getOffersByCompanyIdAndStatusAndProductId(companyId, statuses, productId, pageable);
 					} else {
-						offerIds = getOffersByCompanyIdAndStatus(companyId, status, pageable);
+						offerIds = getOffersByCompanyIdAndStatus(companyId, statuses, pageable);
 					}
 				}
 			}
 		} else {
 			if (companyId == null)
 			{
-				if (status == null)
+				if (statuses == null || statuses.size() == 0)
 				{
 					if (productId != null)
 					{
@@ -96,13 +96,13 @@ public class OfferService
 				} else {
 					if (productId != null)
 					{
-						offerIds = getOffersByUsernameAndStatusAndProductId(username, status, productId, pageable);
+						offerIds = getOffersByUsernameAndStatusAndProductId(username, statuses, productId, pageable);
 					} else {
-						offerIds = getOffersByUsernameAndStatus(username, status, pageable);
+						offerIds = getOffersByUsernameAndStatus(username, statuses, pageable);
 					}
 				}
 			} else {
-				if (status == null)
+				if (statuses == null || statuses.size() == 0)
 				{
 					if (productId != null)
 					{
@@ -113,9 +113,9 @@ public class OfferService
 				} else {
 					if (productId != null)
 					{
-						offerIds = getOffersByUsernameAndCompanyIdAndStatusAndProductId(username, companyId, status, productId, pageable);
+						offerIds = getOffersByUsernameAndCompanyIdAndStatusAndProductId(username, companyId, statuses, productId, pageable);
 					} else {
-						offerIds = getOffersByUsernameAndCompanyIdAndStatus(username, companyId, status, pageable);
+						offerIds = getOffersByUsernameAndCompanyIdAndStatus(username, companyId, statuses, pageable);
 					}
 				}
 			}
@@ -129,17 +129,17 @@ public class OfferService
 	}
 
 
-	private Page<String> getOffersByUsernameAndCompanyIdAndStatus(String username, Long companyId, Status status,
+	private Page<String> getOffersByUsernameAndCompanyIdAndStatus(String username, Long companyId, List<Status> statuses,
 			Pageable pageable)
 	{
-		return offerRepository.findByUserUsernameAndCompanyIdAndStatus(username, companyId, status, pageable);
+		return offerRepository.findByUserUsernameAndCompanyIdAndStatus(username, companyId, statuses, pageable);
 	}
 
 
-	private Page<String> getOffersByUsernameAndCompanyIdAndStatusAndProductId(String username, Long companyId, Status status,
+	private Page<String> getOffersByUsernameAndCompanyIdAndStatusAndProductId(String username, Long companyId, List<Status> statuses,
 			Long productId, Pageable pageable)
 	{
-		return offerRepository.findByUserUsernameAndCompanyIdAndStatusAndProductId(username, companyId, status, productId, pageable);
+		return offerRepository.findByUserUsernameAndCompanyIdAndStatusAndProductId(username, companyId, statuses, productId, pageable);
 	}
 
 
@@ -156,15 +156,15 @@ public class OfferService
 	}
 
 
-	private Page<String> getOffersByUsernameAndStatus(String username, Status status, Pageable pageable)
+	private Page<String> getOffersByUsernameAndStatus(String username, List<Status> statuses, Pageable pageable)
 	{
-		return offerRepository.findByUserUsernameAndStatus(username, status, pageable);
+		return offerRepository.findByUserUsernameAndStatus(username, statuses, pageable);
 	}
 
 
-	private Page<String> getOffersByUsernameAndStatusAndProductId(String username, Status status, Long productId, Pageable pageable)
+	private Page<String> getOffersByUsernameAndStatusAndProductId(String username, List<Status> statuses, Long productId, Pageable pageable)
 	{
-		return offerRepository.findByUserUsernameAndStatusAndProductId(username, status, productId, pageable);
+		return offerRepository.findByUserUsernameAndStatusAndProductId(username, statuses, productId, pageable);
 	}
 
 
@@ -180,15 +180,15 @@ public class OfferService
 	}
 
 
-	private Page<String> getOffersByCompanyIdAndStatus(Long companyId, Status status, Pageable pageable)
+	private Page<String> getOffersByCompanyIdAndStatus(Long companyId, List<Status> statuses, Pageable pageable)
 	{
-		return offerRepository.findByCompanyIdAndStatus(companyId, status, pageable);
+		return offerRepository.findByCompanyIdAndStatus(companyId, statuses, pageable);
 	}
 
 
-	private Page<String> getOffersByCompanyIdAndStatusAndProductId(Long companyId, Status status, Long productId, Pageable pageable)
+	private Page<String> getOffersByCompanyIdAndStatusAndProductId(Long companyId, List<Status> statuses, Long productId, Pageable pageable)
 	{
-		return offerRepository.findByCompanyIdAndStatusAndProductId(companyId, status, productId, pageable);
+		return offerRepository.findByCompanyIdAndStatusAndProductId(companyId, statuses, productId, pageable);
 	}
 
 
@@ -204,15 +204,15 @@ public class OfferService
 	}
 
 
-	private Page<String> getOffersByStatus(Status status, Pageable pageable)
+	private Page<String> getOffersByStatus(List<Status> statuses, Pageable pageable)
 	{
-		return offerRepository.findByStatus(status, pageable);
+		return offerRepository.findByStatus(statuses, pageable);
 	}
 
 
-	private Page<String> getOffersByStatusAndProductId(Status status, Long productId, Pageable pageable)
+	private Page<String> getOffersByStatusAndProductId(List<Status> statuses, Long productId, Pageable pageable)
 	{
-		return offerRepository.findByStatusAndProductId(status, productId, pageable);
+		return offerRepository.findByStatusAndProductId(statuses, productId, pageable);
 	}
 
 

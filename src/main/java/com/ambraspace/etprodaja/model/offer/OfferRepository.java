@@ -25,12 +25,12 @@ FROM
 WHERE
 	o.user.username = :username AND
 	o.company.id = :companyId AND
-	o.status = :status
+	o.status IN (:statuses)
 			""")
 	Page<String> findByUserUsernameAndCompanyIdAndStatus(
 			@Param("username") String username,
 			@Param("companyId") Long companyId,
-			@Param("status") Status status,
+			@Param("statuses") List<Status> statuses,
 			Pageable pageable);
 
 
@@ -42,13 +42,13 @@ FROM
 WHERE
 	o.user.username = :username AND
 	o.company.id = :companyId AND
-	o.status = :status AND
+	o.status IN (:statuses) AND
 	i.stockInfo.product.id = :product
 			""")
 	Page<String> findByUserUsernameAndCompanyIdAndStatusAndProductId(
 			@Param("username") String username,
 			@Param("companyId") Long companyId,
-			@Param("status") Status status,
+			@Param("statuses") List<Status> statuses,
 			@Param("product") Long productId,
 			Pageable pageable);
 
@@ -92,11 +92,11 @@ FROM
 	Offer o
 WHERE
 	o.user.username = :username AND
-	o.status = :status
+	o.status IN (:statuses)
 			""")
 	Page<String> findByUserUsernameAndStatus(
 			@Param("username") String username,
-			@Param("status") Status status,
+			@Param("statuses") List<Status> statuses,
 			Pageable pageable);
 
 
@@ -107,12 +107,12 @@ FROM
 	Offer o JOIN o.items i
 WHERE
 	o.user.username = :username AND
-	o.status = :status AND
+	o.status IN (:statuses) AND
 	i.stockInfo.product.id = :product
 			""")
 	Page<String> findByUserUsernameAndStatusAndProductId(
 			@Param("username") String username,
-			@Param("status") Status status,
+			@Param("statuses") List<Status> statuses,
 			@Param("product") Long productId,
 			Pageable pageable);
 
@@ -152,11 +152,11 @@ FROM
 	Offer o
 WHERE
 	o.company.id = :companyId AND
-	o.status = :status
+	o.status IN (:statuses)
 			""")
 	Page<String> findByCompanyIdAndStatus(
 			@Param("companyId") Long companyId,
-			@Param("status") Status status,
+			@Param("statuses") List<Status> statuses,
 			Pageable pageable);
 
 
@@ -167,12 +167,12 @@ FROM
 	Offer o JOIN o.items i
 WHERE
 	o.company.id = :companyId AND
-	o.status = :status AND
+	o.status IN (:statuses) AND
 	i.stockInfo.product.id = :product
 			""")
 	Page<String> findByCompanyIdAndStatusAndProductId(
 			@Param("companyId") Long companyId,
-			@Param("status") Status status,
+			@Param("statuses") List<Status> statuses,
 			@Param("product") Long productId,
 			Pageable pageable);
 
@@ -211,10 +211,10 @@ SELECT
 FROM
 	Offer o
 WHERE
-	o.status = :status
+	o.status IN (:statuses)
 			""")
 	Page<String> findByStatus(
-			@Param("status") Status status,
+			@Param("statuses") List<Status> statuses,
 			Pageable pageable);
 
 
@@ -224,11 +224,11 @@ SELECT DISTINCT
 FROM
 	Offer o JOIN o.items i
 WHERE
-	o.status = :status AND
+	o.status IN (:statuses) AND
 	i.stockInfo.product.id = :product
 			""")
 	Page<String> findByStatusAndProductId(
-			@Param("status") Status status,
+			@Param("statuses") List<Status> statuses,
 			@Param("product") Long productId,
 			Pageable pageable);
 

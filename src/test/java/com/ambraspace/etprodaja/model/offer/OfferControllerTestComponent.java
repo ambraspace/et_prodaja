@@ -61,7 +61,7 @@ public class OfferControllerTestComponent {
 	}
 
 
-	public List<Offer> getOffers(String username, Long companyId, Status status, Long productId) throws Exception
+	public List<Offer> getOffers(String username, Long companyId, List<Status> statuses, Long productId) throws Exception
 	{
 
 		MockHttpServletRequestBuilder builder = get("/api/offers");
@@ -72,8 +72,11 @@ public class OfferControllerTestComponent {
 		if (companyId != null)
 			builder.param("c", "" + companyId);
 
-		if (status != null)
-			builder.param("s", status.name());
+		if (statuses != null && statuses.size() > 0)
+		{
+			String[] sg = statuses.stream().map(s -> s.name()).toArray(String[] ::new);
+			builder.param("s", sg);
+		}
 
 		if (productId != null)
 			builder.param("p", "" + productId);

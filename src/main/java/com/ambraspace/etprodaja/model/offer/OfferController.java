@@ -1,6 +1,7 @@
 package com.ambraspace.etprodaja.model.offer;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,13 +80,13 @@ public class OfferController
 			@RequestParam(name = "u", required = false) String username,
 			@Parameter(description = "Company ID", required = false)
 			@RequestParam(name = "c", required = false) Long companyId,
-			@Parameter(description = "Offer status", required = false)
-			@RequestParam(name = "s", required = false) Status status,
+			@Parameter(description = "Offer statuses", required = false)
+			@RequestParam(name = "s", required = false) List<Status> statuses,
 			@Parameter(description = "Product", required = false)
 			@RequestParam(name = "p", required = false) Long productId,
 			@ParameterObject @PageableDefault(sort = {"offerDate", "id"}, direction = Direction.DESC) Pageable pageable)
 	{
-		return offerService.getOffers(username, companyId, status, productId, pageable);
+		return offerService.getOffers(username, companyId, statuses, productId, pageable);
 	}
 
 
