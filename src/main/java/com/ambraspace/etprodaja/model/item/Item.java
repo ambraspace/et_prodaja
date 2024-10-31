@@ -55,6 +55,7 @@ import lombok.Setter;
 						@NamedAttributeNode("delivery")
 				}),
 				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
+						@NamedAttributeNode("warehouse"),
 						@NamedAttributeNode("product")
 				})
 		}),

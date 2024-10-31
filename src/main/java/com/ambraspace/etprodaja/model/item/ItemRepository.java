@@ -27,7 +27,7 @@ public interface ItemRepository extends CrudRepository<Item, Long>, PagingAndSor
 	Optional<Item> findByOrderIdAndId(String orderId, Long id);
 
 
-	@EntityGraph("items")
+	@EntityGraph("offer-items")
 	Iterable<Item> findByOfferId(String offerId);
 
 
