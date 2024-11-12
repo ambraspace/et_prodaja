@@ -55,9 +55,12 @@ import lombok.Setter;
 						@NamedAttributeNode("delivery")
 				}),
 				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
-						@NamedAttributeNode("warehouse"),
-						@NamedAttributeNode("product")
-				})
+						@NamedAttributeNode(value = "warehouse", subgraph = "item.stockInfo.warehouse"),
+						@NamedAttributeNode("product"),
+				}),
+				@NamedSubgraph(name = "item.stockInfo.warehouse", attributeNodes = {
+						@NamedAttributeNode("company")
+				}),
 		}),
 		@NamedEntityGraph(name = "order-items", attributeNodes = {
 				@NamedAttributeNode("offer"),
