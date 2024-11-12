@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.product.Product;
 
 import jakarta.annotation.PostConstruct;
@@ -30,6 +33,9 @@ public class PreviewService
 
 	@Autowired
 	private PreviewRepository previewRepository;
+
+	@Autowired
+	private ItemService itemService;
 
 	@Value("${et-prodaja.storage-location}")
 	private String storageLocation;
@@ -128,18 +134,19 @@ public class PreviewService
 
 		List<Preview> orphans = new ArrayList<Preview>();
 		previewRepository.findByProductIsNull().forEach(pr -> {
-			new File(storageLocation, pr.getFileName()).delete();
 			orphans.add(pr);
 		});
 		previewRepository.deleteAll(orphans);
 
-		List<String> images = new ArrayList<String>();
-		List<String> imagesInTheDb = new ArrayList<String>();
+		Set<String> images = new HashSet<String>();
+		Set<String> imagesInTheDb = new HashSet<String>();
 
 		File directory = new File(storageLocation);
 		List.of(directory.list()).forEach(images::add);
 
 		previewRepository.findAll().forEach(pr -> imagesInTheDb.add(pr.getFileName()));
+
+		imagesInTheDb.addAll(itemService.getItemPreviews());
 
 		images.removeAll(imagesInTheDb);
 

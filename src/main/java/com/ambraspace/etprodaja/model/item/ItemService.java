@@ -250,4 +250,12 @@ public class ItemService
 		return itemRepository.getOrderedStockInfoQty(stockInfo);
 	}
 
+
+	public List<String> getItemPreviews()
+	{
+		List<String> retVal = new ArrayList<String>();
+		itemRepository.findItemPreviews().forEach(retVal::add);
+		return retVal;
+	}
+
 }

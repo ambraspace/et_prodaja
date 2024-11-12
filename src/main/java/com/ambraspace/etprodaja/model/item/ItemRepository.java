@@ -149,4 +149,10 @@ WHERE
 	BigDecimal getOrderedStockInfoQty(Long id);
 
 
+	@Query("""
+SELECT DISTINCT i.preview FROM Item i
+			""")
+	Iterable<String> findItemPreviews();
+
+
 }
