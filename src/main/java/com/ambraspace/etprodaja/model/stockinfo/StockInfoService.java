@@ -1,6 +1,5 @@
 package com.ambraspace.etprodaja.model.stockinfo;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class StockInfoService
 	{
 		StockInfo retVal = stockInfoRepository.findByProductIdAndId(productId, id).orElse(null);
 		if (retVal != null)
-			fillTransientFields(List.of(retVal));
+			itemService.fillStockInfoTransientFields(List.of(retVal));
 		return retVal;
 	}
 
@@ -38,7 +37,7 @@ public class StockInfoService
 	public Page<StockInfo> getStockInfosByProduct(Long productId, Pageable pageable)
 	{
 		Page<StockInfo> retVal = stockInfoRepository.findByProductId(productId, pageable);
-		fillTransientFields(retVal.getContent());
+		itemService.fillStockInfoTransientFields(retVal.getContent());
 		return retVal;
 	}
 
@@ -65,7 +64,7 @@ public class StockInfoService
 
 		StockInfo retVal = stockInfoRepository.save(fromRep);
 
-		fillTransientFields(List.of(retVal));
+		itemService.fillStockInfoTransientFields(List.of(retVal));
 
 		return retVal;
 
@@ -108,21 +107,5 @@ public class StockInfoService
 
 	}
 
-
-	private void fillTransientFields(List<StockInfo> stockInfos)
-	{
-
-		for (StockInfo si:stockInfos)
-		{
-			BigDecimal offeredQty = itemService.getOfferedStockInfo(si.getId());
-			BigDecimal orderedQty = itemService.getOrderedStockInfo(si.getId());
-			si.setAvailableQuantity(
-					si.getQuantity()
-						.subtract(offeredQty == null ? BigDecimal.ZERO : offeredQty)
-						.subtract(orderedQty == null ? BigDecimal.ZERO : orderedQty)
-			);
-		}
-
-	}
 
 }

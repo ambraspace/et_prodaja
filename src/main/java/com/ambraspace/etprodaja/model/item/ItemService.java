@@ -15,6 +15,7 @@ import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItem;
 import com.ambraspace.etprodaja.model.offer.Offer;
 import com.ambraspace.etprodaja.model.offer.OfferService;
 import com.ambraspace.etprodaja.model.product.Product;
+import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 
 import jakarta.persistence.Tuple;
 
@@ -45,6 +46,8 @@ public class ItemService
 	{
 		List<Item> retVal = new ArrayList<>();
 		itemRepository.findByOfferId(offerNo).forEach(retVal::add);
+		List<StockInfo> sis = retVal.stream().map(i -> i.getStockInfo()).toList();
+		fillStockInfoTransientFields(sis);
 		return retVal;
 	}
 
@@ -256,6 +259,24 @@ public class ItemService
 		List<String> retVal = new ArrayList<String>();
 		itemRepository.findItemPreviews().forEach(retVal::add);
 		return retVal;
+	}
+
+
+
+	public void fillStockInfoTransientFields(List<StockInfo> stockInfos)
+	{
+
+		for (StockInfo si:stockInfos)
+		{
+			BigDecimal offeredQty = getOfferedStockInfo(si.getId());
+			BigDecimal orderedQty = getOrderedStockInfo(si.getId());
+			si.setAvailableQuantity(
+					si.getQuantity()
+						.subtract(offeredQty == null ? BigDecimal.ZERO : offeredQty)
+						.subtract(orderedQty == null ? BigDecimal.ZERO : orderedQty)
+			);
+		}
+
 	}
 
 }
