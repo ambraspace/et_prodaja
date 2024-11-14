@@ -79,9 +79,9 @@ public class ItemService
 
 
 	@Transactional
-	Page<Item> getUnorderedItems(Pageable pageable)
+	Page<Item> getUnorderedItems(Long supplierId, Pageable pageable)
 	{
-		Page<Item> items = itemRepository.findOnlyUndelivered(pageable);
+		Page<Item> items = itemRepository.findOnlyUndelivered(supplierId, pageable);
 		List<Tuple> qtys = itemRepository.getOrderedQtys(items.getContent()
 				.stream().map(i -> i.getId()).collect(Collectors.toList()));
 		for (Tuple t:qtys)

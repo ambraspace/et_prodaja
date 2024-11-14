@@ -49,12 +49,15 @@ ORDER BY i.id
 
 	@Query(value = """
 			SELECT i FROM Item i LEFT JOIN i.deliveryItems di
-			WHERE i.order IS NOT NULL AND i.order.status = 'CLOSED'
+			WHERE
+				i.order IS NOT NULL AND
+				i.order.status = 'CLOSED' AND
+				i.order.warehouse.company.id = :supplierId
 			GROUP BY i.id, i.quantity
 			HAVING i.quantity > SUM(COALESCE(di.quantity, 0))
 			""")
 	@EntityGraph("delivery-items")
-	Page<Item> findOnlyUndelivered(Pageable pageable);
+	Page<Item> findOnlyUndelivered(Long supplierId, Pageable pageable);
 
 
 	@Query("""

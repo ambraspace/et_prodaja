@@ -142,10 +142,11 @@ public class ItemController
 	@GetMapping("/api/items")
 	@JsonView(Views.Item.class)
 	public Page<Item> getUnorderedItems(
+		@RequestParam("s") Long supplierId,
 		Pageable pageable
 	)
 	{
-		return itemService.getUnorderedItems(pageable);
+		return itemService.getUnorderedItems(supplierId, pageable);
 	}
 
 
