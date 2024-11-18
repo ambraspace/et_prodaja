@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ambraspace.etprodaja.model.item.Item;
-import com.ambraspace.etprodaja.model.item.ItemService;
+import com.ambraspace.etprodaja.model.offerItem.OfferItem;
+import com.ambraspace.etprodaja.model.offerItem.OfferItemService;
 import com.ambraspace.etprodaja.model.order.OrderService;
+import com.ambraspace.etprodaja.model.orderItem.OrderItem;
 import com.ambraspace.etprodaja.model.user.User;
 import com.ambraspace.etprodaja.model.user.UserService;
 
@@ -23,7 +24,7 @@ public class WorkflowService
 	private OrderService orderService;
 
 	@Autowired
-	private ItemService itemService;
+	private OfferItemService itemService;
 
 	@Autowired
 	private UserService userService;
@@ -37,12 +38,12 @@ public class WorkflowService
 
 
 	@Transactional
-	public Offer acceptOffer(String offerId)
+	public Offer acceptOffer(String offerId, List<OrderItem> orderItems)
 	{
 
 		Offer offer = offerService.acceptOffer(offerId);
 
-		orderService.orderItems(offer.getItems());
+		orderService.orderItems(orderItems);
 
 		return offer;
 
@@ -65,7 +66,7 @@ public class WorkflowService
 
 		Offer duplicatedOffer = offerService.duplicateOffer(fromRep, user);
 
-		List<Item> duplicatedItems = itemService.duplicateItems(fromRep.getItems(), duplicatedOffer);
+		List<OfferItem> duplicatedItems = itemService.duplicateItems(fromRep.getItems(), duplicatedOffer);
 
 		duplicatedOffer.getItems().addAll(duplicatedItems);
 

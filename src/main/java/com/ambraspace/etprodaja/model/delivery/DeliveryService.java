@@ -144,7 +144,7 @@ public class DeliveryService
 				for (DeliveryItem di : d.getDeliveryItems())
 				{
 					value = value.add(
-							di.getItem().getStockInfo().getUnitPrice()
+							di.getOrderItem().getStockInfo().getUnitPrice()
 							.multiply(di.getQuantity())
 							.setScale(2, RoundingMode.HALF_EVEN));
 				}

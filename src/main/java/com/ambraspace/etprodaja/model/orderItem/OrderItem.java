@@ -1,13 +1,19 @@
-package com.ambraspace.etprodaja.model.deliveryItem;
+package com.ambraspace.etprodaja.model.orderItem;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
 
-import com.ambraspace.etprodaja.model.delivery.Delivery;
-import com.ambraspace.etprodaja.model.orderItem.OrderItem;
+import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItem;
+import com.ambraspace.etprodaja.model.offerItem.OfferItem;
+import com.ambraspace.etprodaja.model.order.Order;
+import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
 import com.ambraspace.etprodaja.util.Views;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Entity;
@@ -16,37 +22,53 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-public class DeliveryItem
+public class OrderItem
 {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	private Delivery delivery;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	private Order order;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JsonView(value = {Views.OfferItem.class, Views.DeliveryItem.class})
-	private OrderItem orderItem;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JsonView(value = {Views.OrderItem.class, Views.DeliveryItem.class})
+	private OfferItem offerItem;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	private StockInfo stockInfo;
 
 	private BigDecimal quantity;
 
-	private String deliveryNote;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orderItem")
+	@JsonView(value = {Views.OfferItem.class, Views.OrderItem.class})
+	private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>();
 
 
-	void copyFieldsFrom(DeliveryItem original)
+	@JsonProperty(access = Access.READ_ONLY)
+	public BigDecimal getOutstandingQuantity()
 	{
-		if (original.getOrderItem() != null)
-			this.setOrderItem(original.getOrderItem());
-		this.setDeliveryNote(original.getDeliveryNote());
-		this.setQuantity(original.getQuantity());
+
+		if (deliveryItems == null || deliveryItems.size() == 0)
+			return quantity;
+
+		BigDecimal retVal = quantity;
+
+		for (DeliveryItem di:deliveryItems)
+		{
+			retVal = retVal.subtract(di.getQuantity());
+		}
+
+		return retVal;
+
 	}
 
 
@@ -57,7 +79,7 @@ public class DeliveryItem
 		Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
 		Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
 		if (thisEffectiveClass != oEffectiveClass) return false;
-		DeliveryItem other = (DeliveryItem) o;
+		OrderItem other = (OrderItem) o;
 		return getId() != null && Objects.equals(getId(), other.getId());
 	}
 

@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ambraspace.etprodaja.model.category.CategoryService;
-import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.preview.PreviewService;
-import com.ambraspace.etprodaja.model.stockinfo.StockInfoService;
 
 import jakarta.persistence.Tuple;
 
@@ -34,12 +32,6 @@ public class ProductService
 
 	@Autowired
 	private CategoryService categoryService;
-
-	@Autowired
-	private StockInfoService stockInfoService;
-
-	@Autowired
-	private ItemService itemService;
 
 
 	@Transactional(readOnly = true)
@@ -227,38 +219,34 @@ public class ProductService
 		if (warehouseId != null && warehouseId > 0)
 		{
 
-			List<Tuple> stockInfos = stockInfoService.getStockInfoByWarehouseIdAndProducts(warehouseId, products);
-			List<Tuple> itemDataForOffers = itemService.getItemDataForProductsInValidOffersByWarehouse(warehouseId, products);
-			List<Tuple> itemDataForOrders = itemService.getItemDataForOrderedProductsByWarehouse(warehouseId, products);
+			List<Tuple> stockQtysAndValues = productRepository.getWarehouseStockQtyAndValue(warehouseId, products);
+			List<Tuple> orderedQtysAndValues = productRepository.getWarehouseOrderedQtyAndValue(warehouseId, products);
+			List<Tuple> offeredQtysAndValues = productRepository.getOfferedQty(products);
 
 			products.forEach(p -> {
 
-				Tuple si = stockInfos.stream().filter(s -> p.getId().equals(s.get(0, Long.class))).findFirst().orElse(null);
-				Tuple dataForOffers = itemDataForOffers.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
-				Tuple dataForOrders = itemDataForOrders.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
+				Tuple stockTuple = stockQtysAndValues.stream().filter(t -> p.getId().equals(t.get(0, Long.class))).findFirst().orElse(null);
+				Tuple orderedTuple = orderedQtysAndValues.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
+				Tuple offeredTuple = offeredQtysAndValues.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
 
-				BigDecimal offeredQty = dataForOffers != null ? dataForOffers.get(1, BigDecimal.class) : BigDecimal.ZERO;
-				BigDecimal orderedQty = dataForOrders != null ? dataForOrders.get(1, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal stockQty = stockTuple != null ? stockTuple.get(1, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal orderedQty = orderedTuple != null ? orderedTuple.get(1, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal offeredQty = offeredTuple != null ? offeredTuple.get(1, BigDecimal.class) : BigDecimal.ZERO;
 
-				BigDecimal availableQty = (si != null ? si.get(1, BigDecimal.class) : BigDecimal.ZERO)
-						.subtract(offeredQty)
-						.subtract(orderedQty);
+				BigDecimal availableQty = stockQty.subtract(offeredQty).subtract(orderedQty);
 
-				BigDecimal offeredValue = dataForOffers != null ? dataForOffers.get(2, BigDecimal.class) : BigDecimal.ZERO;
-				BigDecimal orderedValue = dataForOrders != null ? dataForOrders.get(2, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal stockValue = stockTuple != null ? stockTuple.get(2, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal orderedValue = orderedTuple != null ? orderedTuple.get(2, BigDecimal.class) : BigDecimal.ZERO;
 
-				BigDecimal availableValue =
-						(si != null ? si.get(2, BigDecimal.class) : BigDecimal.ZERO)
-						.subtract(offeredValue)
-						.subtract(orderedValue);
+				BigDecimal availableValue = stockValue.subtract(orderedValue);
 
-				BigDecimal repairableQty = si != null ? si.get(3, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal repairableQty = stockTuple != null ? stockTuple.get(3, BigDecimal.class) : BigDecimal.ZERO;
 
 				p.setAvailableQty(availableQty);
 				p.setOfferedQty(offeredQty);
 				p.setOrderedQty(orderedQty);
-				p.setPurchasePrice(availableQty.compareTo(
-						BigDecimal.ZERO) == 0 ?
+				p.setPurchasePrice(
+						availableQty.compareTo(BigDecimal.ZERO) == 0 ?
 								BigDecimal.ZERO
 								: availableValue.divide(availableQty, 2, RoundingMode.HALF_EVEN));
 				p.setRepairableQty(repairableQty);
@@ -267,32 +255,28 @@ public class ProductService
 
 		} else {
 
-			List<Tuple> stockInfos = stockInfoService.getStockInfoByProducts(products);
-			List<Tuple> itemDataForOffers = itemService.getItemDataForProductsInValidOffers(products);
-			List<Tuple> itemDataForOrders = itemService.getItemDataForOrderedProducts(products);
+			List<Tuple> stockQtysAndValues = productRepository.getStockQtyAndValue(products);
+			List<Tuple> orderedQtysAndValues = productRepository.getOrderedQtyAndValue(products);
+			List<Tuple> offeredQtysAndValues = productRepository.getOfferedQty(products);
 
 			products.forEach(p -> {
 
-				Tuple si = stockInfos.stream().filter(s -> p.getId().equals(s.get(0, Long.class))).findFirst().orElse(null);
-				Tuple dataForOffers = itemDataForOffers.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
-				Tuple dataForOrders = itemDataForOrders.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
+				Tuple stockTuple = stockQtysAndValues.stream().filter(t -> p.getId().equals(t.get(0, Long.class))).findFirst().orElse(null);
+				Tuple orderedTuple = orderedQtysAndValues.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
+				Tuple offeredTuple = offeredQtysAndValues.stream().filter(o -> p.getId().equals(o.get(0, Long.class))).findFirst().orElse(null);
 
-				BigDecimal offeredQty = dataForOffers != null ? dataForOffers.get(1, BigDecimal.class) : BigDecimal.ZERO;
-				BigDecimal orderedQty = dataForOrders != null ? dataForOrders.get(1, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal stockQty = stockTuple != null ? stockTuple.get(1, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal orderedQty = orderedTuple != null ? orderedTuple.get(1, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal offeredQty = offeredTuple != null ? offeredTuple.get(1, BigDecimal.class) : BigDecimal.ZERO;
 
-				BigDecimal availableQty = (si != null ? si.get(1, BigDecimal.class) : BigDecimal.ZERO)
-						.subtract(offeredQty)
-						.subtract(orderedQty);
+				BigDecimal availableQty = stockQty.subtract(offeredQty).subtract(orderedQty);
 
-				BigDecimal offeredValue = dataForOffers != null ? dataForOffers.get(2, BigDecimal.class) : BigDecimal.ZERO;
-				BigDecimal orderedValue = dataForOrders != null ? dataForOrders.get(2, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal stockValue = stockTuple != null ? stockTuple.get(2, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal orderedValue = orderedTuple != null ? orderedTuple.get(2, BigDecimal.class) : BigDecimal.ZERO;
 
-				BigDecimal availableValue =
-						(si != null ? si.get(2, BigDecimal.class) : BigDecimal.ZERO)
-						.subtract(offeredValue)
-						.subtract(orderedValue);
+				BigDecimal availableValue = stockValue.subtract(orderedValue);
 
-				BigDecimal repairableQty = si != null ? si.get(3, BigDecimal.class) : BigDecimal.ZERO;
+				BigDecimal repairableQty = stockTuple != null ? stockTuple.get(3, BigDecimal.class) : BigDecimal.ZERO;
 
 				p.setAvailableQty(availableQty);
 				p.setOfferedQty(offeredQty);
@@ -321,7 +305,7 @@ public class ProductService
 			p.setPurchasePrice(BigDecimal.ZERO);
 			p.setRepairableQty(BigDecimal.ZERO);
 		}
-		
+
 	}
 
 

@@ -10,7 +10,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import com.ambraspace.etprodaja.model.company.Company;
 import com.ambraspace.etprodaja.model.contact.Contact;
-import com.ambraspace.etprodaja.model.item.Item;
+import com.ambraspace.etprodaja.model.offerItem.OfferItem;
 import com.ambraspace.etprodaja.model.user.User;
 import com.ambraspace.etprodaja.util.LocalDateDeserializer;
 import com.ambraspace.etprodaja.util.LocalDateSerializer;
@@ -26,10 +26,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedEntityGraphs;
-import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
@@ -40,18 +36,18 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-@NamedEntityGraphs({
-		@NamedEntityGraph(name = "offer-with-details", attributeNodes = {
-				@NamedAttributeNode("user"),
-				@NamedAttributeNode("company"),
-				@NamedAttributeNode("contact"),
-				@NamedAttributeNode(value = "items", subgraph = "offer.items")
-		}, subgraphs = {
-				@NamedSubgraph(name = "offer.items", attributeNodes = {
-						@NamedAttributeNode("stockInfo")
-				})
-		})
-})
+//@NamedEntityGraphs({
+//		@NamedEntityGraph(name = "offer-with-details", attributeNodes = {
+//				@NamedAttributeNode("user"),
+//				@NamedAttributeNode("company"),
+//				@NamedAttributeNode("contact"),
+//				@NamedAttributeNode(value = "items", subgraph = "offer.items")
+//		}, subgraphs = {
+//				@NamedSubgraph(name = "offer.items", attributeNodes = {
+//						@NamedAttributeNode("stockInfo")
+//				})
+//		})
+//})
 public class Offer
 {
 
@@ -88,7 +84,7 @@ public class Offer
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "offer", orphanRemoval = true)
-	private List<Item> items = new ArrayList<Item>();
+	private List<OfferItem> items = new ArrayList<OfferItem>();
 
 	@NotNull @PositiveOrZero
 	private BigDecimal vat;
@@ -119,12 +115,12 @@ public class Offer
 	public void copyFieldsFrom(Offer other)
 	{
 
-		this.setComments(other.getComments());
+		this.setValidUntil(other.getValidUntil());
 		this.setCompany(other.getCompany());
 		this.setContact(other.getContact());
-		this.setNotes(other.getNotes());
-		this.setValidUntil(other.getValidUntil());
 		this.setVat(other.getVat());
+		this.setNotes(other.getNotes());
+		this.setComments(other.getComments());
 
 	}
 

@@ -15,6 +15,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.ambraspace.etprodaja.model.category.Category;
 
+import jakarta.persistence.Tuple;
+
 
 public interface ProductRepository extends CrudRepository<Product, Long>, PagingAndSortingRepository<Product, Long>
 {
@@ -77,7 +79,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s JOIN p.tags tg
 WHERE
 	s.warehouse.id = :w AND
-	(p.name LIKE :q OR
+	(p.reference LIKE :q OR
+	p.description LIKE :q OR
 	p.comment LIKE :q) AND
 	tg.id in (:t) AND
 	p.category.id IN (:ct)
@@ -95,7 +98,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s JOIN p.tags tg
 WHERE
 	s.warehouse.id = :w AND
-	(p.name LIKE :q OR
+	(p.reference LIKE :q OR
+	p.description LIKE :q OR
 	p.comment LIKE :q) AND
 	tg.id in (:t)
 			""")
@@ -111,7 +115,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s
 WHERE
 	s.warehouse.id = :w AND
-	(p.name LIKE :q OR
+	(p.reference LIKE :q OR
+	p.description LIKE :q OR
 	p.comment LIKE :q) AND
 	p.category.id IN (:ct)
 			""")
@@ -127,7 +132,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s
 WHERE
 	s.warehouse.id = :w AND
-	(p.name LIKE :q OR
+	(p.reference LIKE :q OR
+	p.description LIKE :q OR
 	p.comment LIKE :q)
 			""")
 	Page<Long> findByWarehouseNameAndComment(
@@ -141,7 +147,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s JOIN p.tags tg
 WHERE
 	s.warehouse.id = :w AND
-	p.name LIKE :q AND
+	(p.reference LIKE :q OR
+	p.description LIKE :q) AND
 	tg.id in (:t) AND
 	p.category.id IN (:ct)
 			""")
@@ -158,7 +165,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s JOIN p.tags tg
 WHERE
 	s.warehouse.id = :w AND
-	p.name LIKE :q AND
+	(p.reference LIKE :q OR
+	p.description LIKE :q) AND
 	tg.id in (:t)
 			""")
 	Page<Long> findByWarehouseNameAndTags(
@@ -173,7 +181,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s
 WHERE
 	s.warehouse.id = :w AND
-	p.name LIKE :q AND
+	(p.reference LIKE :q OR
+	p.description LIKE :q) AND
 	p.category.id IN (:ct)
 			""")
 	Page<Long> findByWarehouseNameAndCategory(
@@ -188,7 +197,8 @@ SELECT DISTINCT p.id
 FROM Product p JOIN p.stockInfos s
 WHERE
 	s.warehouse.id = :w AND
-	p.name LIKE :q
+	(p.reference LIKE :q OR
+	p.description LIKE :q)
 			""")
 	Page<Long> findByWarehouseAndName(
 			@Param("w") Long warehouseId,
@@ -242,7 +252,8 @@ FROM Product p
 SELECT DISTINCT p.id
 FROM Product p JOIN p.tags tg
 WHERE
-	(p.name LIKE :q OR
+	(p.reference LIKE :q OR
+	p.description LIKE :q OR
 	p.comment LIKE :q) AND
 	tg.id in (:t) AND
 	p.category.id IN (:ct)
@@ -258,7 +269,8 @@ WHERE
 SELECT DISTINCT p.id
 FROM Product p JOIN p.tags tg
 WHERE
-	(p.name LIKE :q OR
+	(p.reference LIKE :q OR
+	p.description LIKE :q OR
 	p.comment LIKE :q) AND
 	tg.id in (:t)
 			""")
@@ -272,7 +284,8 @@ WHERE
 SELECT p.id
 FROM Product p
 WHERE
-	(p.name LIKE :q OR
+	(p.reference LIKE :q OR
+	p.description LIKE :q OR
 	p.comment LIKE :q) AND
 	p.category.id IN (:ct)
 			""")
@@ -286,7 +299,8 @@ WHERE
 SELECT p.id
 FROM Product p
 WHERE
-	p.name LIKE :q OR
+	p.reference LIKE :q OR
+	p.description LIKE :q OR
 	p.comment LIKE :q
 			""")
 	Page<Long> findByNameAndComment(
@@ -298,7 +312,8 @@ WHERE
 SELECT DISTINCT p.id
 FROM Product p JOIN p.tags tg
 WHERE
-	p.name LIKE :q AND
+	(p.reference LIKE :q OR
+	p.description LIKE :q) AND
 	tg.id in (:t) AND
 	p.category.id IN (:ct)
 			""")
@@ -313,7 +328,8 @@ WHERE
 SELECT DISTINCT p.id
 FROM Product p JOIN p.tags tg
 WHERE
-	p.name LIKE :q AND
+	(p.reference LIKE :q OR
+	p.description LIKE :q) AND
 	tg.id in (:t)
 			""")
 	Page<Long> findByNameAndTags(
@@ -326,7 +342,8 @@ WHERE
 SELECT p.id
 FROM Product p
 WHERE
-	p.name LIKE :q AND
+	(p.reference LIKE :q OR
+	p.description LIKE :q) AND
 	p.category.id IN (:ct)
 			""")
 	Page<Long> findByNameAndCategory(
@@ -339,7 +356,8 @@ WHERE
 SELECT p.id
 FROM Product p
 WHERE
-	p.name LIKE :q
+	p.reference LIKE :q OR
+	p.description LIKE :q
 			""")
 	Page<Long> findByName(
 			@Param("q") String query, Pageable pageable);
@@ -361,5 +379,64 @@ WHERE
 
 
 	Iterable<Product> findByCategoryIn(Set<Category> categories);
+
+
+	@Query("""
+SELECT p.id, SUM(s.quantity), SUM(s.quantity * s.unitPrice), SUM(s.repairableQuantity)
+FROM Product p JOIN p.stockInfos s
+WHERE p in (:products)
+GROUP BY p.id
+ORDER BY p.id
+			""")
+	List<Tuple> getStockQtyAndValue(List<Product> products);
+
+
+	@Query("""
+SELECT p.id, SUM(s.quantity), SUM(s.quantity * s.unitPrice), SUM(s.repairableQuantity)
+FROM Product p JOIN p.stockInfos s
+WHERE
+	p in (:products) AND
+	s.warehouse.id = :warehouseId
+GROUP BY p.id
+ORDER BY p.id
+			""")
+	List<Tuple> getWarehouseStockQtyAndValue(Long warehouseId, List<Product> products);
+
+
+	@Query("""
+SELECT p.id, SUM(i.quantity), SUM(i.quantity * s.unitPrice)
+FROM OrderItem i JOIN i.stockInfo s JOIN s.product p
+WHERE p in (:products)
+GROUP BY p.id
+ORDER BY p.id
+			""")
+	List<Tuple> getOrderedQtyAndValue(List<Product> products);
+
+
+	@Query("""
+SELECT p.id, SUM(i.quantity), SUM(i.quantity * s.unitPrice)
+FROM OrderItem i JOIN i.stockInfo s JOIN s.product p
+WHERE
+	p in (:products) AND
+	s.warehouse.id = :warehouseId
+GROUP BY p.id
+ORDER BY p.id
+			""")
+	List<Tuple> getWarehouseOrderedQtyAndValue(Long warehouseId, List<Product> products);
+
+
+	@Query("""
+SELECT p.id, SUM(i.quantity)
+FROM OfferItem i JOIN i.offer o JOIN i.product p
+WHERE
+	p in (:products) AND
+	o.status = 'ACTIVE' AND
+	o.validUntil >= CURRENT_DATE
+GROUP BY p.id
+ORDER BY p.id
+			""")
+	List<Tuple> getOfferedQty(List<Product> products);
+
+
 
 }

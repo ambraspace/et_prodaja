@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ambraspace.etprodaja.model.offer.Offer.Status;
+import com.ambraspace.etprodaja.model.orderItem.OrderItem;
 import com.ambraspace.etprodaja.util.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -206,11 +207,11 @@ public class OfferController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@PatchMapping("/api/offers/{id}/accept")
-	public Offer acceptOffer(@PathVariable("id") String offerId)
+	public Offer acceptOffer(@PathVariable("id") String offerId, @RequestBody List<OrderItem> orderItems)
 	{
 		try
 		{
-			return workflowService.acceptOffer(offerId);
+			return workflowService.acceptOffer(offerId, orderItems);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

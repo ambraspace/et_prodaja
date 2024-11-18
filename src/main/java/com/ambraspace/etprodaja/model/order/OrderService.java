@@ -17,9 +17,10 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ambraspace.etprodaja.model.item.Item;
-import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.order.Order.Status;
+import com.ambraspace.etprodaja.model.orderItem.OrderItem;
+import com.ambraspace.etprodaja.model.orderItem.OrderItemService;
+import com.ambraspace.etprodaja.model.stockinfo.StockInfoService;
 import com.ambraspace.etprodaja.model.warehouse.Warehouse;
 import com.ambraspace.etprodaja.model.warehouse.WarehouseService;
 
@@ -34,7 +35,10 @@ public class OrderService
 	private WarehouseService warehouseService;
 
 	@Autowired
-	private ItemService itemService;
+	private StockInfoService stockInfoService;
+
+	@Autowired
+	private OrderItemService orderItemService;
 
 
 	@Transactional
@@ -47,12 +51,6 @@ public class OrderService
 		{
 			throw new RuntimeException("No such order in the database!");
 		}
-
-		fromRep.getItems().forEach(i -> {
-			i.setOrder(null);
-		});
-
-		itemService.updateItems(fromRep.getItems());
 
 		orderRepository.deleteById(fromRep.getId());
 
@@ -71,42 +69,41 @@ public class OrderService
 
 
 	@Transactional
-	public void orderItems(List<Item> items)
+	public List<OrderItem> orderItems(List<OrderItem> items)
 	{
 
-		items.forEach(i -> {
-			orderItem(i);
-		});
+		for (OrderItem oi:items)
+		{
+			Warehouse warehouse = stockInfoService.getWarehousesByStockInfo(oi.getStockInfo());
+			if (warehouse == null)
+				throw new RuntimeException("Warehouse not found in the database!");
 
-		itemService.updateItems(items);
+			Order order = getOpenOrderByWarehouseOrCreate(warehouse.getId());
+
+			oi.setOrder(order);
+		}
+
+		return orderItemService.saveAllItems(items);
 
 	}
 
 
-	private void orderItem(Item item)
-	{
-		Order parentOrder = getOpenOrderByWarehouseOrCreate(
-				item.getStockInfo().getWarehouse().getCompany().getId(),
-				item.getStockInfo().getWarehouse().getId());
-		item.setOrder(parentOrder);
-	}
 
-
-	private Order getOpenOrderByWarehouseOrCreate(Long companyId, Long warehouseId)
+	private Order getOpenOrderByWarehouseOrCreate(Long warehouseId)
 	{
 		Order openOrder = orderRepository.findByWarehouseIdAndStatus(warehouseId, Status.OPEN).orElse(null);
 		if (openOrder == null)
 		{
-			openOrder = createEmptyOrder(companyId, warehouseId);
+			openOrder = createEmptyOrder(warehouseId);
 		}
 		return openOrder;
 	}
 
 
-	private Order createEmptyOrder(Long companyId, Long warehouseId)
+	private Order createEmptyOrder(Long warehouseId)
 	{
 
-		Warehouse wh = warehouseService.getWarehouse(companyId, warehouseId);
+		Warehouse wh = warehouseService.getWarehouse(warehouseId);
 
 		if (wh == null)
 		{
@@ -266,7 +263,7 @@ public class OrderService
 
 			if (o.getItems() != null && o.getItems().size() > 0)
 			{
-				for (Item i:o.getItems())
+				for (OrderItem i:o.getItems())
 				{
 					value = value.add(
 							i.getStockInfo().getUnitPrice()

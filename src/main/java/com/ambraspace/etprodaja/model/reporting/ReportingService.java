@@ -27,12 +27,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ambraspace.etprodaja.model.item.Item;
-import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.offer.Offer;
 import com.ambraspace.etprodaja.model.offer.OfferService;
+import com.ambraspace.etprodaja.model.offerItem.OfferItem;
+import com.ambraspace.etprodaja.model.offerItem.OfferItemService;
 import com.ambraspace.etprodaja.model.order.Order;
 import com.ambraspace.etprodaja.model.order.OrderService;
+import com.ambraspace.etprodaja.model.orderItem.OrderItem;
+import com.ambraspace.etprodaja.model.orderItem.OrderItemService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -53,7 +55,10 @@ public class ReportingService
 	private OfferService offerService;
 
 	@Autowired
-	private ItemService itemService;
+	private OfferItemService offerItemService;
+
+	@Autowired
+	private OrderItemService orderItemService;
 
 	@Autowired
 	private OrderService orderService;
@@ -82,11 +87,11 @@ public class ReportingService
 		if (offer == null)
 			throw new RuntimeException("No such offer!");
 
-		List<Item> items = itemService.getOfferItems(offerId);
+		List<OfferItem> items = offerItemService.getOfferItems(offerId);
 
 		BigDecimal offerGrossValue = BigDecimal.ZERO;
 
-		for (Item i:items)
+		for (OfferItem i:items)
 		{
 			offerGrossValue = offerGrossValue
 					.add(
@@ -187,7 +192,7 @@ public class ReportingService
 		if (order == null)
 			throw new RuntimeException("No such order!");
 
-		List<Item> items = itemService.getOrderItems(orderId, false);
+		List<OrderItem> items = orderItemService.getItemsByOrderId(orderId);
 
 		Workbook workbook = new XSSFWorkbook();
 
@@ -229,13 +234,13 @@ public class ReportingService
 			currentCell.setCellValue(i + 1);
 
 			currentCell = itemRow.createCell(1);
-			currentCell.setCellValue(items.get(i).getOffer().getId());
+			currentCell.setCellValue(items.get(i).getOfferItem().getOffer().getId());
 
 			currentCell = itemRow.createCell(2);
-			currentCell.setCellValue(items.get(i).getOffer().getCompany().getName());
+			currentCell.setCellValue(items.get(i).getOfferItem().getOffer().getCompany().getName());
 
 			currentCell = itemRow.createCell(3);
-			currentCell.setCellValue(items.get(i).getProductName());
+			currentCell.setCellValue(items.get(i).getOfferItem().getProductDescription());
 
 			currentCell = itemRow.createCell(4);
 			currentCell.setCellValue(items.get(i).getStockInfo().getCustomerReference());

@@ -1,10 +1,8 @@
-package com.ambraspace.etprodaja.model.item;
+package com.ambraspace.etprodaja.model.offerItem;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,7 +18,6 @@ import com.ambraspace.etprodaja.util.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,18 +26,18 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
 
 @RestController
-public class ItemController
+public class OfferItemController
 {
 
 	@Autowired
-	private ItemService itemService;
+	private OfferItemService offerItemService;
 
 
 	@Operation(summary = "Get an item by offer ID and item ID",
 			responses = {
 			@ApiResponse(responseCode = "200", description = "Item returned (may be null)", content = {
 					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = Item.class))
+							@Schema(implementation = OfferItem.class))
 			}),
 			@ApiResponse(responseCode = "400", description = "Bad request", content = {
 					@Content(mediaType = "application/json", schema =
@@ -51,31 +47,10 @@ public class ItemController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/offers/{offerId}/items/{id}")
-	@JsonView(Views.Item.class)
-	public Item getOfferItem(@PathVariable("offerId") String offerId, @PathVariable("id") Long id)
+	@JsonView(Views.OfferItem.class)
+	public OfferItem getOfferItem(@PathVariable("offerId") String offerId, @PathVariable("id") Long id)
 	{
-		return itemService.getOfferItem(offerId, id);
-	}
-
-
-	@Operation(summary = "Get an item by order ID and item ID",
-			responses = {
-			@ApiResponse(responseCode = "200", description = "Item returned (may be null)", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = Item.class))
-			}),
-			@ApiResponse(responseCode = "400", description = "Bad request", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = ErrorResponse.class))
-			})
-	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
-	@GetMapping("/api/orders/{orderId}/items/{id}")
-	@JsonView(Views.Item.class)
-	public Item getOrderItem(@PathVariable String orderId, @PathVariable Long id)
-	{
-		return itemService.getOrderItem(orderId, id);
+		return offerItemService.getOfferItem(offerId, id);
 	}
 
 
@@ -83,7 +58,7 @@ public class ItemController
 			@ApiResponse(responseCode = "200", description = "List of items returned", content = {
 					@Content(mediaType = "application/json", array =
 							@ArraySchema(schema =
-							@Schema(implementation = Item.class)))
+							@Schema(implementation = OfferItem.class)))
 			}),
 			@ApiResponse(responseCode = "400", description = "Bad request", content = {
 					@Content(mediaType = "application/json", schema =
@@ -93,60 +68,10 @@ public class ItemController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/offers/{offerId}/items")
-	@JsonView(Views.Item.class)
-	public List<Item> getOfferItems(@PathVariable("offerId") String offerId)
+	@JsonView(Views.OfferItem.class)
+	public List<OfferItem> getOfferItems(@PathVariable("offerId") String offerId)
 	{
-		return itemService.getOfferItems(offerId);
-	}
-
-
-	@Operation(summary = "Get items by order", responses = {
-			@ApiResponse(responseCode = "200", description = "List of items returned", content = {
-					@Content(mediaType = "application/json", array =
-							@ArraySchema(schema =
-							@Schema(implementation = Item.class)))
-			}),
-			@ApiResponse(responseCode = "400", description = "Bad request", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = ErrorResponse.class))
-			})
-	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
-	@GetMapping("/api/orders/{orderId}/items")
-	@JsonView(Views.Item.class)
-	public List<Item> getOrderItems(
-			@Parameter(description = "Order ID", required = false)
-			@PathVariable("orderId") String offerId,
-			@Parameter(description = "Whether to return only items which have not been ordered", required = false)
-			@RequestParam(name = "ou", defaultValue = "false") boolean onlyUndelivered
-			)
-	{
-		return itemService.getOrderItems(offerId, onlyUndelivered);
-	}
-
-
-	@Operation(summary = "Get items which haven't been ordered yet", responses = {
-			@ApiResponse(responseCode = "200", description = "List of items returned", content = {
-					@Content(mediaType = "application/json", array =
-							@ArraySchema(schema =
-							@Schema(implementation = Item.class)))
-			}),
-			@ApiResponse(responseCode = "400", description = "Bad request", content = {
-					@Content(mediaType = "application/json", schema =
-							@Schema(implementation = ErrorResponse.class))
-			})
-	})
-	@SecurityRequirement(name = "JWT")
-	@RolesAllowed({"ADMIN", "USER"})
-	@GetMapping("/api/items")
-	@JsonView(Views.Item.class)
-	public Page<Item> getUnorderedItems(
-		@RequestParam("s") Long supplierId,
-		Pageable pageable
-	)
-	{
-		return itemService.getUnorderedItems(supplierId, pageable);
+		return offerItemService.getOfferItems(offerId);
 	}
 
 
@@ -155,7 +80,7 @@ public class ItemController
 			@ApiResponse(responseCode = "200", description = "Items saved and returned", content = {
 					@Content(mediaType = "application/json", array =
 							@ArraySchema(schema =
-							@Schema(implementation = Item.class)))
+							@Schema(implementation = OfferItem.class)))
 			}),
 			@ApiResponse(responseCode = "400", description = "Bad request", content = {
 					@Content(mediaType = "application/json", schema =
@@ -165,12 +90,12 @@ public class ItemController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/offers/{offerId}/items")
-	@JsonView(Views.Item.class)
-	public List<Item> addItems(@PathVariable("offerId") String offerId, @RequestBody List<Item> items)
+	@JsonView(Views.OfferItem.class)
+	public List<OfferItem> addItems(@PathVariable("offerId") String offerId, @RequestBody List<OfferItem> items)
 	{
 		try
 		{
-			return itemService.addItems(offerId, items);
+			return offerItemService.addItems(offerId, items);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
@@ -182,7 +107,7 @@ public class ItemController
 			@ApiResponse(responseCode = "200", description = "Items saved and returned", content = {
 					@Content(mediaType = "application/json", array =
 							@ArraySchema(schema =
-							@Schema(implementation = Item.class)))
+							@Schema(implementation = OfferItem.class)))
 			}),
 			@ApiResponse(responseCode = "400", description = "Bad request", content = {
 					@Content(mediaType = "application/json", schema =
@@ -192,14 +117,14 @@ public class ItemController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@PutMapping("/api/offers/{offerId}/items")
-	@JsonView(Views.Item.class)
-	public List<Item> updateItems(
+	@JsonView(Views.OfferItem.class)
+	public List<OfferItem> updateItems(
 			@PathVariable("offerId") String offerId,
-			@RequestBody List<Item> items)
+			@RequestBody List<OfferItem> items)
 	{
 		try
 		{
-			return itemService.updateItems(offerId, items);
+			return offerItemService.updateItems(offerId, items);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
@@ -225,7 +150,7 @@ public class ItemController
 	{
 		try
 		{
-			itemService.deleteItem(offerId, itemId);
+			offerItemService.deleteItem(offerId, itemId);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

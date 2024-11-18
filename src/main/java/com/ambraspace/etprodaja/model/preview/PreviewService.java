@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ambraspace.etprodaja.model.item.ItemService;
+import com.ambraspace.etprodaja.model.offerItem.OfferItemService;
 import com.ambraspace.etprodaja.model.product.Product;
 
 import jakarta.annotation.PostConstruct;
@@ -35,7 +35,7 @@ public class PreviewService
 	private PreviewRepository previewRepository;
 
 	@Autowired
-	private ItemService itemService;
+	private OfferItemService offerItemService;
 
 	@Value("${et-prodaja.storage-location}")
 	private String storageLocation;
@@ -146,7 +146,7 @@ public class PreviewService
 
 		previewRepository.findAll().forEach(pr -> imagesInTheDb.add(pr.getFileName()));
 
-		imagesInTheDb.addAll(itemService.getItemPreviews());
+		imagesInTheDb.addAll(offerItemService.getItemPreviews());
 
 		images.removeAll(imagesInTheDb);
 

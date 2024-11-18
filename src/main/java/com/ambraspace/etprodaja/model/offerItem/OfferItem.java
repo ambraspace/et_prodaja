@@ -1,4 +1,4 @@
-package com.ambraspace.etprodaja.model.item;
+package com.ambraspace.etprodaja.model.offerItem;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -8,10 +8,10 @@ import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
 
-import com.ambraspace.etprodaja.model.deliveryItem.DeliveryItem;
 import com.ambraspace.etprodaja.model.offer.Offer;
-import com.ambraspace.etprodaja.model.order.Order;
-import com.ambraspace.etprodaja.model.stockinfo.StockInfo;
+import com.ambraspace.etprodaja.model.offer.Offer.Status;
+import com.ambraspace.etprodaja.model.orderItem.OrderItem;
+import com.ambraspace.etprodaja.model.product.Product;
 import com.ambraspace.etprodaja.util.Views;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -28,7 +28,6 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -39,52 +38,24 @@ import lombok.Setter;
 @Entity
 @Getter @Setter @NoArgsConstructor
 @NamedEntityGraphs(value = {
-		@NamedEntityGraph(name = "items", attributeNodes = {
-				@NamedAttributeNode(value = "stockInfo", subgraph = "item.stockInfo")
-		}, subgraphs = {
-				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
-						@NamedAttributeNode("product")
-				})
-		}),
 		@NamedEntityGraph(name = "offer-items", attributeNodes = {
-				@NamedAttributeNode("order"),
-				@NamedAttributeNode(value = "deliveryItems", subgraph = "item.deliveryItems"),
-				@NamedAttributeNode(value = "stockInfo", subgraph = "item.stockInfo")
+				@NamedAttributeNode(value = "orderItems", subgraph = "offerItem.orderItems"),
+				@NamedAttributeNode("product")
 		}, subgraphs = {
-				@NamedSubgraph(name = "item.deliveryItems", attributeNodes = {
+				@NamedSubgraph(name = "offerItem.orderItems", attributeNodes = {
+						@NamedAttributeNode("order"),
+						@NamedAttributeNode(value = "stockInfo", subgraph = "offerItem.orderItems.stockInfo"),
+						@NamedAttributeNode(value = "deliveryItems", subgraph = "offerItem.orderItems.deliveryItems")
+				}),
+				@NamedSubgraph(name = "offerItem.orderItems.stockInfo", attributeNodes = {
+						@NamedAttributeNode("warehouse")
+				}),
+				@NamedSubgraph(name = "offerItem.orderItems.deliveryItems", attributeNodes = {
 						@NamedAttributeNode("delivery")
-				}),
-				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
-						@NamedAttributeNode(value = "warehouse", subgraph = "item.stockInfo.warehouse"),
-						@NamedAttributeNode("product"),
-				}),
-				@NamedSubgraph(name = "item.stockInfo.warehouse", attributeNodes = {
-						@NamedAttributeNode("company")
-				}),
-		}),
-		@NamedEntityGraph(name = "order-items", attributeNodes = {
-				@NamedAttributeNode("offer"),
-				@NamedAttributeNode(value = "deliveryItems", subgraph = "item.deliveryItems"),
-				@NamedAttributeNode(value = "stockInfo", subgraph = "item.stockInfo")
-		}, subgraphs = {
-				@NamedSubgraph(name = "item.deliveryItems", attributeNodes = {
-						@NamedAttributeNode("delivery")
-				}),
-				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
-						@NamedAttributeNode("product")
-				})
-		}),
-		@NamedEntityGraph(name = "delivery-items", attributeNodes = {
-				@NamedAttributeNode("offer"),
-				@NamedAttributeNode("order"),
-				@NamedAttributeNode(value = "stockInfo", subgraph = "item.stockInfo")
-		}, subgraphs = {
-				@NamedSubgraph(name = "item.stockInfo", attributeNodes = {
-						@NamedAttributeNode("product")
 				})
 		})
 })
-public class Item
+public class OfferItem
 {
 
 	@Id
@@ -94,18 +65,15 @@ public class Item
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Offer offer;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Order order;
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", orphanRemoval = true)
-	@JsonView(value = {Views.Item.class})
-	private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "offerItem")
+	@JsonView(value = {Views.OfferItem.class, Views.DeliveryItem.class})
+	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	private StockInfo stockInfo;
+	private Product product;
 
 	@NotNull @NotBlank
-	private String productName;
+	private String productDescription;
 
 	private String preview;
 
@@ -118,10 +86,6 @@ public class Item
 	@NotNull @PositiveOrZero
 	private BigDecimal discountPercent = BigDecimal.valueOf(0, 2);
 
-	@JsonProperty
-	@Transient
-	private BigDecimal outstandingQuantity = BigDecimal.ZERO;
-
 	@JsonProperty(access = Access.READ_ONLY)
 	public BigDecimal getNetPrice()
 	{
@@ -131,15 +95,22 @@ public class Item
 	}
 
 
-	public void copyFieldsFrom(Item other)
+	public void copyFieldsFrom(OfferItem other)
 	{
 
-		this.setDiscountPercent(other.getDiscountPercent());
-		this.setGrossPrice(other.getGrossPrice());
-		this.setProductName(other.getProductName());
+		if (
+				(this.offer.getStatus() != Status.ACTIVE ||
+				(this.orderItems != null && this.orderItems.size() > 0 )) &&
+				this.product.getId() != other.getProduct().getId()
+		)
+			throw new RuntimeException("Can not change the product if it's already ordered!");
+
+		this.setProduct(other.getProduct());
+		this.setProductDescription(other.getProductDescription());
 		this.setPreview(other.getPreview());
 		this.setQuantity(other.getQuantity());
-		this.setStockInfo(other.getStockInfo());
+		this.setGrossPrice(other.getGrossPrice());
+		this.setDiscountPercent(other.getDiscountPercent());
 
 	}
 
@@ -151,7 +122,7 @@ public class Item
 		Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
 		Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
 		if (thisEffectiveClass != oEffectiveClass) return false;
-		Item other = (Item) o;
+		OfferItem other = (OfferItem) o;
 		return getId() != null && Objects.equals(getId(), other.getId());
 	}
 

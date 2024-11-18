@@ -13,8 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ambraspace.etprodaja.model.item.Item;
 import com.ambraspace.etprodaja.model.offer.Offer.Status;
+import com.ambraspace.etprodaja.model.offerItem.OfferItem;
 import com.ambraspace.etprodaja.model.user.User;
 import com.ambraspace.etprodaja.model.user.UserService;
 
@@ -397,7 +397,7 @@ Garantni period: 2 godine.
 			if (o.getItems() != null && o.getItems().size() > 0)
 			{
 
-				for (Item i:o.getItems())
+				for (OfferItem i:o.getItems())
 				{
 
 					value = value.add(
@@ -409,7 +409,7 @@ Garantni period: 2 godine.
 					);
 
 					cost = cost.add(
-							i.getStockInfo().getUnitPrice()
+							i.getProduct().getPurchasePrice()
 							.multiply(
 									i.getQuantity()
 							)

@@ -8,7 +8,7 @@ spring:
       '[hibernate.max_fetch_depth]': 3
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver        
-    url: jdbc:mariadb://localhost:3306/et_prodaja
+    url: jdbc:mariadb://localhost:3306/et_prodaja_2
     username: ambra
   jackson:
     mapper:

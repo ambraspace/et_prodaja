@@ -25,7 +25,9 @@ import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -45,6 +47,9 @@ import lombok.Setter;
 	})
 })
 @Getter @Setter @NoArgsConstructor
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"reference"})
+})
 public class Product
 {
 
@@ -52,8 +57,10 @@ public class Product
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String reference;
+
 	@NotNull @NotBlank @Size(min = 5, max = 255, message = "Product name must be between 5 and 255 characters long")
-	private String name;
+	private String description;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	@NotNull
@@ -100,15 +107,16 @@ public class Product
 
 	void copyFieldsFrom(Product other)
 	{
-		this.name = other.getName();
+		this.category = other.getCategory();
+		this.comment = other.getComment();
+		this.description = other.getDescription();
 		this.previews.clear();
 		this.previews.addAll(other.getPreviews());
-		this.unit = other.getUnit();
 		this.price = other.getPrice();
-		this.category = other.getCategory();
+		this.reference = other.getReference();
 		this.tags.clear();
 		this.tags.addAll(other.getTags());
-		this.comment = other.getComment();
+		this.unit = other.getUnit();
 	}
 
 	@Override

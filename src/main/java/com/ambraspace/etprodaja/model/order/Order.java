@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
 
-import com.ambraspace.etprodaja.model.item.Item;
+import com.ambraspace.etprodaja.model.orderItem.OrderItem;
 import com.ambraspace.etprodaja.model.warehouse.Warehouse;
 import com.ambraspace.etprodaja.util.LocalDateDeserializer;
 import com.ambraspace.etprodaja.util.LocalDateSerializer;
@@ -81,7 +81,7 @@ public class Order
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-	private List<Item> items = new ArrayList<Item>();
+	private List<OrderItem> items = new ArrayList<OrderItem>();
 
 	@Transient
 	@JsonProperty

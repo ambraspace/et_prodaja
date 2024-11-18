@@ -1,5 +1,6 @@
 package com.ambraspace.etprodaja.model.stockinfo;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ambraspace.etprodaja.model.item.ItemService;
 import com.ambraspace.etprodaja.model.product.Product;
+import com.ambraspace.etprodaja.model.warehouse.Warehouse;
 
 import jakarta.persistence.Tuple;
 
@@ -21,15 +22,12 @@ public class StockInfoService
 	@Autowired
 	private StockInfoRepository stockInfoRepository;
 
-	@Autowired
-	private ItemService itemService;
-
 
 	public StockInfo getStockInfo(Long productId, Long id)
 	{
 		StockInfo retVal = stockInfoRepository.findByProductIdAndId(productId, id).orElse(null);
 		if (retVal != null)
-			itemService.fillStockInfoTransientFields(List.of(retVal));
+			fillTransientFields(List.of(retVal));
 		return retVal;
 	}
 
@@ -37,7 +35,7 @@ public class StockInfoService
 	public Page<StockInfo> getStockInfosByProduct(Long productId, Pageable pageable)
 	{
 		Page<StockInfo> retVal = stockInfoRepository.findByProductId(productId, pageable);
-		itemService.fillStockInfoTransientFields(retVal.getContent());
+		fillTransientFields(retVal.getContent());
 		return retVal;
 	}
 
@@ -64,7 +62,7 @@ public class StockInfoService
 
 		StockInfo retVal = stockInfoRepository.save(fromRep);
 
-		itemService.fillStockInfoTransientFields(List.of(retVal));
+		fillTransientFields(List.of(retVal));
 
 		return retVal;
 
@@ -106,6 +104,31 @@ public class StockInfoService
 		return retVal;
 
 	}
+
+	public Warehouse getWarehousesByStockInfo(StockInfo stockInfo)
+	{
+		return stockInfoRepository.getWarehouseByStockInfo(stockInfo).orElse(null);
+	}
+
+
+	private void fillTransientFields(List<StockInfo> stockInfos)
+	{
+
+		List<Tuple> stockInfoOrderedQtys = new ArrayList<Tuple>();
+		stockInfoRepository.getStockInfoOrderedQtys(stockInfos).forEach(stockInfoOrderedQtys::add);
+		for (StockInfo si:stockInfos)
+		{
+
+			Tuple orderedQtyTuple = stockInfoOrderedQtys.stream().filter(t -> si.getId().equals(t.get(0, Long.class))).findFirst().orElse(null);
+
+			BigDecimal orderedQyt = orderedQtyTuple != null ? orderedQtyTuple.get(1, BigDecimal.class) : BigDecimal.ZERO;
+
+			si.setAvailableQuantity(si.getQuantity().subtract(orderedQyt));
+
+		}
+
+	}
+
 
 
 }

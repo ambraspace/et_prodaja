@@ -1,5 +1,6 @@
 package com.ambraspace.etprodaja.model.stockinfo;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.ambraspace.etprodaja.model.product.Product;
+import com.ambraspace.etprodaja.model.warehouse.Warehouse;
 
 import jakarta.persistence.Tuple;
 
@@ -53,5 +55,24 @@ ORDER BY s.product.id
 
 	@EntityGraph("stockinfo-with-warehouse-and-company")
 	Page<StockInfo> findByProductId(Long productId, Pageable pageable);
+
+
+	@Query("""
+SELECT w
+FROM StockInfo s JOIN s.warehouse w
+WHERE s = :stockInfo
+			""")
+	@EntityGraph("warehouse-with-company")
+	Optional<Warehouse> getWarehouseByStockInfo(StockInfo stockInfo);
+
+
+	@Query("""
+SELECT s.id, SUM(oi.quantity)
+FROM OrderItem oi JOIN oi.stockInfo s
+WHERE s IN (:stockInfos)
+GROUP BY s.id
+ORDER BY s.id
+			""")
+	Iterable<Tuple> getStockInfoOrderedQtys(List<StockInfo> stockInfos);
 
 }

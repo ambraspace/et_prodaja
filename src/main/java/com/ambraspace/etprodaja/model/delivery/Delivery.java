@@ -23,10 +23,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedEntityGraphs;
-import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
@@ -37,19 +33,19 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-@NamedEntityGraphs({
-	@NamedEntityGraph(name = "delivery-with-details", attributeNodes = {
-			@NamedAttributeNode("supplier"),
-			@NamedAttributeNode(value = "deliveryItems", subgraph = "delivery.deliveryItems")
-	}, subgraphs = {
-			@NamedSubgraph(name = "delivery.deliveryItems", attributeNodes = {
-					@NamedAttributeNode(value = "item", subgraph = "delivery.deliveryItems.item")
-			}),
-			@NamedSubgraph(name = "delivery.deliveryItems.item", attributeNodes = {
-					@NamedAttributeNode(value = "stockInfo")
-			})
-	})
-})
+//@NamedEntityGraphs({
+//	@NamedEntityGraph(name = "delivery-with-details", attributeNodes = {
+//			@NamedAttributeNode("supplier"),
+//			@NamedAttributeNode(value = "deliveryItems", subgraph = "delivery.deliveryItems")
+//	}, subgraphs = {
+//			@NamedSubgraph(name = "delivery.deliveryItems", attributeNodes = {
+//					@NamedAttributeNode(value = "item", subgraph = "delivery.deliveryItems.item")
+//			}),
+//			@NamedSubgraph(name = "delivery.deliveryItems.item", attributeNodes = {
+//					@NamedAttributeNode(value = "stockInfo")
+//			})
+//	})
+//})
 public class Delivery
 {
 
