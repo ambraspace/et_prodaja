@@ -212,7 +212,7 @@ public class WarehouseController
 	@GetMapping("/api/warehouses/search")
 	public List<Warehouse> searchWarehouses(
 			@RequestParam("q") String query,
-			@RequestParam("size") Integer size
+			@RequestParam Integer size
 	)
 	{
 		try

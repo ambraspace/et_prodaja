@@ -52,7 +52,7 @@ public class ItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/offers/{offerId}/items/{id}")
 	@JsonView(Views.Item.class)
-	public Item getOfferItem(@PathVariable("offerId") String offerId, @PathVariable("id") Long id)
+	public Item getOfferItem(@PathVariable String offerId, @PathVariable Long id)
 	{
 		return itemService.getOfferItem(offerId, id);
 	}
@@ -94,7 +94,7 @@ public class ItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/offers/{offerId}/items")
 	@JsonView(Views.Item.class)
-	public List<Item> getOfferItems(@PathVariable("offerId") String offerId)
+	public List<Item> getOfferItems(@PathVariable String offerId)
 	{
 		return itemService.getOfferItems(offerId);
 	}
@@ -166,7 +166,7 @@ public class ItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/offers/{offerId}/items")
 	@JsonView(Views.Item.class)
-	public List<Item> addItems(@PathVariable("offerId") String offerId, @RequestBody List<Item> items)
+	public List<Item> addItems(@PathVariable String offerId, @RequestBody List<Item> items)
 	{
 		try
 		{
@@ -194,7 +194,7 @@ public class ItemController
 	@PutMapping("/api/offers/{offerId}/items")
 	@JsonView(Views.Item.class)
 	public List<Item> updateItems(
-			@PathVariable("offerId") String offerId,
+			@PathVariable String offerId,
 			@RequestBody List<Item> items)
 	{
 		try
@@ -220,7 +220,7 @@ public class ItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@DeleteMapping("/api/offers/{offerId}/items/{id}")
 	public void deleteItem(
-			@PathVariable("offerId") String offerId,
+			@PathVariable String offerId,
 			@PathVariable("id") Long itemId)
 	{
 		try

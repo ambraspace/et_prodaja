@@ -48,7 +48,7 @@ public class DeliveryController
 	@SecurityRequirement(name = "JWT")
 	@RolesAllowed({"ADMIN", "USER"})
 	@GetMapping("/api/deliveries/{id}")
-	public Delivery getDelivery(@PathVariable("id") String id)
+	public Delivery getDelivery(@PathVariable String id)
 	{
 		return deliveryService.getDelivery(id);
 	}

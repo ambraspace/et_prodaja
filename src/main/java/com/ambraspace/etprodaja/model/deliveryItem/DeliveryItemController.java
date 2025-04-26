@@ -94,7 +94,7 @@ public class DeliveryItemController
 	@RolesAllowed({"ADMIN", "USER"})
 	@PostMapping("/api/deliveries/{deliveryId}/deliveryItems")
 	public List<DeliveryItem> addDeliveryItems(
-			@PathVariable("deliveryId") String deliveryId,
+			@PathVariable String deliveryId,
 			@RequestBody List<DeliveryItem> dis)
 	{
 		try
