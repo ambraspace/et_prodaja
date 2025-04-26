@@ -10,6 +10,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver        
     url: jdbc:mariadb://localhost:3306/et_prodaja_test
     username: ambra
+    password: ambra
   jackson:
     mapper:
       default-view-inclusion: true

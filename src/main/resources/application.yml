@@ -1,15 +1,16 @@
 spring:
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: true
     properties:
       '[hibernate.max_fetch_depth]': 3
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver        
-    url: jdbc:mariadb://localhost:3306/et_prodaja
-    username: ambra
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jackson:
     mapper:
       default-view-inclusion: true
@@ -25,10 +26,10 @@ springdoc:
     csrf:
       enabled: true
 et-prodaja:
-  storage-location: /home/ambra/et_prodaja
+  storage-location: ${STORAGE_LOCATION}
 jwt:
-  secret: sklfjslkfjslkdfjslkdfjslkdfjsdlkfjsdlkfjsldkfjsdfsdfsdfsdfsdfsdf
-  secret2-f-a: sklfjslkfjslkdfjslkdfjslkdfjsdlkfjsdlkfjsldkfjsdfsdfsdfsdfsdfsdd
-  token-validity: 7d
-  refresh-token-validity: 2d
+  secret: ${JWT_SECRET}
+  secret2-f-a: ${JWT_SECRET_2FA}
+  token-validity: ${JWT_TOKEN_VALIDITY}
+  refresh-token-validity: ${JWT_REFRESH_TOKEN_VALIDITY}
   refresh-url: /api/refreshtoken
