@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.5</version>
+		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ambraspace</groupId>
@@ -14,7 +14,7 @@
 	<name>et-prodaja</name>
 	<description>Izrada ponuda, praćenje nabavke</description>
 	<properties>
-		<java.version>23</java.version>
+		<java.version>24</java.version>
 		<maven.compiler.proc>full</maven.compiler.proc>
 	</properties>
 	<dependencies>
@@ -128,7 +128,26 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<image>
+						<name>ambraspace/${project.artifactId}:${project.version}</name>
+						<env>
+							<BP_JVM_CDS_ENABLED>true</BP_JVM_CDS_ENABLED>
+						</env>
+					</image>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<environmentVariables>
+						<LANG>en_US.UTF-8</LANG>
+					</environmentVariables>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
