@@ -54,7 +54,8 @@ public class SecurityConfig
     }
 
 
-    @Bean
+    @SuppressWarnings("unused")
+	@Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
 
